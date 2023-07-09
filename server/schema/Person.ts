@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { Person } from "../types/Person";
+import { IPerson } from "../types/Person";
 const Schema = mongoose.Schema;
 
-export const PersonSchema = new Schema<Person>({
+export const PersonSchema = new Schema<IPerson>({
   first_name: {
     type: String,
     required: true,
