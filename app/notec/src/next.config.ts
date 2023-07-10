@@ -1,3 +1,5 @@
+const path = require("path")
+
 module.exports = {
     async rewrites() {
         return [
@@ -5,6 +7,9 @@ module.exports = {
             {
                 source: '/:path*',
                 destination: '/',
+                sassOptions: {
+                    includePaths: [path.join(__dirname, 'style')],
+                },
             },
         ];
     },
