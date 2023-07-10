@@ -1,8 +1,9 @@
 import { PersonModel } from "../models/Person";
-import { IPerson, IPersonModel } from "../types/Person";
+import { IPerson, IPersonModel } from "../types/person/types";
 import { Request, Response } from "express";
 
 const PersonController = {
+
   getAllPersons: async (req: Request, res: Response) => {
     try {
       const persons: IPerson[] = await PersonModel.find();
@@ -12,8 +13,15 @@ const PersonController = {
       res.status(500).json({ error: "Error getting data" });
     }
   },
+
   createPerson: async (req: Request, res: Response) => {
-    const { first_name, last_name, email, phone_number } = req.body;
+
+    const { first_name, last_name, email, phone_number } = req.body ?? {};
+
+    if (!first_name || !last_name || !phone_number) {
+      return res.status(500).json({ error: "Please enter all required fields." })
+    }
+
     try {
 
       const personData: IPerson = {
@@ -32,8 +40,11 @@ const PersonController = {
       console.log(error);
     }
   },
+
   updatePerson: async (req: Request, res: Response) => {
+
     const { id, first_name, last_name, phone_number, email } = req.body
+
     try {
       const personData: IPerson = {
         first_name,
@@ -60,6 +71,7 @@ const PersonController = {
     }
   },
   deletePerson: async (req: Request, res: Response) => {
+
     const { id } = req.body;
 
     try {

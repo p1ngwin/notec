@@ -1,5 +1,5 @@
 import { model } from "mongoose";
-import { IPerson, IPersonModel } from "../types/Person";
+import { IPerson } from "../types/person/types";
 import { PersonSchema } from "../schema/Person";
 
 export const PersonModel = model<IPerson>("Person", PersonSchema);
