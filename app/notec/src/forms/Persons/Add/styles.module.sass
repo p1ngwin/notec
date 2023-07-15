@@ -1,0 +1,72 @@
+@import ../../../assets/styles/_constants
+
+.FormContainer
+    width: 100%
+    margin: 0 auto
+    padding: 20px
+    background-color: #f4f4f4
+    border-radius: 5px
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
+    font-family: Arial, sans-serif
+    color: #333
+
+    h2
+        text-align: center
+        margin-bottom: 20px
+
+    .FormGroup
+        margin-bottom: 20px
+        display: flex
+        place-items: center
+
+        svg
+            margin-right: 1rem
+            path
+                fill: $primary
+
+    label
+        display: block
+        margin-bottom: 5px
+        font-weight: bold
+
+    .FormInput
+        width: 100%
+        border: 1px solid #ccc
+        border-radius: 3px
+        font-size: 14px
+        min-height: 40px
+        padding: 1rem 2rem
+        margin: 1rem
+        &::placeholder
+            font-size: 1rem
+
+    .FormButton
+        background-color: #007bff
+        color: #fff
+        cursor: pointer
+
+        &:hover
+            background-color: #0069d9
+
+        &[type="submit"]
+            padding: 1rem 2rem
+            border-radius: 3px
+            border: 0
+            font-size: 1rem
+            text-transform: uppercase
+            font-weight: normal
+            width: 100%
+            margin: 1rem
+
+    .FormMessage
+        padding: 10px
+        margin-bottom: 20px
+        border-radius: 3px
+
+    &.form-success
+        background-color: #d4edda
+        color: #155724
+
+    &.form-error
+        background-color: #f8d7da
+        color: #721c24
