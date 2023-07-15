@@ -1,5 +1,5 @@
 const fetchOptions: RequestInit = {
-  method: "POST",
+  method: "DELETE",
   mode: "cors",
   cache: "no-cache",
   credentials: "omit",
@@ -8,15 +8,15 @@ const fetchOptions: RequestInit = {
   },
 };
 
-export const postData = async (url: RequestInfo, body: any): Promise<any> => {
-  console.log("Body is", body);
+export const deleteData = async (url: RequestInfo, id: any): Promise<any> => {
   const response = await fetch(url, {
     ...fetchOptions,
-    body: JSON.stringify(body),
+    body: JSON.stringify(id),
   });
 
   if (response.ok) {
-    return response;
+    const json = await response.json();
+    return json;
   }
 
   if (response.status === 401) {

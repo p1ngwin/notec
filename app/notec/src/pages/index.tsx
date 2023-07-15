@@ -1,25 +1,13 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Home from "@/screens/Home";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import Persons from "@/screens/Persons";
-import Appointments from "@/screens/Appointments";
 
-export default function App() {
+const HomePage = () => {
   return (
-    <Router>
-      <div className="page-container">
-        <Header />
-        <div className="content">
-          <Routes>
-            <Route path="/" Component={Home} />
-            <Route path="/persons" Component={Persons} />
-            <Route path="/appointments" Component={Appointments} />
-          </Routes>
-        </div>
-        <Footer />
-      </div>
-    </Router>
+    <div className="content">
+      {/* Add your main content for the home page here */}
+      <h1>Welcome to the Homepage</h1>
+      <p>This is the main content of the home page.</p>
+    </div>
   );
-}
+};
+
+export default HomePage;
