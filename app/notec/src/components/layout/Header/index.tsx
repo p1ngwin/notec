@@ -1,5 +1,4 @@
-import { IconButton, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
-import styles from "./styles.module.sass";
+import { IconButton, Toolbar } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 
 const Header = () => {

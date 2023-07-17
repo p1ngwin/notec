@@ -5,7 +5,7 @@ import PersonCard from "@/components/Profile/PersonCard";
 import { useEffect, useState } from "react";
 import { personsUrl } from "@/utils/api/urls";
 import { fetchData } from "@/utils/api/fetch";
-import { IPerson } from "@/types/person/Person";
+import { IPerson } from "@/types/Person";
 
 export default function Page() {
   const { query } = useRouter();

@@ -9,8 +9,13 @@ import PeopleIcon from "@mui/icons-material/People";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 const SideMenuLayout = () => {
-  const { SideMenuWrapper, DrawerPrimary, NavMenuButton, NavMenuWrapper } =
-    styles;
+  const {
+    SideMenuWrapper,
+    DrawerPrimary,
+    NavMenuButton,
+    NavMenuWrapper,
+    NavMenuText,
+  } = styles;
 
   const router = useRouter();
 
@@ -33,16 +38,22 @@ const SideMenuLayout = () => {
         </div>
         <Spacer />
         <div className={NavMenuWrapper}>
-          <div className={NavMenuButton}>
-            <Button onClick={() => router.push("/persons")}>
+          <div>
+            <Button
+              className={NavMenuButton}
+              onClick={() => router.push("/persons")}
+            >
               <PeopleIcon />
-              <span>Stranke</span>
+              <div className={NavMenuText}>Stranke</div>
             </Button>
           </div>
-          <div className={NavMenuButton}>
-            <Button onClick={() => router.push("/appointments")}>
+          <div>
+            <Button
+              className={NavMenuButton}
+              onClick={() => router.push("/appointments")}
+            >
               <CalendarMonthIcon />
-              Urnik
+              <div className={NavMenuText}>Urnik</div>
             </Button>
           </div>
         </div>

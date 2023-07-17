@@ -2,27 +2,32 @@
   "name": "notec",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@fullcalendar/interaction": "^6.1.8",
     "@fullcalendar/react": "^6.1.8",
     "@mui/icons-material": "^5.14.0",
+    "@mui/lab": "^5.0.0-alpha.136",
     "@mui/material": "^5.14.0",
+    "@mui/x-date-pickers": "^6.10.0",
     "@types/node": "20.4.1",
     "@types/react": "18.0.1",
     "@types/react-dom": "18.2.6",
     "@zeit/next-sass": "^1.0.1",
     "babel": "^6.23.0",
     "classnames": "^2.3.2",
-    "eslint": "8.44.0",
+    "eslint": "^8.45.0",
     "eslint-config-next": "13.4.9",
     "fullcalendar": "^6.1.8",
+    "moment": "^2.29.4",
     "next": "13.4.9",
     "node-sass": "^9.0.0",
     "react": "18.2.0",
@@ -34,6 +39,8 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
     "css-loader": "1.0.0"
   }
 }

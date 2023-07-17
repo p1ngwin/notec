@@ -1,11 +1,8 @@
 import mongoose from "mongoose";
 
-export interface IAppointment {
+export interface IService {
   id?: string;
-  date: Date;
-  time: Date;
-  service_id: mongoose.Schema.Types.ObjectId;
-  person_id: mongoose.Schema.Types.ObjectId;
+  service: SERVICE_TYPES;
 }
 
 export enum HAIR_TYPE {
@@ -17,4 +14,5 @@ export enum HAIR_TYPE {
 export enum SERVICE_TYPES {
   CUT = "CUT",
   COLOR = "COLOR",
+  FAN = "FAN",
 }

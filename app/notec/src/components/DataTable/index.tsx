@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Table as DataTable,
   TableBody,
@@ -118,17 +118,15 @@ const Table = <RowData extends HasId>({
             {rows.length > 0 &&
               rows.map((row, index) => (
                 <TableRow key={index}>
+                  {showRowCount && <Cell>{index + 1}</Cell>}
                   {columns.map(
                     ({ field, label, headClassName, renderCell }) => (
-                      <>
-                        {showRowCount && <Cell>{index + 1}</Cell>}
-                        <Cell
-                          className={headClassName && headClassName}
-                          key={`${index}-${field}`}
-                        >
-                          {renderCell ? renderCell(row) : label}
-                        </Cell>
-                      </>
+                      <Cell
+                        className={headClassName && headClassName}
+                        key={`${index}-${field}`}
+                      >
+                        {renderCell ? renderCell(row) : label}
+                      </Cell>
                     )
                   )}
                   {rowActions && (

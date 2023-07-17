@@ -3,7 +3,7 @@ import styles from "./styles.module.sass";
 import { Email, Person, Phone } from "@mui/icons-material";
 import { postData } from "@/utils/api/post";
 import { createPersonUrl } from "@/utils/api/urls";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 
 type FormProps = {
@@ -18,11 +18,7 @@ const AddPersonForm = () => {
 
   const { FormGroup, FormContainer, FormInput, FormButton } = styles;
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormProps>();
+  const { register, handleSubmit } = useForm<FormProps>();
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
     const response = await postData(createPersonUrl(), data);
@@ -34,7 +30,6 @@ const AddPersonForm = () => {
 
   return (
     <div className={FormContainer}>
-      <Toaster />
       <h2>Person form</h2>
 
       <form onSubmit={handleSubmit(onSubmit)}>
