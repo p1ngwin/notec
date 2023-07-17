@@ -1,3 +1,4 @@
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Table, { Action, Column } from "@/components/DataTable";
 import HeaderActions from "@/components/HeaderActions";
 import View from "@/components/View";
@@ -8,7 +9,7 @@ import { deletePersonUrl, personsUrl } from "@/utils/api/urls";
 import { Button, CircularProgress } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const Appointments = () => {
   const router = useRouter();
@@ -70,8 +71,8 @@ const Appointments = () => {
 
   return (
     <View fullWidth>
-      <Toaster />
-      <HeaderActions title="Stranke">
+      <HeaderActions>
+        <Breadcrumbs depth={1} values={["Stranke"]}/>
         <Button onClick={() => router.push("/persons/add")}>ADD</Button>
       </HeaderActions>
       {isLoading ? (

@@ -32,7 +32,7 @@ const Breadcrumbs = ({
   values,
   includeParamsAsPath = false,
 }: Props) => {
-  const { Breadcrumbs, Breadcrumb } = styles;
+  const { Breadcrumbs, Breadcrumb, Seperator, Active } = styles;
 
   const params = useParams();
   const path = useRouter();
@@ -83,10 +83,14 @@ const Breadcrumbs = ({
                 <Link href={url}>
                   {values?.length ? values?.[index] : segment}
                 </Link>
-                <ChevronRightIcon />
+                <div className={Seperator}>
+                  <ChevronRightIcon />
+                </div>
               </>
             ) : (
-              <>{values?.length ? values?.[index] : segment}</>
+              <span className={Active}>
+                {values?.length ? values?.[index] : segment}
+              </span>
             )}
           </div>
         );

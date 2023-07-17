@@ -25,6 +25,7 @@ div#__next > div
   padding: 20px
   width: 100%
   display: flex
+  flex-direction: column
 
 .FullWidth
   width: 100%
@@ -43,11 +44,12 @@ div#__next > div
   font-size: 14px
   min-height: 40px
   padding: 1rem 2rem
-  margin: 1rem 3rem 1rem 1rem
   background: white
   box-sizing: initial
   display: flex
   justify-content: center
+  &:not(:last-child)
+    margin: 1rem 3rem 1rem 1rem
 
 .MuiInput-root:before
   border-bottom: 0!important

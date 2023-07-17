@@ -10,7 +10,7 @@ const HeaderActions = ({ title, children }: PropsWithChildren<Props>) => {
 
   return (
     <div className={HeaderActions}>
-      <span className={Title}>{title}</span>
+      {title && <span className={Title}>{title}</span>}
       {children}
     </div>
   );

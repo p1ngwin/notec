@@ -12,6 +12,8 @@ import { capitalize } from "@/utils/helpers/utils";
 import { useRouter } from "next/router";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import moment from "moment";
+import HeaderActions from "@/components/HeaderActions";
+import { Button } from "@mui/material";
 
 const Appointments = () => {
   const { AppointmentsView, EventCell, Service } = styles;
@@ -65,10 +67,16 @@ const Appointments = () => {
       fullWidth
       className={AppointmentsView}
     >
-      <Breadcrumbs depth={2} />
+      <HeaderActions>
+        <Breadcrumbs depth={1} values={["Naročila"]}/>
+        <Button onClick={() => router.push("/appointments/add")}>
+          Novo naročilo
+        </Button>
+      </HeaderActions>
       <FullCalendar
         ref={calendarRef}
         eventClassNames={EventCell}
+        aspectRatio={2.5}
         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
         initialView="dayGridMonth"
         events={
@@ -92,9 +100,12 @@ const Appointments = () => {
         selectable
         dateClick={handleDateClick}
         headerToolbar={{
-          left: "prev,next",
-          center: "title",
-          right: "timeGridDay,timeGridWeek,dayGridMonth",
+          right: "prev,next,timeGridDay,timeGridWeek,dayGridMonth",
+        }}
+        buttonText={{
+          dayGridMonth: "Mesec",
+          timeGridWeek: "Teden",
+          timeGridDay: "Dan",
         }}
         slotLabelFormat={[
           {
@@ -106,6 +117,9 @@ const Appointments = () => {
             hourCycle: "h24",
           },
         ]}
+        slotMinTime={"05:00"}
+        slotMaxTime={"21:00"}
+        allDaySlot={false}
         // Ugly solution for displaying 00:00 instead of 24:00
         slotLabelContent={(arg) => {
           if (arg.text === "24:00") return "00:00";

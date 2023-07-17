@@ -30,8 +30,7 @@ const AddPersonForm = () => {
 
   return (
     <div className={FormContainer}>
-      <h2>Person form</h2>
-
+      <h2>Stranka</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={FormGroup}>
           <Person />
