@@ -3,11 +3,13 @@
 .FormContainer
     width: 100%
     margin: 0 auto
-    padding: 20px
     background-color: #f4f4f4
     border-radius: 5px
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
     color: #333
+
+    .Form
+        padding: 2.5rem
 
     h2
         text-align: center
@@ -37,11 +39,13 @@
         font-size: 14px
         min-height: 40px
         padding: 1rem 2rem
-        margin: 1rem 3rem 1rem 1rem
         background: white
         box-sizing: initial
         &::placeholder
             font-size: 1rem
+
+        &:not(:last-child)
+            margin: 1rem 3rem 1rem 1rem
 
     .FormButton
         background-color: #007bff
@@ -59,7 +63,6 @@
             text-transform: uppercase
             font-weight: normal
             width: 100%
-            margin: 1rem
 
     .FormMessage
         padding: 10px

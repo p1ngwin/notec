@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import styles from "./styles.module.sass";
 import {
@@ -8,23 +8,17 @@ import {
   QueryBuilder,
 } from "@mui/icons-material";
 import { postData } from "@/utils/api/post";
-import {
-  createAppointmentUrl,
-  personsUrl,
-  servicesUrl,
-} from "@/utils/api/urls";
+import { createAppointmentUrl } from "@/utils/api/urls";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { MenuItem, Select } from "@mui/material";
-import { ParsedUrlQuery } from "querystring";
-import { fetchData } from "@/utils/api/fetch";
 import { IPerson } from "@/types/Person";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import moment from "moment";
 import { IService } from "@/types/Service";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import { QueryProps } from "@/types/general";
 
 type FormProps = {
   person_id: string;
@@ -33,43 +27,27 @@ type FormProps = {
   service_id: string;
 };
 
-interface QueryProps extends ParsedUrlQuery {
-  [key: string]: string;
-}
+type Props = {
+  persons: IPerson[];
+  services: IService[];
+};
 
-const CreateAppointmentForm = () => {
+const CreateAppointmentForm = ({ persons, services }: Props) => {
   const router = useRouter();
 
   const query = router.query as QueryProps;
 
-  const { FormGroup, FormContainer, FormInput, FormButton } = styles;
-
-  const [currentPersons, setPersons] = useState<IPerson[]>();
-  const [currentServices, setServices] = useState<IService[]>();
+  const { FormGroup, FormContainer, FormInput, FormButton, Form } = styles;
 
   const { control, handleSubmit, setValue } = useForm<FormProps>();
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
-    console.log(data);
     const response = await postData(createAppointmentUrl(), data);
     if (response?.ok) {
-      console.log(await response.json());
       toast.success("Person appointment successfully created");
       router.push("/appointments");
     } else return toast.error("Napaka!");
   };
-
-  useEffect(() => {
-    (async () => {
-      const persons = await fetchData(personsUrl());
-      persons && setPersons(persons);
-    })();
-
-    (async () => {
-      const services = await fetchData(servicesUrl());
-      services && setServices(services);
-    })();
-  }, []);
 
   useEffect(() => {
     query.time &&
@@ -82,9 +60,10 @@ const CreateAppointmentForm = () => {
 
   return (
     <div className={FormContainer}>
-      <Breadcrumbs depth={2} />
-
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className={Form}
+      >
         <div className={FormGroup}>
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <Controller
@@ -102,7 +81,12 @@ const CreateAppointmentForm = () => {
                       field.onChange(date ? date.format("YYYY-MM-DD") : "");
                     }}
                     format="DD.MM.YYYY"
-                    slotProps={{ textField: { variant: "standard" } }}
+                    slotProps={{
+                      textField: {
+                        variant: "standard",
+                        placeholder: moment().format("DD.MM.YYYY"),
+                      },
+                    }}
                   />
                 </>
               )}
@@ -121,9 +105,11 @@ const CreateAppointmentForm = () => {
                       field.onChange(time ? time.format("HH:mm") : "");
                     }}
                     slotProps={{
-                      textField: { variant: "standard" },
+                      textField: {
+                        variant: "standard",
+                        placeholder: moment().format("HH:mm"),
+                      },
                     }}
-                    format={"HH:mm"}
                     views={["hours", "minutes"]}
                     ampm={false}
                   />
@@ -147,8 +133,8 @@ const CreateAppointmentForm = () => {
                 placeholder="Storitev"
                 onChange={(event) => field.onChange(event.target.value)}
               >
-                {currentServices?.length &&
-                  currentServices.map((service: IService, index) => (
+                {services?.length &&
+                  services.map((service: IService, index) => (
                     <MenuItem
                       key={index}
                       value={service?._id}
@@ -172,8 +158,8 @@ const CreateAppointmentForm = () => {
                 defaultValue=""
                 onChange={(event) => field.onChange(event.target.value)}
               >
-                {currentPersons?.length &&
-                  currentPersons.map((person: IPerson, index) => (
+                {persons?.length &&
+                  persons.map((person: IPerson, index) => (
                     <MenuItem
                       key={index}
                       value={person?._id}
