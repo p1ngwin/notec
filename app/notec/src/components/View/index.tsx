@@ -5,13 +5,17 @@ import { ReactNode } from "react";
 type Props = {
   className?: string | string[];
   children: ReactNode;
-  FullWidth?: boolean;
+  fullWidth?: boolean;
 };
 
-const View = ({ className, children, FullWidth = false }: Props) => {
-  const { View, fullWidth } = styles;
+const View = ({ className, children, fullWidth = false }: Props) => {
+  const { View } = styles;
 
-  return <div className={`${View} ${FullWidth && fullWidth}`}>{children}</div>;
+  const viewCn = classNames([View], className, {
+    FullWidth: Boolean(fullWidth),
+  });
+
+  return <div className={viewCn}>{children}</div>;
 };
 
 export default View;

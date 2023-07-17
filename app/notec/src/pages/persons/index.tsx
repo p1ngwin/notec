@@ -1,14 +1,14 @@
 import Table, { Action, Column } from "@/components/DataTable";
 import HeaderActions from "@/components/HeaderActions";
 import View from "@/components/View";
-import { IPerson } from "@/types/person/Person";
+import { IPerson } from "@/types/Person";
 import { deleteData } from "@/utils/api/delete";
 import { fetchData } from "@/utils/api/fetch";
 import { deletePersonUrl, personsUrl } from "@/utils/api/urls";
 import { Button, CircularProgress } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
-import toast, { ToastBar, Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const Appointments = () => {
   const router = useRouter();
@@ -69,7 +69,7 @@ const Appointments = () => {
   }, [router]);
 
   return (
-    <View FullWidth>
+    <View fullWidth>
       <Toaster />
       <HeaderActions title="Stranke">
         <Button onClick={() => router.push("/persons/add")}>ADD</Button>

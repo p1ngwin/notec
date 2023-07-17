@@ -1,5 +1,4 @@
 import { PropsWithChildren } from "react";
-import { Button } from "@mui/material";
 import styles from "./styles.module.sass";
 
 type Props = {

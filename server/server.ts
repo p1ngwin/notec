@@ -1,9 +1,11 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { appointmetsUrl, personsUrl } from "./utils/api/apiUrls";
+import { appointmetsUrl, personsUrl, serviceUrl } from "./utils/api/apiUrls";
 import personsRoutes from "./routes/persons/routes";
 import appointmentsRoutes from "./routes/appointments/routes";
+import serviceRoutes from "./routes/services/routes";
+
 dotenv.config();
 
 const app: Express = express();
@@ -33,6 +35,8 @@ app.use(`${personsUrl()}`, personsRoutes);
 
 // Person routes
 app.use(`${appointmetsUrl()}`, appointmentsRoutes);
+
+app.use(`${serviceUrl()}`, serviceRoutes);
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

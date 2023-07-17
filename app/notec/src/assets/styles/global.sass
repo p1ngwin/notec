@@ -1,3 +1,6 @@
+@import ./_constants
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap')
+
 body
   margin: 0
 
@@ -22,3 +25,42 @@ div#__next > div
   padding: 20px
   width: 100%
   display: flex
+
+.FullWidth
+  width: 100%
+  min-width: unset!important
+  max-width: unset!important
+
+.MuiSelect-select
+  padding: 0
+  min-height: 40px!important
+
+.MuiFormControl-root
+  font-family: "Nunito Sans"
+  width: 100%
+  border: 1px solid #ccc
+  border-radius: 3px
+  font-size: 14px
+  min-height: 40px
+  padding: 1rem 2rem
+  margin: 1rem 3rem 1rem 1rem
+  background: white
+  box-sizing: initial
+  display: flex
+  justify-content: center
+
+.MuiInput-root:before
+  border-bottom: 0!important
+  content: none
+
+.MuiMultiSectionDigitalClockSection-root
+  width: 70px!important
+
+.MuiInputBase-input
+  display: flex
+  align-items: center
+  font-size: 1.2rem
+  font-weight: 500
+
+.fc-daygrid-event-harness:nth-child(2n) > .fc-event
+  background: $secondary
