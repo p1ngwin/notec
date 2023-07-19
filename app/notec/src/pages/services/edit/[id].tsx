@@ -5,7 +5,7 @@ import { servicesUrl } from "@/utils/api/urls";
 import { fetchData } from "@/utils/api/fetch";
 import { IService } from "@/types/Service";
 
-export default function Page() {
+const ServicesEdit = () => {
   const { query } = useRouter();
 
   const serviceId = query.id as string;
@@ -14,8 +14,8 @@ export default function Page() {
 
   useEffect(() => {
     (async () => {
-      const persons = await fetchData(servicesUrl(serviceId));
-      persons && setPerson(persons);
+      const services = await fetchData(servicesUrl(serviceId));
+      services && setPerson(services);
     })();
   }, [serviceId]);
 
@@ -30,4 +30,6 @@ export default function Page() {
       </div>
     </View>
   );
-}
+};
+
+export default ServicesEdit;

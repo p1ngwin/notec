@@ -2,7 +2,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import HeaderActions from "@/components/HeaderActions";
 import AddServiceForm from "@/forms/Services/Add";
 
-const AddPerson = () => {
+const AddService = () => {
   return (
     <>
       <HeaderActions>
@@ -15,4 +15,4 @@ const AddPerson = () => {
     </>
   );
 };
-export default AddPerson;
+export default AddService;

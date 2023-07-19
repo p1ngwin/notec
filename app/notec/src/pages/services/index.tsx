@@ -17,7 +17,7 @@ const Services = () => {
   const [curretServices, setServices] = useState<IService[]>([]);
 
   const handleDeleteService = async (id: string) => {
-    if (!id) return;
+    if (!id) return toast.error("Missing person id.");
 
     toast.promise(
       deleteData(servicesDeleteUrl(id), {
@@ -57,7 +57,10 @@ const Services = () => {
 
   const rowActions = useMemo<Action<IService>[]>(() => {
     return [
-      { label: "Edit", onClick: ({ _id }) => router.push(`services/edit/${_id}`) },
+      {
+        label: "Edit",
+        onClick: ({ _id }) => router.push(`services/edit/${_id}`),
+      },
       { label: "Delete", onClick: ({ _id }) => handleDeleteService(_id) },
     ];
   }, [router]);
@@ -69,7 +72,9 @@ const Services = () => {
           depth={1}
           values={["Cenik"]}
         />
-        <Button onClick={() => router.push("/services/add")}>Dodaj storitev</Button>
+        <Button onClick={() => router.push("/services/add")}>
+          Dodaj storitev
+        </Button>
       </HeaderActions>
       <Table
         showRowCount
