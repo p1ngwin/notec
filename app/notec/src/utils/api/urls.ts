@@ -7,11 +7,12 @@ export const createPersonUrl = () => `${ROOT}/persons/add`;
 export const deletePersonUrl = () => `${ROOT}/persons/delete`;
 
 export const appointmentsUrl = (query?: URLSearchParams) =>
-  `${ROOT}/appointments/all/${query ? query : ""}`;
+  `${ROOT}/appointments/all/?${query ? query : ""}`;
 
 export const createAppointmentUrl = () => `${ROOT}/appointments/create`;
 
-export const servicesUrl = () => `${ROOT}/services/all`;
+export const servicesUrl = (id?: string) =>
+  `${ROOT}/services/${id ? id : "all"}`;
 
 export const servicesCreateUrl = () => `${ROOT}/services/create`;
 

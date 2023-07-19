@@ -8,6 +8,9 @@ import { Toaster } from "react-hot-toast";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import classNames from "classnames";
+import HeaderMobile from "@/components/layout/mobile/Header";
+import MobileMenu from "@/components/layout/mobile/Menu";
+import { SidebarProvider } from "@/context/mobileSidebar/SidebarProvider";
 
 const font = Nunito_Sans({
   subsets: ["latin"],
@@ -29,15 +32,17 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <ThemeProvider theme={theme}>
         <div className={baseClasses}>
-          <Header />
-          <Toaster />
-          <div className="AppContentWrapper">
-            <SideMenuLayout />
-            <div className="PageContentWrapper">
-              <Component {...pageProps} />
+          <SidebarProvider>
+            {isMobile ? <HeaderMobile /> : <Header />}
+            <Toaster />
+            <div className="AppContentWrapper">
+              {!isMobile ? <SideMenuLayout /> : <MobileMenu />}
+              <div className="PageContentWrapper">
+                <Component {...pageProps} />
+              </div>
             </div>
-          </div>
-          <Footer />
+            <Footer />
+          </SidebarProvider>
         </div>
       </ThemeProvider>
     </>

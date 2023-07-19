@@ -1,8 +1,22 @@
 @import ./_constants
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap')
 
+// Media query for tablets
+@media screen and (max-width: 1024px)
+  html
+    font-size: 14px // Adjusted font size for tablets
+
+// Media query for mobile devices
+@media screen and (max-width: 768px)
+  html
+    font-size: 14px // Adjusted font size for mobile devices
+
 body
   margin: 0
+
+.HeaderMobile
+  svg
+    fill: $white
 
 div#__next > div
   margin: 0
@@ -66,3 +80,13 @@ div#__next > div
 
 .fc-daygrid-event-harness:nth-child(2n) > .fc-event
   background: $secondary
+
+.react-datepicker
+  font-family: 'Nunito Sans'!important
+
+  .react-datepicker__day--selected
+    background-color: $primary
+
+  .react-datepicker__day:hover
+    background-color: $secondary
+    color: $white

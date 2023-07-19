@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import styles from "./styles.module.sass";
 import { ReactNode } from "react";
+import { Grid } from "@mui/material";
 
 type Props = {
   className?: string | string[];
@@ -15,7 +16,7 @@ const View = ({ className, children, fullWidth = false }: Props) => {
     FullWidth: Boolean(fullWidth),
   });
 
-  return <div className={viewCn}>{children}</div>;
+  return <Grid className={viewCn}>{children}</Grid>;
 };
 
 export default View;

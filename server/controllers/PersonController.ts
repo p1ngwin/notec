@@ -9,7 +9,6 @@ const PersonController = {
       const persons: IPerson[] = await PersonModel.find();
       return res.status(200).json(persons);
     } catch (error) {
-      console.log(error);
       res.status(500).json({ error: "Error getting data" });
     }
   },
@@ -26,7 +25,6 @@ const PersonController = {
 
       return res.status(404).json({ error: "Person not found!" });
     } catch (error) {
-      console.log("Error retreiving person", error);
       res.status(500).json({ error: "Error retreiving person" });
     }
   },
@@ -52,9 +50,7 @@ const PersonController = {
 
       await person.save();
       res.status(201).json(person);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   },
 
   updatePerson: async (req: Request, res: Response) => {
@@ -83,7 +79,6 @@ const PersonController = {
 
       res.json(updatedPerson);
     } catch (error) {
-      console.log("Error updating person", error);
       res.status(500).json({ error: "Error updating person" });
     }
   },
@@ -102,7 +97,6 @@ const PersonController = {
 
       res.json(deletedPerson);
     } catch (error) {
-      console.log("Error deleting person: ", error);
       res.status(500).json({ error: "Error deleting person" });
     }
   },

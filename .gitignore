@@ -13,11 +13,12 @@
 .env
 .env.local
 
-# IDE and editor files
-/.vscode
+# IDE and editor files3
+./vscode
 /.idea
 *.sublime-*
 *.swp
 .DS_Store
 
 dist/
+
