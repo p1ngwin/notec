@@ -64,7 +64,7 @@ const Appointments = () => {
 
   const rowActions = useMemo<Action<IPerson>[]>(() => {
     return [
-      { label: "Edit", onClick: ({ _id }) => router.push(`persons/${_id}`) },
+      { label: "Edit", onClick: ({ _id }) => router.push(`persons/edit/${_id}`) },
       { label: "Delete", onClick: ({ _id }) => handleDeletePerson(_id) },
     ];
   }, [router]);
@@ -73,7 +73,7 @@ const Appointments = () => {
     <View fullWidth>
       <HeaderActions>
         <Breadcrumbs depth={1} values={["Stranke"]}/>
-        <Button onClick={() => router.push("/persons/add")}>ADD</Button>
+        <Button onClick={() => router.push("/persons/add")}>Dodaj stranko</Button>
       </HeaderActions>
       {isLoading ? (
         <CircularProgress />

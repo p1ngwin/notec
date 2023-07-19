@@ -3,13 +3,11 @@
 .FormContainer
     width: 100%
     margin: 0 auto
+    padding: 20px
     background-color: #f4f4f4
     border-radius: 5px
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
     color: #333
-
-    .Form
-        padding: 2.5rem
 
     h2
         text-align: center
@@ -21,8 +19,6 @@
         place-items: center
 
         svg
-            height: 40px,
-            width: 40px
             margin-right: 1rem
             path
                 fill: $primary
@@ -33,37 +29,16 @@
         font-weight: bold
 
     .FormInput
+        background: $white
         width: 100%
-        cursor: pointer
         border: 1px solid #ccc
         border-radius: 3px
         font-size: 14px
         min-height: 40px
         padding: 1rem 2rem
-        background: white
-        box-sizing: initial
-
+        margin: 1rem
         &::placeholder
             font-size: 1rem
-
-        &:not(:last-child)
-            margin: 1rem 3rem 1rem 1rem
-
-        & > div
-            width: 100%
-
-        & input[type="text"]
-            min-height: 40px
-            width: 100%
-            border: none
-            padding: initial
-            cursor: inherit
-            font-size: 1.2rem
-            font-family: inherit
-
-            &:focus-visible
-                outline: 0
-                padding: 0
 
     .FormButton
         background-color: #007bff
@@ -81,6 +56,7 @@
             text-transform: uppercase
             font-weight: normal
             width: 100%
+            margin: 1rem
 
     .FormMessage
         padding: 10px

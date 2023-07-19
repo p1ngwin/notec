@@ -1,14 +1,13 @@
-import mongoose, { Aggregate, FilterQuery, PipelineStage } from "mongoose";
+import { FilterQuery } from "mongoose";
 import { AppointmentModel } from "../models/Appointment";
 import { PersonModel } from "../models/Person";
 import { IAppointment } from "../types/appointment/types";
 import { Request, Response } from "express";
-import { dateType, idType } from "../utils/helpers/queryTypeHelpers";
-import moment from "moment";
+import { dateType } from "../utils/helpers/queryTypeHelpers";
 
 const AppointmentController = {
   getAppointments: async (req: Request, res: Response) => {
-    const { date } = req.body ?? {};
+    const { date } = req.query ?? req.body ?? {};
 
     const pipeline: FilterQuery<IAppointment[]> = [
       {
@@ -45,6 +44,11 @@ const AppointmentController = {
           email: "$person.email",
         },
       },
+      {
+        $sort: {
+          date: 1,
+        },
+      },
     ];
 
     if (date) {
@@ -71,8 +75,6 @@ const AppointmentController = {
   createAppointment: async (req: Request, res: Response) => {
     const { person_id, date, time, service_id } = req.body ?? {};
 
-    console.log(req.body);
-
     if (!person_id)
       return res.status(400).json({ error: "Missing person id!" });
 
@@ -84,14 +86,10 @@ const AppointmentController = {
         return res.status(404).json({ error: "Person not found!" });
       }
 
-      const formattedTime = new Date(
-        `${moment().format("YYYY-MM-DD")}T${time}:00Z`
-      );
-
       const appointmentData: IAppointment = {
         person_id,
-        date: moment(date, "YYYY-MM-DD").toDate(),
-        time: formattedTime,
+        date: date,
+        time: time,
         service_id,
       };
 
@@ -99,7 +97,6 @@ const AppointmentController = {
 
       await appointment.save();
       res.status(201).json(appointment);
-      console.log("success");
     } catch (error) {
       res.status(500).json({ error: "Error creating appointment" });
     }
@@ -130,7 +127,6 @@ const AppointmentController = {
 
       res.json(updatedAppointment);
     } catch (error) {
-      console.log("Error updating appointment", error);
       res.status(500).json({ error: "Error updating appointment" });
     }
   },
@@ -146,7 +142,6 @@ const AppointmentController = {
 
       res.json(deletedAppointment);
     } catch (error) {
-      console.log("Error deleting appointment: ", error);
       res.status(500).json({ error: "Error deleting appointment" });
     }
   },

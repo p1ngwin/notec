@@ -1,6 +1,8 @@
 export type IService = {
-  _id?: string;
+  _id: string;
+  id: string;
   service: SERVICE_TYPES;
+  price: number;
 };
 
 export enum SERVICE_TYPES {

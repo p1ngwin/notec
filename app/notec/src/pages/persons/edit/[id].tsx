@@ -1,6 +1,6 @@
 import View from "@/components/View";
 import { useRouter } from "next/router";
-import styles from "./styles.module.sass";
+import styles from "../styles.module.sass";
 import PersonCard from "@/components/Profile/PersonCard";
 import { useEffect, useState } from "react";
 import { personsUrl } from "@/utils/api/urls";
