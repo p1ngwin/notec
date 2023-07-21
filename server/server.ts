@@ -10,7 +10,12 @@ dotenv.config();
 
 const app: Express = express();
 app.use(express.json());
-const port = process.env.SERVER_PORT;
+
+const defaultPort = process.env.SERVER_PORT
+  ? parseInt(process.env.SERVER_PORT, 10)
+  : 3000;
+const hostname = process.env.HOST || "localhost";
+const port = hostname !== "localhost" ? defaultPort : 8000;
 
 const uri = String(process.env.DATABASE_CONNECTION);
 
@@ -38,6 +43,6 @@ app.use(`${appointmetsUrl()}`, appointmentsRoutes);
 
 app.use(`${serviceUrl()}`, serviceRoutes);
 
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+app.listen(port, hostname, () => {
+  console.log(`Server is running at ${hostname}:${port}`);
 });
