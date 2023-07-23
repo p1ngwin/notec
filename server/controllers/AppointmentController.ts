@@ -7,6 +7,7 @@ import { dateType } from "../utils/helpers/queryTypeHelpers";
 
 const AppointmentController = {
   getAppointments: async (req: Request, res: Response) => {
+    res.send("Hello from appointments");
     const { date } = req.query ?? req.body ?? {};
 
     const pipeline: FilterQuery<IAppointment[]> = [

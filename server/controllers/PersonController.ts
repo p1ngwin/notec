@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 
 const PersonController = {
   getAllPersons: async (_: any, res: Response) => {
+    res.send("Hello from persons");
     try {
       const persons: IPerson[] = await PersonModel.find();
       return res.status(200).json(persons);
@@ -30,6 +31,8 @@ const PersonController = {
   },
 
   createPerson: async (req: Request, res: Response) => {
+    res.status(201);
+
     const { first_name, last_name, email, phone_number } = req.body ?? {};
 
     if (!first_name || !last_name) {

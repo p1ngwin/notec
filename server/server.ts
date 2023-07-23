@@ -43,6 +43,6 @@ app.use(`${appointmetsUrl()}`, appointmentsRoutes);
 
 app.use(`${serviceUrl()}`, serviceRoutes);
 
-app.listen(port, hostname, () => {
+app.listen(3000, () => {
   console.log(`Server is running at ${hostname}:${port}`);
 });

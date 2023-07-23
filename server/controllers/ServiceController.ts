@@ -5,6 +5,7 @@ import mongoose, { isValidObjectId } from "mongoose";
 
 const ServiceController = {
   getServices: async (req: Request, res: Response) => {
+    res.send("Hello from services");
     try {
       const services: IService[] = await ServiceModel.find();
 
