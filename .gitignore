@@ -12,6 +12,7 @@
 # Environment variables
 .env
 .env.local
+.vscode
 
 # IDE and editor files3
 ./vscode
