@@ -1,10 +1,15 @@
 {
-  "app": "server.ts",
-  "framework": "express",
-  "build": {
-    "target": "node16"
-  },
-  "scripts": {
-    "start": "node server.ts"
-  }
+  "version": 2,
+  "builds": [
+    {
+      "src": "./server.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/.*",
+      "dest": "server.ts"
+    }
+  ]
 }
