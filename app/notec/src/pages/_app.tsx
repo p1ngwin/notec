@@ -1,4 +1,4 @@
-import AppProps from "next/app";
+import type { AppProps } from "next/app";
 import "@/assets/styles/global.sass";
 import Header from "@/components/layout/Header";
 import SideMenuLayout from "@/components/layout/SideMenu";
@@ -11,8 +11,6 @@ import classNames from "classnames";
 import HeaderMobile from "@/components/layout/mobile/Header";
 import MobileMenu from "@/components/layout/mobile/Menu";
 import { SidebarProvider } from "@/context/mobileSidebar/SidebarProvider";
-import dotenv from "dotenv";
-dotenv.config();
 
 const font = Nunito_Sans({
   subsets: ["latin"],
