@@ -13,9 +13,9 @@ app.use(express.json());
 
 const defaultPort = process.env.SERVER_PORT
   ? parseInt(process.env.SERVER_PORT, 10)
-  : 3000;
+  : 8000;
 const env = process.env.ENVIRONMENT;
-const port = env !== "local" ? defaultPort : 3000;
+const port = env !== "local" ? defaultPort : 8000;
 
 const uri = String(process.env.DATABASE_CONNECTION);
 

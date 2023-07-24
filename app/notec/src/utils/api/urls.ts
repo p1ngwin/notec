@@ -1,4 +1,7 @@
-const ROOT = "http://localhost:8000";
+const ROOT =
+  process.env.ENVIRONMENT === "local"
+    ? "http://localhost:8000"
+    : "https://notec-server.vercel.app";
 
 export const personsUrl = (id?: string) => `${ROOT}/persons/${id ? id : "all"}`;
 
