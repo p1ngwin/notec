@@ -13,9 +13,9 @@ app.use(express.json());
 
 const defaultPort = process.env.SERVER_PORT
   ? parseInt(process.env.SERVER_PORT, 10)
-  : 3000;
-const hostname = process.env.HOST || "localhost";
-const port = hostname !== "localhost" ? defaultPort : 8000;
+  : 80;
+const env = process.env.ENVIRONMENT;
+const port = env !== "local" ? defaultPort : 8000;
 
 const uri = String(process.env.DATABASE_CONNECTION);
 
@@ -43,6 +43,6 @@ app.use(`${appointmetsUrl()}`, appointmentsRoutes);
 
 app.use(`${serviceUrl()}`, serviceRoutes);
 
-app.listen(port, hostname, () => {
-  console.log(`Server is running at ${hostname}:${port}`);
+app.listen(port, () => {
+  console.log(`Server is running at port:${port}`);
 });
