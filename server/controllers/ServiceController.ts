@@ -34,7 +34,7 @@ const ServiceController = {
   },
 
   createService: async (req: Request, res: Response) => {
-    const { service, price } = req.body ?? {};
+    const { service, price, user_id } = req.body ?? {};
 
     if (!service || !price)
       return res.status(400).json({ error: "Please provide required data" });
@@ -43,6 +43,7 @@ const ServiceController = {
       const serviceData: IService = {
         service,
         price,
+        user_id,
       };
 
       const newService = new ServiceModel(serviceData);

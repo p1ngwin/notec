@@ -1,6 +1,6 @@
 import mongoose, { isValidObjectId } from "mongoose";
 import { PersonModel } from "../models/Person";
-import { IPerson, IPersonModel } from "../types/person/types";
+import { IPerson } from "../types/person/types";
 import { Request, Response } from "express";
 
 const PersonController = {
@@ -30,7 +30,8 @@ const PersonController = {
   },
 
   createPerson: async (req: Request, res: Response) => {
-    const { first_name, last_name, email, phone_number } = req.body ?? {};
+    const { first_name, last_name, email, phone_number, user_id } =
+      req.body ?? {};
 
     if (!first_name || !last_name) {
       return res
@@ -44,6 +45,7 @@ const PersonController = {
         last_name,
         email,
         phone_number,
+        user_id,
       };
 
       const person = new PersonModel(personData);
@@ -54,7 +56,8 @@ const PersonController = {
   },
 
   updatePerson: async (req: Request, res: Response) => {
-    const { id, first_name, last_name, phone_number, email } = req.body;
+    const { id, first_name, last_name, phone_number, email, user_id } =
+      req.body;
 
     try {
       const personData: IPerson = {
@@ -62,6 +65,7 @@ const PersonController = {
         last_name,
         email,
         phone_number,
+        user_id,
       };
 
       const filter = { _id: id };

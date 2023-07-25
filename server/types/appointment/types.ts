@@ -6,7 +6,8 @@ export interface IAppointment {
   time: Date;
   service_id: mongoose.Schema.Types.ObjectId;
   person_id: mongoose.Schema.Types.ObjectId;
-  payment_date?: Date
+  payment_date?: Date;
+  user_id: mongoose.Schema.Types.ObjectId;
 }
 
 export enum HAIR_TYPE {
@@ -19,5 +20,5 @@ export enum SERVICE_TYPES {
   CUT = "CUT",
   COLOR = "COLOR",
 }
-//brisanje naročila
+// TODO: brisanje naročila
 //urejanje
