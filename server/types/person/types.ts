@@ -1,4 +1,4 @@
-import { Document, Model } from "mongoose";
+import mongoose from "mongoose";
 
 export interface IPerson {
   id?: string;
@@ -6,6 +6,5 @@ export interface IPerson {
   last_name: string;
   phone_number?: string;
   email?: string;
+  user_id: mongoose.Schema.Types.ObjectId;
 }
-
-export interface IPersonModel extends Model<Document, IPerson> { }

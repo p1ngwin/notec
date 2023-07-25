@@ -73,7 +73,7 @@ const AppointmentController = {
     }
   },
   createAppointment: async (req: Request, res: Response) => {
-    const { person_id, date, time, service_id } = req.body ?? {};
+    const { person_id, date, time, service_id, user_id } = req.body ?? {};
 
     if (!person_id)
       return res.status(400).json({ error: "Missing person id!" });
@@ -91,6 +91,7 @@ const AppointmentController = {
         date: date,
         time: time,
         service_id,
+        user_id,
       };
 
       const appointment = new AppointmentModel(appointmentData);
@@ -102,7 +103,7 @@ const AppointmentController = {
     }
   },
   updateAppointment: async (req: Request, res: Response) => {
-    const { id, person_id, date, time, service_id } = req.body;
+    const { id, person_id, date, time, service_id, user_id } = req.body;
     try {
       const appointmentData: IAppointment = {
         id,
@@ -110,6 +111,7 @@ const AppointmentController = {
         date,
         time,
         service_id,
+        user_id,
       };
 
       const filter = { _id: id };
