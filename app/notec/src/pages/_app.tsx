@@ -11,6 +11,7 @@ import classNames from "classnames";
 import HeaderMobile from "@/components/layout/mobile/Header";
 import MobileMenu from "@/components/layout/mobile/Menu";
 import { SidebarProvider } from "@/context/mobileSidebar/SidebarProvider";
+import { AuthProvider } from "@/auth/useAuth";
 
 const font = Nunito_Sans({
   subsets: ["latin"],
@@ -30,21 +31,24 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <div className={baseClasses}>
-          <SidebarProvider>
-            {isMobile ? <HeaderMobile /> : <Header />}
-            <Toaster />
-            <div className="AppContentWrapper">
-              {!isMobile ? <SideMenuLayout /> : <MobileMenu />}
-              <div className="PageContentWrapper">
-                <Component {...pageProps} />
+      <AuthProvider>
+        <ThemeProvider theme={theme}>
+          <div className={baseClasses}>
+            <SidebarProvider>
+              {isMobile ? <HeaderMobile /> : <Header />}
+              <Toaster />
+
+              <div className="AppContentWrapper">
+                {!isMobile ? <SideMenuLayout /> : <MobileMenu />}
+                <div className="PageContentWrapper">
+                  <Component {...pageProps} />
+                </div>
               </div>
-            </div>
-            <Footer />
-          </SidebarProvider>
-        </div>
-      </ThemeProvider>
+              <Footer />
+            </SidebarProvider>
+          </div>
+        </ThemeProvider>
+      </AuthProvider>
     </>
   );
 }
