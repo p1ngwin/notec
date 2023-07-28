@@ -1,28 +1,26 @@
-import { signInUserWithEmail } from "@/auth/authHelpers";
-import View from "@/components/View";
 import { useUserStore } from "@/stores/useUserStore";
 import {
   Container,
   Box,
   Typography,
   TextField,
-  FormControlLabel,
   Button,
-  Checkbox,
   Grid,
-  Link,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { registerUser } from "@/auth/authHelpers";
+import View from "@/components/View";
 
 type FormProps = {
   email: string;
   password: string;
 };
 
-const Login = () => {
+const Register = () => {
   const router = useRouter();
+
   const actions = useUserStore();
 
   const { control, handleSubmit } = useForm<FormProps>({
@@ -33,18 +31,16 @@ const Login = () => {
   });
 
   const onSubmit: SubmitHandler<FormProps> = async ({ email, password }) => {
-    const user = await signInUserWithEmail(email, password);
-    toast.loading("Logging in...", { id: "loading" });
+    const user = await registerUser(email, password);
+    toast.loading("Registering...", { id: "loading" });
     if (user.error) {
-      toast.error(`Error signing in. Error: ${user.error}`);
+      toast.error(`Error registrating user. Error: ${user.error}`);
     }
     if (user) {
       toast.dismiss("loading");
-      toast.success("Successfully logged in.");
+      toast.success("Successfully registered.");
       actions.setUser(user);
       router.push("/");
-    } else {
-      actions.setUser(null);
     }
   };
 
@@ -66,7 +62,7 @@ const Login = () => {
             component="h1"
             variant="h5"
           >
-            Sign in
+            Register new user
           </Typography>
           <Box sx={{ mt: 1 }}>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -87,38 +83,18 @@ const Login = () => {
                   />
                 )}
               />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value="remember"
-                    color="primary"
-                  />
-                }
-                label="Remember me"
-              />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
+                Register
               </Button>
               <Grid container>
-                <Grid
-                  item
-                  xs
-                >
-                  <Link
-                    href="#"
-                    variant="body2"
-                  >
-                    Forgot password?
-                  </Link>
-                </Grid>
                 <Grid item>
-                  <Button onClick={() => router.push("/register")}>
-                    {"Don't have an account? Sign Up"}
+                  <Button onClick={() => router.push("/login")}>
+                    Already registered?
                   </Button>
                 </Grid>
               </Grid>
@@ -130,4 +106,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

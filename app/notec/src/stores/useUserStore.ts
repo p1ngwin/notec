@@ -1,13 +1,15 @@
+import { User } from "firebase/auth";
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 
 interface UserStore {
   isAuthenticated: boolean;
-  user: string | null;
+  user: User | null;
   token?: string | null;
   isLoading: boolean;
   error: string | null;
-  setUser: (user: string | null) => void;
+  setUser: (user: User | null) => void;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 export const useUserStore = create<UserStore>()(
@@ -16,10 +18,16 @@ export const useUserStore = create<UserStore>()(
       isAuthenticated: false,
       token: null,
       user: null,
-      isLoading: false,
+      isLoading: true,
       error: null,
+      _hasHydrated: false,
       setUser: (user) => {
-        set({ isLoading: false, user: user });
+        set({
+          user: user,
+        });
+      },
+      setIsLoading: (isLoading) => {
+        set({ isLoading });
       },
     }),
     {

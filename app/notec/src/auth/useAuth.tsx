@@ -1,25 +1,46 @@
-import React, { PropsWithChildren, createContext } from "react";
-import { initializeFirebase } from "./initFirebase";
-import Login from "@/pages/login";
-import useStore from "@/stores/useStore";
+import React, { PropsWithChildren, createContext, useEffect } from "react";
+import { User, getAuth } from "firebase/auth";
 import { useUserStore } from "@/stores/useUserStore";
-
-initializeFirebase();
+import { useRouter } from "next/router";
+import Register from "@/pages/register";
+import { firebaseConfig } from "./initFirebase";
+import { initializeApp } from "firebase/app";
 
 interface AuthContextProps {
-  user: string | null;
+  user: User | null;
 }
 
 const AuthContext = createContext<AuthContextProps>({
   user: null,
 });
 
-export const AuthProvider = ({ children }: PropsWithChildren<unknown>) => {
-  const user = useStore(useUserStore, (state) => state.user);
+const app = initializeApp(firebaseConfig);
 
-  if (!user) return <Login />;
+export const auth = getAuth(app);
+
+export const AuthProvider = ({ children }: PropsWithChildren<unknown>) => {
+  const router = useRouter();
+
+  const user = useUserStore((state) => state.user);
+  const setIsLoading = useUserStore((state) => state.setIsLoading);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      useUserStore.setState({ user });
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [setIsLoading]);
+
+  if (router.pathname === "/register") return <Register />;
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <>
+      <AuthContext.Provider value={{ user: user || null }}>
+        {children}
+      </AuthContext.Provider>
+    </>
   );
 };
