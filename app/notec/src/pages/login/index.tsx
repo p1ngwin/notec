@@ -6,11 +6,8 @@ import {
   Box,
   Typography,
   TextField,
-  FormControlLabel,
   Button,
-  Checkbox,
   Grid,
-  Link,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -33,18 +30,18 @@ const Login = () => {
   });
 
   const onSubmit: SubmitHandler<FormProps> = async ({ email, password }) => {
-    const user = await signInUserWithEmail(email, password);
-    toast.loading("Logging in...", { id: "loading" });
-    if (user.error) {
-      toast.error(`Error signing in. Error: ${user.error}`);
+    const result = await signInUserWithEmail(email, password);
+
+    const { error, user } = result;
+
+    if (error) {
+      toast.error(`Error signing in. Error: ${error.message}`);
+      return actions.setUser(null);
     }
     if (user) {
-      toast.dismiss("loading");
-      toast.success("Successfully logged in.");
+      toast.success(`Successfully logged in as ${user.email}.`);
       actions.setUser(user);
-      router.push("/");
-    } else {
-      actions.setUser(null);
+      return router.push("/");
     }
   };
 
@@ -74,7 +71,12 @@ const Login = () => {
                 name="email"
                 control={control}
                 rules={{ required: true }}
-                render={({ field }) => <TextField {...field} />}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    required
+                  />
+                )}
               />
               <Controller
                 name="password"
@@ -84,17 +86,9 @@ const Login = () => {
                   <TextField
                     {...field}
                     type="password"
+                    required
                   />
                 )}
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value="remember"
-                    color="primary"
-                  />
-                }
-                label="Remember me"
               />
               <Button
                 type="submit"
@@ -105,19 +99,11 @@ const Login = () => {
                 Sign In
               </Button>
               <Grid container>
-                <Grid
-                  item
-                  xs
-                >
-                  <Link
-                    href="#"
-                    variant="body2"
-                  >
-                    Forgot password?
-                  </Link>
-                </Grid>
                 <Grid item>
-                  <Button onClick={() => router.push("/register")}>
+                  <Button
+                    sx={{ alignItems: "center" }}
+                    onClick={() => router.push("/register")}
+                  >
                     {"Don't have an account? Sign Up"}
                   </Button>
                 </Grid>

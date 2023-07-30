@@ -31,14 +31,14 @@ const Register = () => {
   });
 
   const onSubmit: SubmitHandler<FormProps> = async ({ email, password }) => {
-    const user = await registerUser(email, password);
-    toast.loading("Registering...", { id: "loading" });
-    if (user.error) {
-      toast.error(`Error registrating user. Error: ${user.error}`);
+    const result = await registerUser(email, password);
+    const { user, error } = result;
+    if (error) {
+      toast.error(`Error registrating user. Error: ${error.message}`);
+      return actions.setUser(null);
     }
     if (user) {
-      toast.dismiss("loading");
-      toast.success("Successfully registered.");
+      toast.success(`Successfully registered as ${user.email}.`);
       actions.setUser(user);
       router.push("/");
     }

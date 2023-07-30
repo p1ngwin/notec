@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Toaster />
+        <Toaster containerClassName="ToastPrimary" />
         <AuthProvider>
           <div className={baseClasses}>
             {isLoading ? (
