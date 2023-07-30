@@ -46,6 +46,9 @@ div#__next > div
   min-width: unset!important
   max-width: unset!important
 
+.MuiTypography-root
+  font-family: "Nunito Sans"
+
 .MuiSelect-select
   padding: 0
   min-height: 40px!important
@@ -57,7 +60,6 @@ div#__next > div
   border-radius: 3px
   font-size: 14px
   min-height: 40px
-  padding: 1rem 2rem
   background: white
   box-sizing: initial
   display: flex
@@ -90,3 +92,20 @@ div#__next > div
   .react-datepicker__day:hover
     background-color: $secondary
     color: $white
+
+.FormPrimary
+  display: flex
+  flex-direction: column
+  width: 100%
+  max-width: 600px
+  font-family: 'Nunito Sans'!important
+
+  & .MuiFormLabel-root
+    font-family: "Nunito Sans"
+  & .MuiFormControl-root
+    margin-bottom: 1rem
+    width: 100%
+
+.ToastPrimary
+  font-family: 'Nunito Sans'
+  font-weight: bold
