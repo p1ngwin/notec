@@ -1,4 +1,4 @@
-import { useUserStore } from "@/stores/useUserStore";
+import { FirebaseError } from "firebase/app";
 import {
   User,
   createUserWithEmailAndPassword,
@@ -6,18 +6,30 @@ import {
   signInWithEmailAndPassword,
   signOut,
   AuthError,
+  sendEmailVerification,
 } from "firebase/auth";
+import toast from "react-hot-toast";
+
+type AuthRegisterResponse = {
+  user?: User;
+  error?: FirebaseError;
+};
+
 export const registerUser = async (
   email: string,
   password: string
-): Promise<AuthSignInReturnProps> => {
-  return createUserWithEmailAndPassword(getAuth(), email, password)
-    .then((user) => {
-      return { user: user.user };
-    })
-    .catch((error: AuthError) => {
-      return { error: error };
-    });
+): Promise<AuthRegisterResponse> => {
+  try {
+    const user = await createUserWithEmailAndPassword(
+      getAuth(),
+      email,
+      password
+    );
+    sendEmailVerification(user.user);
+    return { user: user.user };
+  } catch (error) {
+    return { error: error as FirebaseError };
+  }
 };
 
 type AuthSignInReturnProps = {
@@ -51,18 +63,32 @@ export const getUser = () => {
 };
 
 export const useAuthActions = () => {
-  const setUser = useUserStore((state) => state.setUser);
+  //const setUser = useUserStore((state) => state.setUser);
 
   const handleSignOut = async () => {
     const auth = getAuth();
     try {
       await signOut(auth);
       console.log("Successfully logged out");
-      setUser(null); // Update the user state to null
+      //setUser(null); // Update the user state to null
     } catch (error) {
       console.log("Error signing out", error);
     }
   };
 
   return { handleSignOut };
+};
+
+export const sendEmailVerificationToUser = async (user: User | null) => {
+  if (!user) return { message: { status: "error", code: "user not found" } };
+
+  toast.loading("Sending verification email...", { id: "loading" });
+
+  await sendEmailVerification(user);
+
+  toast.dismiss("loading");
+
+  toast.success("Email verificaiton sent, check your email.");
+
+  return { message: { status: "ok", code: "verification_code_sent" } };
 };

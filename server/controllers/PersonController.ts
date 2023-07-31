@@ -30,7 +30,7 @@ const PersonController = {
   },
 
   createPerson: async (req: Request, res: Response) => {
-    const { first_name, last_name, email, phone_number, user_id } =
+    const { first_name, last_name, email, phone_number, user_uuid } =
       req.body ?? {};
 
     if (!first_name || !last_name) {
@@ -45,18 +45,20 @@ const PersonController = {
         last_name,
         email,
         phone_number,
-        user_id,
+        user_uuid,
       };
 
       const person = new PersonModel(personData);
 
       await person.save();
       res.status(201).json(person);
-    } catch (error) {}
+    } catch (error) {
+      res.status(500).json({ error: "Error creating person" });
+    }
   },
 
   updatePerson: async (req: Request, res: Response) => {
-    const { id, first_name, last_name, phone_number, email, user_id } =
+    const { id, first_name, last_name, phone_number, email, user_uuid } =
       req.body;
 
     try {
@@ -65,7 +67,7 @@ const PersonController = {
         last_name,
         email,
         phone_number,
-        user_id,
+        user_uuid,
       };
 
       const filter = { _id: id };

@@ -20,7 +20,6 @@ export const useUserStore = create<UserStore>()(
       user: null,
       isLoading: true,
       error: null,
-      _hasHydrated: false,
       setUser: (user) => {
         set({
           user: user,

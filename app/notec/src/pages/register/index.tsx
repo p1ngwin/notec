@@ -6,12 +6,14 @@ import {
   TextField,
   Button,
   Grid,
+  Avatar,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { registerUser } from "@/auth/authHelpers";
 import View from "@/components/View";
+import { LockOutlined } from "@mui/icons-material";
 
 type FormProps = {
   email: string;
@@ -32,14 +34,12 @@ const Register = () => {
 
   const onSubmit: SubmitHandler<FormProps> = async ({ email, password }) => {
     const result = await registerUser(email, password);
-    const { user, error } = result;
-    if (error) {
-      toast.error(`Error registrating user. Error: ${error.message}`);
+    if (result.error) {
+      toast.error(`Error registrating user. Error: ${result.error.message}`);
       return actions.setUser(null);
     }
-    if (user) {
-      toast.success(`Successfully registered as ${user.email}.`);
-      actions.setUser(user);
+    if (result.user) {
+      toast.success(`Verification email sent to ${result.user.email}.`);
       router.push("/");
     }
   };
@@ -58,6 +58,9 @@ const Register = () => {
             alignItems: "center",
           }}
         >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LockOutlined />
+          </Avatar>
           <Typography
             component="h1"
             variant="h5"
@@ -70,7 +73,17 @@ const Register = () => {
                 name="email"
                 control={control}
                 rules={{ required: true }}
-                render={({ field }) => <TextField {...field} />}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Email Address"
+                    autoComplete="email"
+                    autoFocus
+                  />
+                )}
               />
               <Controller
                 name="password"
@@ -79,6 +92,11 @@ const Register = () => {
                 render={({ field }) => (
                   <TextField
                     {...field}
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Password"
+                    autoComplete="password"
                     type="password"
                   />
                 )}

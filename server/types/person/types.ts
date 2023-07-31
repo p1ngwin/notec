@@ -6,5 +6,5 @@ export interface IPerson {
   last_name: string;
   phone_number?: string;
   email?: string;
-  user_id: mongoose.Schema.Types.ObjectId;
+  user_uuid: string;
 }
