@@ -5,6 +5,7 @@ import { postData } from "@/utils/api/post";
 import { createPersonUrl } from "@/utils/api/urls";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import { useUserStore } from "@/stores/useUserStore";
 
 type FormProps = {
   first_name: string;
@@ -19,9 +20,10 @@ const AddPersonForm = () => {
   const { FormGroup, FormContainer, FormInput, FormButton } = styles;
 
   const { register, handleSubmit } = useForm<FormProps>();
+  const token = useUserStore((state) => state.token);
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
-    const response = await postData(createPersonUrl(), data);
+    const response = await postData(createPersonUrl(), data, token);
     if (response?.ok) {
       toast.success("Person successfully added!");
       router.push("/persons");

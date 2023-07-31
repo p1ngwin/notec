@@ -7,9 +7,17 @@ import { dateType } from "../utils/helpers/queryTypeHelpers";
 
 const AppointmentController = {
   getAppointments: async (req: Request, res: Response) => {
+    const { uid } = req.user ?? {};
+    if (!uid) return res.status(401).json({ error: "Not authorized" });
+
     const { date } = req.query ?? req.body ?? {};
 
     const pipeline: FilterQuery<IAppointment[]> = [
+      {
+        $match: {
+          uuid: uid,
+        },
+      },
       {
         $lookup: {
           from: "people",
@@ -73,7 +81,9 @@ const AppointmentController = {
     }
   },
   createAppointment: async (req: Request, res: Response) => {
-    const { person_id, date, time, service_id, user_id } = req.body ?? {};
+    const { person_id, date, time, service_id } = req.body ?? {};
+    const { uid } = req.user ?? {};
+    if (!uid) return res.status(401).json({ error: "Not authorized" });
 
     if (!person_id)
       return res.status(400).json({ error: "Missing person id!" });
@@ -91,7 +101,7 @@ const AppointmentController = {
         date: date,
         time: time,
         service_id,
-        user_id,
+        uuid: uid,
       };
 
       const appointment = new AppointmentModel(appointmentData);
@@ -103,7 +113,9 @@ const AppointmentController = {
     }
   },
   updateAppointment: async (req: Request, res: Response) => {
-    const { id, person_id, date, time, service_id, user_id } = req.body;
+    const { uid } = req.user ?? {};
+    if (!uid) return res.status(401).json({ error: "Not authorized" });
+    const { id, person_id, date, time, service_id, uuid } = req.body;
     try {
       const appointmentData: IAppointment = {
         id,
@@ -111,7 +123,7 @@ const AppointmentController = {
         date,
         time,
         service_id,
-        user_id,
+        uuid,
       };
 
       const filter = { _id: id };
@@ -133,6 +145,8 @@ const AppointmentController = {
     }
   },
   deleteAppointment: async (req: Request, res: Response) => {
+    const { uid } = req.user ?? {};
+    if (!uid) return res.status(401).json({ error: "Not authorized" });
     const { id } = req.body;
 
     try {

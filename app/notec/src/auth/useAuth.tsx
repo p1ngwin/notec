@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import Register from "@/pages/register";
 import { firebaseConfig } from "./initFirebase";
 import { initializeApp } from "firebase/app";
+import Login from "@/pages/login";
+import VerifyEmail from "@/pages/verify";
 
 interface AuthContextProps {
   user: User | null;
@@ -27,7 +29,9 @@ export const AuthProvider = ({ children }: PropsWithChildren<unknown>) => {
   useEffect(() => {
     setIsLoading(true);
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      useUserStore.setState({ user });
+      useUserStore.setState({
+        user: user || null,
+      });
       setIsLoading(false);
     });
 
@@ -35,6 +39,10 @@ export const AuthProvider = ({ children }: PropsWithChildren<unknown>) => {
   }, [setIsLoading]);
 
   if (router.pathname === "/register") return <Register />;
+
+  if (!user) return <Login />;
+
+  if (user && !user.emailVerified) return <VerifyEmail />;
 
   return (
     <>

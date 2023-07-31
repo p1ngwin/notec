@@ -5,11 +5,21 @@ import { appointmetsUrl, personsUrl, serviceUrl } from "./utils/api/apiUrls";
 import personsRoutes from "./routes/persons/routes";
 import appointmentsRoutes from "./routes/appointments/routes";
 import serviceRoutes from "./routes/services/routes";
+import firebaseAdmin from "firebase-admin";
+import { validateToken } from "./utils/helpers/token";
+const cors = require("cors");
+
+const firebaseConfig = require("./firebaseAdminSDK.json");
+
+firebaseAdmin.initializeApp({
+  credential: firebaseAdmin.credential.cert(firebaseConfig),
+});
 
 dotenv.config();
 
 const app: Express = express();
 app.use(express.json());
+app.use(cors());
 
 const defaultPort = process.env.SERVER_PORT
   ? parseInt(process.env.SERVER_PORT, 10)
@@ -20,6 +30,7 @@ const port = env !== "local" ? defaultPort : 8000;
 const uri = String(process.env.DATABASE_CONNECTION);
 
 mongoose.set("strictQuery", true);
+
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -52,6 +63,10 @@ app.use(function (req, res, next) {
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
+
+app.use(express.json());
+
+app.use(validateToken);
 
 // Person routes
 app.use(`${personsUrl()}`, personsRoutes);

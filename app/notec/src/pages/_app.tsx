@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { CircularProgress } from "@mui/material";
 import classNames from "classnames";
 import HeaderMobile from "@/components/layout/mobile/Header";
 import MobileMenu from "@/components/layout/mobile/Menu";
@@ -14,8 +15,7 @@ import { AuthProvider } from "@/auth/useAuth";
 import { font, theme } from "@/assets/styles/theme";
 import dynamic from "next/dynamic";
 import { useUserStore } from "@/stores/useUserStore";
-import { ColorRing } from "react-loader-spinner";
-import Login from "./login";
+
 import View from "@/components/View";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -23,7 +23,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const baseClasses = classNames(font.className, { Mobile: isMobile });
   const isLoading = useUserStore((state) => state.isLoading);
-  const user = useUserStore((state) => state.user);
 
   return (
     <>
@@ -33,9 +32,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           <div className={baseClasses}>
             {isLoading ? (
               <View fullScreen>
-                <ColorRing />
+                <CircularProgress size={"5rem"} />
               </View>
-            ) : user ? (
+            ) : (
               <SidebarProvider>
                 {isMobile ? <HeaderMobile /> : <Header />}
                 <div className="AppContentWrapper">
@@ -46,8 +45,6 @@ function MyApp({ Component, pageProps }: AppProps) {
                 </div>
                 <Footer />
               </SidebarProvider>
-            ) : (
-              <Login />
             )}
           </div>
         </AuthProvider>

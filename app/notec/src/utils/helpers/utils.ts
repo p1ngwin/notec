@@ -51,3 +51,12 @@ export const formatDate = (input?: string | Dayjs, format?: string) => {
   }
   return dayjs().format(format ? format : "DD.MM.YYYY");
 };
+
+export const defaultFetchOptions: RequestInit = {
+  mode: "cors",
+  cache: "no-cache",
+  credentials: "omit",
+  headers: {
+    "Content-type": "application/json",
+  },
+};

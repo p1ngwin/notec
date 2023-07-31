@@ -13,8 +13,8 @@ export const PersonSchema = new Schema<IPerson>({
   },
   email: String,
   phone_number: String,
-  user_id: {
-    type: mongoose.Schema.Types.ObjectId,
+  uuid: {
+    type: String,
     required: true,
   },
 });

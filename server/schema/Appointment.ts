@@ -21,7 +21,7 @@ export const AppointmentSchema = new Schema<IAppointment>({
     type: Date,
     required: true,
   },
-  user_id: {
+  uuid: {
     type: String,
     required: true,
   },

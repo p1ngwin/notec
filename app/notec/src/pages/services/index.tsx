@@ -2,6 +2,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import Table, { Action, Column } from "@/components/DataTable";
 import HeaderActions from "@/components/HeaderActions";
 import View from "@/components/View";
+import { useUserStore } from "@/stores/useUserStore";
 import { IService } from "@/types/Service";
 import { deleteData } from "@/utils/api/delete";
 import { fetchData } from "@/utils/api/fetch";
@@ -15,7 +16,7 @@ const Services = () => {
   const router = useRouter();
 
   const [curretServices, setServices] = useState<IService[]>([]);
-
+  const token = useUserStore((state) => state.token);
   const handleDeleteService = async (id: string) => {
     if (!id) return toast.error("Missing person id.");
 
@@ -23,7 +24,7 @@ const Services = () => {
       deleteData(servicesDeleteUrl(id), {
         id: id,
       }).then(() => {
-        fetchData(servicesUrl()).then((services) => {
+        fetchData(servicesUrl(), token).then((services) => {
           services && setServices(services);
         });
       }),
@@ -37,10 +38,10 @@ const Services = () => {
 
   useEffect(() => {
     (async () => {
-      const services = await fetchData(servicesUrl());
+      const services = await fetchData(servicesUrl(), token);
       services && setServices(services);
     })();
-  }, []);
+  }, [token]);
 
   const tableColumns: Column<IService>[] = [
     { label: "Naziv storitve", field: "service", renderCell: (i) => i.service },

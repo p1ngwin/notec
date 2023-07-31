@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { Input } from "@mui/material";
 import { AddBusiness } from "@mui/icons-material";
+import { useUserStore } from "@/stores/useUserStore";
 
 type FormProps = {
   service: string;
@@ -18,10 +19,16 @@ const AddServiceForm = () => {
 
   const { FormGroup, FormContainer, FormInput, FormButton } = styles;
 
-  const { control, handleSubmit } = useForm<FormProps>();
+  const token = useUserStore((state) => state.token);
+  const { control, handleSubmit } = useForm<FormProps>({
+    defaultValues: {
+      price: 0,
+      service: "",
+    },
+  });
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
-    const response = await postData(servicesCreateUrl(), data);
+    const response = await postData(servicesCreateUrl(), data, token);
     if (response?.ok) {
       toast.success("Person successfully added!");
       router.push("/persons");

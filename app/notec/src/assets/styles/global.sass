@@ -64,8 +64,7 @@ div#__next > div
   box-sizing: initial
   display: flex
   justify-content: center
-  &:not(:last-child)
-    margin: 1rem 3rem 1rem 1rem
+  margin-bottom: 1rem
 
 .MuiInput-root:before
   border-bottom: 0!important
@@ -102,9 +101,12 @@ div#__next > div
 
   & .MuiFormLabel-root
     font-family: "Nunito Sans"
+
   & .MuiFormControl-root
     margin-bottom: 1rem
     width: 100%
+    &:not(:last-child)
+      margin: 1rem 3rem 1rem 1rem
 
 .ToastPrimary
   font-family: 'Nunito Sans'
