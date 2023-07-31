@@ -13,7 +13,7 @@ export const PersonSchema = new Schema<IPerson>({
   },
   email: String,
   phone_number: String,
-  user_uuid: {
+  uuid: {
     type: String,
     required: true,
   },

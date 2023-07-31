@@ -34,7 +34,7 @@ const Login = () => {
   const onSubmit: SubmitHandler<FormProps> = async ({ email, password }) => {
     const result = await signInUserWithEmail(email, password);
 
-    const { error, user } = result;
+    const { error, user, token } = result;
 
     if (error) {
       toast.error(`Error signing in. Error: ${error.message}`);
@@ -43,6 +43,7 @@ const Login = () => {
     if (user) {
       toast.success(`Successfully logged in as ${user.email}.`);
       actions.setUser(user);
+      actions.setToken(token);
       return router.push("/");
     }
   };

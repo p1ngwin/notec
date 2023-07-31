@@ -4,9 +4,12 @@ import { IPerson } from "../types/person/types";
 import { Request, Response } from "express";
 
 const PersonController = {
-  getAllPersons: async (_: any, res: Response) => {
+  getAllPersons: async (req: Request, res: Response) => {
+    const { uid } = req.user ?? {};
+    if (!uid) return res.status(401).json({ error: "Not authorized" });
+
     try {
-      const persons: IPerson[] = await PersonModel.find();
+      const persons: IPerson[] = await PersonModel.find({ uuid: uid });
       return res.status(200).json(persons);
     } catch (error) {
       res.status(500).json({ error: "Error getting data" });
@@ -14,6 +17,9 @@ const PersonController = {
   },
 
   getPerson: async (req: Request, res: Response) => {
+    const { uid } = req.user ?? {};
+    if (!uid) return res.status(401).json({ error: "Not authorized" });
+
     if (!isValidObjectId(req?.params?.id))
       return res.status(500).json({ error: "Wrong ID format!" });
 
@@ -30,8 +36,8 @@ const PersonController = {
   },
 
   createPerson: async (req: Request, res: Response) => {
-    const { first_name, last_name, email, phone_number, user_uuid } =
-      req.body ?? {};
+    const { first_name, last_name, email, phone_number } = req.body ?? {};
+    const { uid } = req.user ?? {};
 
     if (!first_name || !last_name) {
       return res
@@ -39,13 +45,15 @@ const PersonController = {
         .json({ error: "Please enter all required fields." });
     }
 
+    if (!uid) return res.status(401).json({ error: "Not authorized" });
+
     try {
       const personData: IPerson = {
         first_name,
         last_name,
         email,
         phone_number,
-        user_uuid,
+        uuid: uid,
       };
 
       const person = new PersonModel(personData);
@@ -61,13 +69,16 @@ const PersonController = {
     const { id, first_name, last_name, phone_number, email, user_uuid } =
       req.body;
 
+    const { uid } = req.user ?? {};
+    if (!uid) return res.status(401).json({ error: "Not authorized" });
+
     try {
       const personData: IPerson = {
         first_name,
         last_name,
         email,
         phone_number,
-        user_uuid,
+        uuid: uid,
       };
 
       const filter = { _id: id };
@@ -89,6 +100,9 @@ const PersonController = {
     }
   },
   deletePerson: async (req: Request, res: Response) => {
+    const { uid } = req.user ?? {};
+    if (!uid) return res.status(401).json({ error: "Not authorized" });
+
     if (!isValidObjectId(req?.body?.id))
       return res.status(500).json({ error: "Wrong ID format!" });
 

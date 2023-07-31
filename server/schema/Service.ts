@@ -12,7 +12,7 @@ export const ServiceSchema = new Schema<IService>({
     type: Number,
     required: true,
   },
-  user_id: {
+  uuid: {
     type: String,
     required: true,
   },

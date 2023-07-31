@@ -7,7 +7,7 @@ export interface IAppointment {
   service_id: mongoose.Schema.Types.ObjectId;
   person_id: mongoose.Schema.Types.ObjectId;
   payment_date?: Date;
-  user_id: mongoose.Schema.Types.ObjectId;
+  uuid: string; // Firebase user id
 }
 
 export enum HAIR_TYPE {

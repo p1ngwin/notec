@@ -1,15 +1,21 @@
-const fetchOptions: RequestInit = {
-  method: "POST",
-  mode: "cors",
-  cache: "no-cache",
-  credentials: "omit",
-  headers: {
-    "Content-type": "application/json",
-  },
-};
+import { defaultFetchOptions } from "../helpers/utils";
 
-export const postData = async (url: RequestInfo, body: any): Promise<any> => {
-  console.log("Body is", body);
+export const postData = async (
+  url: RequestInfo,
+  body: any,
+  token?: string
+): Promise<any> => {
+  if (!token) return new Error("Provide token!");
+
+  const fetchOptions = {
+    ...defaultFetchOptions,
+    method: "POST",
+    headers: {
+      ...defaultFetchOptions.headers,
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
   const response = await fetch(url, {
     ...fetchOptions,
     body: JSON.stringify(body),

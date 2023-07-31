@@ -2,6 +2,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import Table, { Action, Column } from "@/components/DataTable";
 import HeaderActions from "@/components/HeaderActions";
 import View from "@/components/View";
+import { useUserStore } from "@/stores/useUserStore";
 import { IPerson } from "@/types/Person";
 import { deleteData } from "@/utils/api/delete";
 import { fetchData } from "@/utils/api/fetch";
@@ -17,14 +18,20 @@ const Appointments = () => {
   const [currentPersons, setPersons] = useState<IPerson[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const token = useUserStore((state) => state.token);
+
   const handleDeletePerson = async (id: string) => {
     if (!id) return;
 
     toast.promise(
-      deleteData(deletePersonUrl(), {
-        id: id,
-      }).then(() => {
-        fetchData(personsUrl()).then((persons) => {
+      deleteData(
+        deletePersonUrl(),
+        {
+          id: id,
+        },
+        token
+      ).then(() => {
+        fetchData(personsUrl(), token).then((persons) => {
           persons && setPersons(persons);
         });
       }),
@@ -38,8 +45,9 @@ const Appointments = () => {
 
   useEffect(() => {
     (async () => {
+      if (!token) return;
       setIsLoading(true);
-      const persons = await fetchData(personsUrl());
+      const persons = await fetchData(personsUrl(), token);
       persons && setPersons(persons);
       setIsLoading(false);
     })();

@@ -1,14 +1,20 @@
-const fetchOptions: RequestInit = {
-  method: "DELETE",
-  mode: "cors",
-  cache: "no-cache",
-  credentials: "omit",
-  headers: {
-    "Content-type": "application/json",
-  },
-};
+import { defaultFetchOptions } from "../helpers/utils";
 
-export const deleteData = async (url: RequestInfo, id: any): Promise<any> => {
+export const deleteData = async (
+  url: RequestInfo,
+  id: any,
+  token?: string
+): Promise<any> => {
+  if (!token) return new Error("Provide token!");
+
+  const fetchOptions = {
+    ...defaultFetchOptions,
+    method: "DELETE",
+    headers: {
+      ...defaultFetchOptions.headers,
+      Authorization: `Bearer ${token}`,
+    },
+  };
   const response = await fetch(url, {
     ...fetchOptions,
     body: JSON.stringify(id),

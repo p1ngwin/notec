@@ -1,14 +1,21 @@
-export const fetchOptions: RequestInit = {
-  mode: "cors",
-  cache: "no-cache",
-  credentials: "omit",
-  headers: {
-    Accept: "application/json, text/javascript, */*; q=0.01",
-    "Accept-Encoding": "gzi, deflate, br",
-  },
-};
-export const fetchData = async (url: RequestInfo): Promise<any> => {
+import { defaultFetchOptions } from "../helpers/utils";
+
+export const fetchData = async (
+  url: RequestInfo,
+  token?: string
+): Promise<any> => {
   try {
+    if (!token) return new Error("Provide token!");
+
+    const fetchOptions = {
+      ...defaultFetchOptions,
+      method: "GET",
+      headers: {
+        ...defaultFetchOptions.headers,
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
     const response = await fetch(url, fetchOptions);
 
     if (response.ok) {

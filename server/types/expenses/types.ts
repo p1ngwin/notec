@@ -6,5 +6,5 @@ type IExpenses = {
   cost: number;
   due_date: Date;
   payment_date: Date;
-  user_id: mongoose.Schema.Types.ObjectId;
+  uuid: string; // Firebase user id
 };

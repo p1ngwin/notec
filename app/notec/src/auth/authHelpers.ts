@@ -34,6 +34,7 @@ export const registerUser = async (
 
 type AuthSignInReturnProps = {
   user?: User;
+  token?: string;
   error?: AuthError;
 };
 
@@ -41,13 +42,19 @@ export const signInUserWithEmail = async (
   email: string,
   password: string
 ): Promise<AuthSignInReturnProps> => {
-  return signInWithEmailAndPassword(getAuth(), email, password)
-    .then((user) => {
-      return { user: user.user };
-    })
-    .catch((error: AuthError) => {
-      return { error: error };
-    });
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      getAuth(),
+      email,
+      password
+    );
+
+    const token = await userCredential.user.getIdToken();
+
+    return { user: userCredential.user, token: token };
+  } catch (error: any) {
+    return { error: error };
+  }
 };
 
 export const getUser = () => {
