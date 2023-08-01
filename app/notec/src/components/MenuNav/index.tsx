@@ -5,7 +5,13 @@ import Image from "next/image";
 import logo from "../../assets/img/logo.svg";
 import { useRouter } from "next/router";
 import Spacer from "@/components/Spacer";
-import { Summarize, CalendarMonth, People, Home } from "@mui/icons-material";
+import {
+  Summarize,
+  CalendarMonth,
+  People,
+  Home,
+  AddCard,
+} from "@mui/icons-material";
 import classNames from "classnames";
 import { useSidebar } from "@/context/mobileSidebar/useSidebar";
 
@@ -81,6 +87,15 @@ export const MenuNav = ({ isMobile = false }: Props) => {
           >
             <Summarize />
             <div className={NavMenuText}>Cenik</div>
+          </Button>
+        </div>
+        <div className={NavMenuButtonWrapper}>
+          <Button
+            className={NavMenuButton}
+            onClick={() => handleOnMenuItemClicked("/revenue")}
+          >
+            <AddCard />
+            <div className={NavMenuText}>Prihodki</div>
           </Button>
         </div>
       </div>

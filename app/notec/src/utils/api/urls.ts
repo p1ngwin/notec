@@ -23,3 +23,6 @@ export const servicesCreateUrl = () => `${ROOT}/services/create`;
 
 export const servicesDeleteUrl = (id: string) =>
   `${ROOT}/services/create/${id}`;
+
+export const revenueUrl = (query?: URLSearchParams) =>
+  `${ROOT}/revenue/all/?${query ? query : ""}`;
