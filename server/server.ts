@@ -1,10 +1,18 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import { appointmetsUrl, personsUrl, serviceUrl } from "./utils/api/apiUrls";
+import {
+  appointmetsUrl,
+  expensesUrl,
+  personsUrl,
+  revenueUrl,
+  serviceUrl,
+} from "./utils/api/apiUrls";
 import personsRoutes from "./routes/persons/routes";
 import appointmentsRoutes from "./routes/appointments/routes";
 import serviceRoutes from "./routes/services/routes";
+import expensesRoutes from "./routes/expenses/routes";
+import revenueRoutes from "./routes/revenue/routes";
 import firebaseAdmin from "firebase-admin";
 import { validateToken } from "./utils/helpers/token";
 const cors = require("cors");
@@ -68,13 +76,15 @@ app.use(express.json());
 
 app.use(validateToken);
 
-// Person routes
 app.use(`${personsUrl()}`, personsRoutes);
 
-// Person routes
 app.use(`${appointmetsUrl()}`, appointmentsRoutes);
 
 app.use(`${serviceUrl()}`, serviceRoutes);
+
+app.use(`${expensesUrl()}`, expensesRoutes);
+
+app.use(`${revenueUrl()}`, revenueRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running at port:${port}`);
