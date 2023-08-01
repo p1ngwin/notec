@@ -6,6 +6,6 @@ export const personsUrl = () => `/persons/`;
 
 export const serviceUrl = () => `/services/`;
 
-export const revenueUrl = () => `/revenues/`;
+export const revenueUrl = () => `/revenue/`;
 
 export const expensesUrl = () => `/expenses/`;

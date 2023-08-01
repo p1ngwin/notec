@@ -1,5 +1,5 @@
 const ROOT =
-  process.env.ENVIRONMENT === "local"
+  process.env.NODE_ENV === "development"
     ? "http://localhost:8000"
     : "https://notec-server.vercel.app";
 

@@ -62,7 +62,7 @@ const ExpensesController = {
       await newExpense.save();
       res.status(201).json(newExpense);
     } catch (error) {
-      res.status(500).json({ error: "Error creating appointment" });
+      res.status(500).json({ error: "Error creating expense" });
     }
   },
   deleteExpenseById: async (req: Request, res: Response) => {

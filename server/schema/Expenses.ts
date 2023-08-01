@@ -18,7 +18,8 @@ export const ExpensesSchema = new Schema<IExpenses>({
   },
   payment_date: {
     type: Date,
-    required: true,
+    required: false,
+    default: undefined,
   },
   uuid: {
     type: String,

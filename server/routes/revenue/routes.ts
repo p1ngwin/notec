@@ -1,11 +1,11 @@
 import express from "express";
-import ExpensesController from "../../controllers/ExpensesController";
+import RevenueController from "../../controllers/RevenueController";
 
 const router = express.Router();
 
-router.post("/create", ExpensesController.createExpense);
-router.get("/all", ExpensesController.getExpenses);
-router.get("/:id", ExpensesController.getExpenseById);
-router.delete("/delete/:id", ExpensesController.deleteExpenseById);
+router.post("/create", RevenueController.createRevenue);
+router.get("/all", RevenueController.getRevenue);
+router.get("/:id", RevenueController.getRevenueById);
+router.delete("/delete/:id", RevenueController.deleteRevenueById);
 
 export default router;
