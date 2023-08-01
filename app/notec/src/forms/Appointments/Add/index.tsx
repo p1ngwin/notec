@@ -20,7 +20,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { parseDateTime } from "@/utils/helpers/utils";
 import { TimePicker, DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { useUserStore } from "@/stores/useUserStore";
 
 type FormProps = {
   person_id: string;
@@ -43,8 +42,6 @@ const CreateAppointmentForm = ({ persons, services }: Props) => {
 
   const { FormGroup, FormContainer, FormInput, FormButton, Form } = styles;
 
-  const token = useUserStore((state) => state.token);
-
   const { control, handleSubmit, reset } = useForm<FormProps>({
     defaultValues: {
       date: parseDateTime(),
@@ -57,7 +54,7 @@ const CreateAppointmentForm = ({ persons, services }: Props) => {
   }, [date, time, reset]);
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
-    const response = await postData(createAppointmentUrl(), data, token);
+    const response = await postData(createAppointmentUrl(), data);
     if (response?.ok) {
       toast.success("Naročilo uspešno dodano.");
       router.push("/appointments");

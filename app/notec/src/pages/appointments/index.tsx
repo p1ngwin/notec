@@ -14,7 +14,6 @@ import { useRouter } from "next/router";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import HeaderActions from "@/components/HeaderActions";
 import { Button } from "@mui/material";
-import { useUserStore } from "@/stores/useUserStore";
 
 const Appointments = () => {
   const { AppointmentsView, EventCell, Service } = styles;
@@ -26,14 +25,12 @@ const Appointments = () => {
 
   const [appointments, setAppointments] = useState<IAppointment[]>();
 
-  const token = useUserStore((state) => state.token);
-
   useEffect(() => {
     (async () => {
-      const res = await fetchData(appointmentsUrl(), token);
+      const res = await fetchData(appointmentsUrl());
       res && setAppointments(res);
     })();
-  }, [token]);
+  }, []);
 
   const handleDateClick = (arg: DateClickArg) => {
     if (!calendarApi) return;
@@ -90,7 +87,7 @@ const Appointments = () => {
         eventClassNames={EventCell}
         aspectRatio={2.5}
         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
-        initialView="dayGridMonth"
+        initialView="timeGridWeek"
         events={
           appointments?.length
             ? appointments.map((app) => ({

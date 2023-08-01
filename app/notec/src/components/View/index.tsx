@@ -1,13 +1,14 @@
 import classNames from "classnames";
 import styles from "./styles.module.sass";
 import { ReactNode } from "react";
-import { Grid } from "@mui/material";
+import { Grid, Container } from "@mui/material";
 
 type Props = {
   className?: string | string[];
   children: ReactNode;
   fullWidth?: boolean;
   fullScreen?: boolean;
+  container?: boolean;
 };
 
 const View = ({
@@ -15,6 +16,7 @@ const View = ({
   children,
   fullWidth = false,
   fullScreen = false,
+  container = false,
 }: Props) => {
   const { View, FullScreen, FullWidth } = styles;
 
@@ -23,7 +25,13 @@ const View = ({
     [FullWidth]: Boolean(fullWidth),
   });
 
-  return <Grid className={viewCn}>{children}</Grid>;
+  return container ? (
+    <Container>
+      <Grid className={viewCn}>{children}</Grid>
+    </Container>
+  ) : (
+    <Grid className={viewCn}>{children}</Grid>
+  );
 };
 
 export default View;

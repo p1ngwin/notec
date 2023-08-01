@@ -2,15 +2,15 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import Table, { Action, Column } from "@/components/DataTable";
 import HeaderActions from "@/components/HeaderActions";
 import View from "@/components/View";
-import { useUserStore } from "@/stores/useUserStore";
 import { IPerson } from "@/types/Person";
 import { deleteData } from "@/utils/api/delete";
 import { fetchData } from "@/utils/api/fetch";
 import { deletePersonUrl, personsUrl } from "@/utils/api/urls";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import AddIcon from "@mui/icons-material/Add";
 
 const Appointments = () => {
   const router = useRouter();
@@ -18,20 +18,14 @@ const Appointments = () => {
   const [currentPersons, setPersons] = useState<IPerson[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const token = useUserStore((state) => state.token);
-
   const handleDeletePerson = async (id: string) => {
     if (!id) return;
 
     toast.promise(
-      deleteData(
-        deletePersonUrl(),
-        {
-          id: id,
-        },
-        token
-      ).then(() => {
-        fetchData(personsUrl(), token).then((persons) => {
+      deleteData(deletePersonUrl(), {
+        id,
+      }).then(() => {
+        fetchData(personsUrl()).then((persons) => {
           persons && setPersons(persons);
         });
       }),
@@ -45,9 +39,8 @@ const Appointments = () => {
 
   useEffect(() => {
     (async () => {
-      if (!token) return;
       setIsLoading(true);
-      const persons = await fetchData(personsUrl(), token);
+      const persons = await fetchData(personsUrl());
       persons && setPersons(persons);
       setIsLoading(false);
     })();
@@ -81,15 +74,24 @@ const Appointments = () => {
   }, [router]);
 
   return (
-    <View fullWidth>
+    <View
+      fullWidth
+      container
+    >
       <HeaderActions>
-        <Breadcrumbs
-          depth={1}
-          values={["Stranke"]}
-        />
-        <Button onClick={() => router.push("/persons/add")}>
-          Dodaj stranko
-        </Button>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Breadcrumbs
+            depth={1}
+            values={["Stranke"]}
+          />
+          <Button onClick={() => router.push("/persons/add")}>
+            Dodaj <AddIcon />
+          </Button>
+        </Stack>
       </HeaderActions>
       {isLoading ? (
         <CircularProgress />
