@@ -4,13 +4,17 @@ import { PersonModel } from "../models/Person";
 import { IAppointment } from "../types/appointment/types";
 import { Request, Response } from "express";
 import { dateType } from "../utils/helpers/queryTypeHelpers";
+import { IRevenue } from "../types/revenue/types";
+import { RevenueModel } from "../models/Revenue";
+import { IService } from "../types/service/types";
+import { ServiceModel } from "../models/Services";
 
 const AppointmentController = {
   getAppointments: async (req: Request, res: Response) => {
     const { uid } = req.user ?? {};
     if (!uid) return res.status(401).json({ error: "Not authorized" });
 
-    const { date } = req.query ?? req.body ?? {};
+    const { date, dateOnly } = req.query ?? req.body ?? {};
 
     const pipeline: FilterQuery<IAppointment[]> = [
       {
@@ -67,6 +71,19 @@ const AppointmentController = {
       });
     }
 
+    if (dateOnly) {
+      pipeline.unshift({
+        $match: {
+          $expr: {
+            $eq: [
+              { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+              dateOnly, // Assuming dateOnly is a Date object
+            ],
+          },
+        },
+      });
+    }
+
     try {
       const appointments: IAppointment[] = await AppointmentModel.aggregate(
         pipeline
@@ -107,7 +124,24 @@ const AppointmentController = {
       const appointment = new AppointmentModel(appointmentData);
 
       await appointment.save();
-      res.status(201).json(appointment);
+
+      const service = await ServiceModel.findById(service_id);
+
+      const revenueData: IRevenue = {
+        service_id,
+        person_id,
+        net_profit: service?.price,
+        date,
+        is_paid: false,
+        uuid: uid,
+      };
+
+      const newRevenue = new RevenueModel(revenueData);
+
+      await newRevenue.save();
+
+      if (appointment || newRevenue)
+        res.status(201).json({ revenue: newRevenue, appoinment: appointment });
     } catch (error) {
       res.status(500).json({ error: "Error creating appointment" });
     }

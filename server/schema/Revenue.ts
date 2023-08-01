@@ -8,30 +8,22 @@ export const RevenueSchema = new Schema<IRevenue>({
     type: String,
     required: false,
   },
-  net_profit: {
-    type: Number,
-    required: true,
-  },
-  real_profit: {
-    type: Number,
-    required: true,
-  },
-  payment_type: {
-    type: String,
+  net_profit: Number,
+  real_profit: Number,
+  payment_type: String,
+  service_id: {
+    ref: "Service",
+    type: Schema.Types.ObjectId,
     required: true,
   },
   person_id: {
-    // Stranka
-    type: String,
-    required: false,
-  },
-  service_id: {
-    // Storitev
-    type: String,
-    requrired: false,
+    ref: "Person",
+    type: Schema.Types.ObjectId,
+    required: true,
   },
   uuid: {
     type: String,
     required: true,
   },
+  date: Date,
 });
