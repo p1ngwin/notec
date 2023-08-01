@@ -1,5 +1,5 @@
 const ROOT =
-  process.env.ENVIRONMENT === "local"
+  process.env.NODE_ENV === "development"
     ? "http://localhost:8000"
     : "https://notec-server.vercel.app";
 
@@ -23,3 +23,6 @@ export const servicesCreateUrl = () => `${ROOT}/services/create`;
 
 export const servicesDeleteUrl = (id: string) =>
   `${ROOT}/services/create/${id}`;
+
+export const revenueUrl = (query?: URLSearchParams) =>
+  `${ROOT}/revenue/all/?${query ? query : ""}`;
