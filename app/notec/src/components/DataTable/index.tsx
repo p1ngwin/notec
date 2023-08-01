@@ -13,6 +13,7 @@ import { useRef } from "react";
 import TuneIcon from "@mui/icons-material/Tune";
 import { useOutsideClick } from "@/utils/helpers/clickHandlers";
 import styles from "./styles.module.sass";
+import classNames from "classnames";
 
 type HasId = { id: string };
 
@@ -93,7 +94,7 @@ const Table = <RowData extends HasId>({
   rowActions,
   showRowCount = false,
 }: Props<RowData>) => {
-  const { Table } = styles;
+  const { Table, TableHeadCell } = styles;
 
   return (
     <div className={Table}>
@@ -104,7 +105,7 @@ const Table = <RowData extends HasId>({
               {showRowCount && <Cell />}
               {columns.map(({ field, label, headClassName }) => (
                 <Cell
-                  className={headClassName && headClassName}
+                  className={classNames([TableHeadCell], { headClassName })}
                   key={field}
                 >
                   {label}

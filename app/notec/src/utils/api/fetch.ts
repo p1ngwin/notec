@@ -1,12 +1,11 @@
+import { auth } from "@/auth/useAuth";
 import { defaultFetchOptions } from "../helpers/utils";
 
-export const fetchData = async (
-  url: RequestInfo,
-  token?: string
-): Promise<any> => {
-  try {
-    if (!token) return new Error("Provide token!");
+export const fetchData = async (url: RequestInfo): Promise<any> => {
+  const token = await auth.currentUser?.getIdToken();
+  if (!token) return new Error("Provide token!");
 
+  try {
     const fetchOptions = {
       ...defaultFetchOptions,
       method: "GET",

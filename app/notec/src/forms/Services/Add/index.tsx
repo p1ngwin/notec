@@ -1,13 +1,10 @@
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import styles from "./styles.module.sass";
-import { Person } from "@mui/icons-material";
 import { postData } from "@/utils/api/post";
 import { servicesCreateUrl } from "@/utils/api/urls";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import { Input } from "@mui/material";
-import { AddBusiness } from "@mui/icons-material";
-import { useUserStore } from "@/stores/useUserStore";
+import { Box, TextField, Stack } from "@mui/material";
 
 type FormProps = {
   service: string;
@@ -17,9 +14,8 @@ type FormProps = {
 const AddServiceForm = () => {
   const router = useRouter();
 
-  const { FormGroup, FormContainer, FormInput, FormButton } = styles;
+  const { FormGroup, FormContainer, FormButton } = styles;
 
-  const token = useUserStore((state) => state.token);
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
       price: 0,
@@ -28,7 +24,7 @@ const AddServiceForm = () => {
   });
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
-    const response = await postData(servicesCreateUrl(), data, token);
+    const response = await postData(servicesCreateUrl(), data);
     if (response?.ok) {
       toast.success("Person successfully added!");
       router.push("/persons");
@@ -37,42 +33,56 @@ const AddServiceForm = () => {
 
   return (
     <div className={FormContainer}>
-      <h2>Stranka</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={FormGroup}>
-          <AddBusiness />
-          <Controller
-            name="service"
-            control={control}
-            rules={{ required: "Prosimo izberite storitev." }}
-            render={({ field }) => (
-              <Input
-                {...field}
-                className={FormInput}
+      <h2>Dodaj storitev</h2>
+      <Box sx={{ mt: 1 }}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className={FormGroup}>
+            <Stack
+              spacing={{ xs: 1, sm: 2 }}
+              direction="row"
+              useFlexGap
+              flexWrap="wrap"
+              justifyContent="center"
+            >
+              <Controller
+                name="service"
+                control={control}
+                rules={{ required: "Prosimo izberite storitev." }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Naziv"
+                  />
+                )}
               />
-            )}
-          />
-          <Person />
-          <Controller
-            name="price"
-            control={control}
-            rules={{ required: "Prosimo izberite osebo" }}
-            render={({ field }) => (
-              <Input
-                {...field}
-                className={FormInput}
+              <Controller
+                name="price"
+                control={control}
+                rules={{ required: "Prosimo izberite osebo" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    margin="normal"
+                    required
+                    fullWidth
+                    label="Cena"
+                  />
+                )}
               />
-            )}
-          />
-        </div>
-        <div className={FormGroup}>
-          <input
-            type="submit"
-            value="Add"
-            className={FormButton}
-          />
-        </div>
-      </form>
+              <div className={FormGroup}>
+                <input
+                  type="submit"
+                  value="Dodaj"
+                  className={FormButton}
+                />
+              </div>
+            </Stack>
+          </div>
+        </form>
+      </Box>
     </div>
   );
 };
