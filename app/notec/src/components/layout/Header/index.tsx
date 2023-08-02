@@ -6,14 +6,17 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useAuthActions } from "@/auth/authHelpers";
 
 const Header = () => {
-  const { HeaderDesktop } = styles;
+  const { HeaderDesktop, AppBarWrapper } = styles;
 
   const { handleSignOut } = useAuthActions();
 
   const user = useUserStore((state) => state.user);
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      className={AppBarWrapper}
+    >
       <div className={HeaderDesktop}>
         {user ? (
           <Typography

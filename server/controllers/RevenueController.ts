@@ -1,14 +1,45 @@
 import { Request, Response } from "express";
-import mongoose, { isValidObjectId } from "mongoose";
+import mongoose, { FilterQuery, isValidObjectId } from "mongoose";
 import { IRevenue } from "../types/revenue/types";
 import { RevenueModel } from "../models/Revenue";
+import { IAppointment } from "../types/appointment/types";
 
 const RevenueController = {
   getRevenue: async (req: Request, res: Response) => {
     const { uid } = req.user ?? {};
     if (!uid) return res.status(401).json({ error: "Not authorized" });
+
+    const pipeline: FilterQuery<any[]> = [
+      {
+        $match: {
+          uuid: uid,
+        },
+      },
+      {
+        $lookup: {
+          from: "services",
+          localField: "service_id",
+          foreignField: "_id",
+          as: "service",
+        },
+      },
+      {
+        $unwind: "$service",
+      },
+      {
+        $project: {
+          date: "$date",
+          name: "$service.service",
+          net_profit: "$service.price",
+          real_profit: "$real_profit",
+          is_paid: "$is_paid",
+          payment_type: "$payment_type",
+        },
+      },
+    ];
+
     try {
-      const revenue: IRevenue[] = await RevenueModel.find({ uuid: uid });
+      const revenue: IRevenue[] = await RevenueModel.aggregate(pipeline);
 
       if (!revenue || revenue.length < 1)
         return res.status(204).json({ error: "No data found." });

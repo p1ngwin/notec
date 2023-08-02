@@ -4,13 +4,12 @@ import { Drawer } from "@mui/material";
 import { MenuNav } from "@/components/MenuNav";
 
 const SideMenuLayout = () => {
-  const { SideMenuWrapper, DrawerPrimary } = styles;
+  const { SideMenuWrapper } = styles;
 
   return (
     <div className={SideMenuWrapper}>
       <Drawer
         variant="permanent"
-        className={DrawerPrimary}
         sx={{
           "& .MuiPaper-root": {
             position: "relative",

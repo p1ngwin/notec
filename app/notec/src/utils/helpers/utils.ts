@@ -54,7 +54,7 @@ export const formatDate = (input?: string | Dayjs, format?: string) => {
 
 export const defaultFetchOptions: RequestInit = {
   mode: "cors",
-  cache: "no-cache",
+  cache: "default",
   credentials: "omit",
   headers: {
     "Content-type": "application/json",

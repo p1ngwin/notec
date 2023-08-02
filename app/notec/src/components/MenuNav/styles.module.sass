@@ -1,35 +1,32 @@
 @import ../../assets/styles/_constants
 
 .SideMenuWrapper
-    background: $grey-01
-    padding: .5rem
+    background: $bg-primary
 
-    .DrawerPrimary
-        & div
-            background: $grey-01
-            border: 1px solid $grey-01
+    .Logo
+        padding: 1.5rem
 
     .NavMenuWrapper
-        padding: 1rem
+        padding: 1rem 0
 
         .NavMenuButton
             display: flex
             width: 100%
             justify-content: flex-start
             transition: none
+            padding: 1rem
+            color: $white
 
             &:hover
-                background: $primary
-                border: 1px solid $primary
+                background: $bg-primary-hover
 
                 .NavMenuText, svg
                     color: $white
-                    background: $primary
-                    border: 0
+                    background: $bg-primary-hover
 
             .NavMenuText
-                font-weight: bold
                 font-size: 1rem
+                color: $white
 
             svg
                 margin-right: 1rem

@@ -11,6 +11,7 @@ import {
   People,
   Home,
   AddCard,
+  AccountBalance,
 } from "@mui/icons-material";
 import classNames from "classnames";
 import { useSidebar } from "@/context/mobileSidebar/useSidebar";
@@ -96,6 +97,15 @@ export const MenuNav = ({ isMobile = false }: Props) => {
           >
             <AddCard />
             <div className={NavMenuText}>Prihodki</div>
+          </Button>
+        </div>
+        <div className={NavMenuButtonWrapper}>
+          <Button
+            className={NavMenuButton}
+            onClick={() => handleOnMenuItemClicked("/expenses")}
+          >
+            <AccountBalance />
+            <div className={NavMenuText}>Odhodki</div>
           </Button>
         </div>
       </div>
