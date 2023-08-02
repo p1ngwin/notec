@@ -78,7 +78,6 @@ const Expenses = () => {
           </Stack>
         </HeaderActions>
         <Table
-          showRowCount
           rows={expenses}
           columns={tableColumns}
           rowActions={rowActions}

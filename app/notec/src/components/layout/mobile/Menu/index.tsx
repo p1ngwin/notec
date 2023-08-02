@@ -1,23 +1,24 @@
-import { Drawer } from "@mui/material";
-import styles from "./styles.module.sass";
+import { Drawer, IconButton } from "@mui/material";
 import { useSidebar } from "@/context/mobileSidebar/useSidebar";
 import { MenuNav } from "@/components/MenuNav";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { useAuthActions } from "@/auth/authHelpers";
 
 const MobileMenu = () => {
   const { isDrawerOpen, toggleDrawer } = useSidebar();
-
-  const { MobileMenuWrapper } = styles;
+  const { handleSignOut } = useAuthActions();
 
   return (
-    <div className={MobileMenuWrapper}>
-      <Drawer
-        anchor="right"
-        open={isDrawerOpen}
-        onClose={toggleDrawer}
-      >
-        <MenuNav isMobile />
-      </Drawer>
-    </div>
+    <Drawer
+      anchor="right"
+      open={isDrawerOpen}
+      onClose={toggleDrawer}
+    >
+      <MenuNav isMobile />
+      <IconButton onClick={handleSignOut}>
+        <LogoutIcon />
+      </IconButton>
+    </Drawer>
   );
 };
 

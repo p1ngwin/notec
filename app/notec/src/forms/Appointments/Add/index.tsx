@@ -11,7 +11,15 @@ import { postData } from "@/utils/api/post";
 import { createAppointmentUrl } from "@/utils/api/urls";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import { MenuItem, Select } from "@mui/material";
+import {
+  Box,
+  Container,
+  FormControl,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from "@mui/material";
 import { IPerson } from "@/types/Person";
 import { IService } from "@/types/Service";
 import { QueryProps } from "@/types/general";
@@ -46,6 +54,8 @@ const CreateAppointmentForm = ({ persons, services }: Props) => {
     defaultValues: {
       date: parseDateTime(),
       time: parseDateTime(),
+      person_id: "",
+      service_id: "",
     },
   });
 
@@ -64,116 +74,121 @@ const CreateAppointmentForm = ({ persons, services }: Props) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={FormContainer}>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className={Form}
-        >
-          <div className={FormGroup}>
-            <Controller
-              name="date"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <CalendarMonth />
-                  <DatePicker
-                    {...field}
-                    className={FormInput}
-                    format="dddd, DD. MMMM YYYY"
-                    onChange={(date) => field.onChange(date!)}
-                    slotProps={{
-                      textField: {
-                        variant: "standard",
-                      },
-                    }}
-                  />
-                </>
-              )}
-            />
-            <Controller
-              name="time"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <QueryBuilder />
-                  <TimePicker
-                    {...field}
-                    className={FormInput}
-                    onChange={(date) => field.onChange(date!)}
-                    slotProps={{
-                      textField: {
-                        variant: "standard",
-                        placeholder: dayjs().format("HH:mm"),
-                      },
-                    }}
-                    views={["hours", "minutes"]}
-                    ampm={false}
-                  />
-                </>
-              )}
-            />
-          </div>
-
-          <div className={FormGroup}>
-            <ModeEdit />
-            <Controller
-              name="service_id"
-              control={control}
-              rules={{ required: "Prosimo izberite storitev." }}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  defaultValue=""
-                  className={FormInput}
-                  placeholder="Storitev"
-                  onChange={(event) => field.onChange(event.target.value)}
-                >
-                  {services?.length &&
-                    services.map((service: IService, index) => (
-                      <MenuItem
-                        key={index}
-                        value={service?._id}
+        <h2>Novo naročilo</h2>
+        <Box sx={{ mt: 1 }}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className={FormGroup}>
+              <Stack
+                spacing={{ xs: 1, sm: 2 }}
+                direction="row"
+                useFlexGap
+                flexWrap="wrap"
+                justifyContent="center"
+              >
+                <Controller
+                  name="date"
+                  control={control}
+                  rules={{ required: "Prosimo izberite storitev." }}
+                  render={({ field }) => (
+                    <>
+                      <DatePicker
+                        {...field}
+                        className={FormInput}
+                        format="dddd, DD. MMMM YYYY"
+                        onChange={(date) => field.onChange(date!)}
+                        slotProps={{
+                          textField: {
+                            variant: "standard",
+                          },
+                        }}
+                      />
+                    </>
+                  )}
+                />
+                <Controller
+                  name="time"
+                  control={control}
+                  rules={{ required: "Prosimo izberite čas" }}
+                  render={({ field }) => (
+                    <FormControl>
+                      <TimePicker
+                        {...field}
+                        className={FormInput}
+                        onChange={(date) => field.onChange(date!)}
+                        slotProps={{
+                          textField: {
+                            variant: "standard",
+                            placeholder: dayjs().format("HH:mm"),
+                          },
+                        }}
+                        views={["hours", "minutes"]}
+                        ampm={false}
+                      />
+                    </FormControl>
+                  )}
+                />
+                <Controller
+                  name="service_id"
+                  control={control}
+                  rules={{ required: "Prosimo izberite osebo" }}
+                  render={({ field }) => (
+                    <FormControl>
+                      <Select
+                        {...field}
+                        variant="standard"
+                        placeholder="Storitev"
+                        onChange={(event) => field.onChange(event.target.value)}
                       >
-                        {service.service}
-                        <i> ({service.price} €)</i>
-                      </MenuItem>
-                    ))}
-                </Select>
-              )}
-            />
-            <Person />
-            <Controller
-              name="person_id"
-              control={control}
-              rules={{ required: "Prosimo izberite osebo" }}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  className={FormInput}
-                  placeholder="Oseba"
-                  defaultValue=""
-                  onChange={(event) => field.onChange(event.target.value)}
-                >
-                  {persons?.length &&
-                    persons.map((person: IPerson, index) => (
-                      <MenuItem
-                        key={index}
-                        value={person?._id}
+                        {services?.length &&
+                          services.map((service: IService, index) => (
+                            <MenuItem
+                              key={index}
+                              value={service?._id}
+                            >
+                              {service.service}
+                              <i> ({service.price} €)</i>
+                            </MenuItem>
+                          ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                />
+                <Controller
+                  name="person_id"
+                  control={control}
+                  rules={{ required: "Prosimo izberite osebo" }}
+                  render={({ field }) => (
+                    <FormControl>
+                      <Select
+                        {...field}
+                        variant="standard"
+                        placeholder="Oseba"
+                        onChange={(event) => field.onChange(event.target.value)}
                       >
-                        {person?.first_name} {person?.last_name}
-                      </MenuItem>
-                    ))}
-                </Select>
-              )}
-            />
-          </div>
-          <div className={FormGroup}>
-            <input
-              type="submit"
-              value="Create"
-              className={FormButton}
-            />
-          </div>
-        </form>
+                        {persons?.length &&
+                          persons.map((person: IPerson, index) => (
+                            <MenuItem
+                              key={index}
+                              value={person?._id}
+                            >
+                              {person?.first_name} {person?.last_name}
+                            </MenuItem>
+                          ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                />
+                <div className={FormGroup}>
+                  <input
+                    type="submit"
+                    value="Dodaj"
+                    className={FormButton}
+                  />
+                </div>
+              </Stack>
+            </div>
+          </form>
+        </Box>
       </div>
     </LocalizationProvider>
   );

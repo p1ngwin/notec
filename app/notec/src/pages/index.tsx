@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Grid, Container } from "@mui/material";
+import { Grid, Container, Typography, Divider } from "@mui/material";
 import { Person, FactCheck, CreditCard } from "@mui/icons-material";
 import React, { useEffect } from "react";
 import { useUserStore } from "@/stores/useUserStore";
@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { appointmentsUrl, personsUrl } from "@/utils/api/urls";
 import { useRouter } from "next/router";
 import { useFetchStore } from "@/stores/useFetchStore";
+import Spacer from "@/components/Spacer";
 
 const HomePage = () => {
   const user = useUserStore((state) => state.user);
@@ -39,15 +40,16 @@ const HomePage = () => {
   return (
     <div className="content">
       <Container>
-        <h1>Pozdravljeni, {user?.email}</h1>
-        <p>Pregled portala</p>
+        <Typography variant="h5">Dobrodošli na portalu</Typography>
+        <Divider sx={{ m: 2 }} />
         <Grid
           container
           spacing={"1rem"}
         >
           <Grid
             item
-            xs={4}
+            xs={12}
+            md={4}
             sx={{ display: "flex" }}
           >
             <PaperCard
@@ -62,7 +64,8 @@ const HomePage = () => {
           </Grid>
           <Grid
             item
-            xs={4}
+            xs={12}
+            md={4}
             sx={{ display: "flex" }}
           >
             <PaperCard
@@ -77,7 +80,8 @@ const HomePage = () => {
           </Grid>
           <Grid
             item
-            xs={4}
+            xs={12}
+            md={4}
             sx={{ display: "flex" }}
           >
             <PaperCard

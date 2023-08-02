@@ -11,10 +11,33 @@
   html
     font-size: 14px // Adjusted font size for mobile devices
 
+  .PageContentWrapper
+    padding: 1rem!important
+
+  .fc .fc-toolbar.fc-header-toolbar
+    display: flex
+    text-align: center
+    flex-direction: column
+
+  .fc-view-harness
+    margin-bottom: 2rem
+
+:root
+  --fc-border-color: #ebebeb
+
 body
   margin: 0
+  max-width: 100%
 
 .HeaderMobile
+  background-color: $bg-primary!important
+  display: flex
+
+  .MuiToolbar-root
+    width: 100%
+    display: flex
+    justify-content: space-between
+
   svg
     fill: $white
 

@@ -1,10 +1,21 @@
 @import '../../assets/styles/_constants'
 
+@media screen and (max-width: 768px)
+    .AppointmentsView
+        height: 100%
+        display: grid
+        grid-template-rows: 1fr 5fr 1fr
+        grid-template-columns: 1fr
+        grid-template-rows: 1fr 7fr minmax(20px, 40px)
+
 .AppointmentsView
+
+    .FullCalendarView
+        margin-bottom: 2rem
 
     .EventCell
         background: $primary
-        padding: 1rem
+        padding: .5rem
         color: white
         font-size: 1.2rem
         position: relative

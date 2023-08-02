@@ -32,12 +32,13 @@
                 margin-right: 1rem
 
 .MobileMenuWrapper
-
+    background-color: $bg-primary
+    flex: 1
     & .Logo
         padding: 1.5rem
 
     .NavMenuWrapper
-        padding: 1.5rem
+        padding-top: 1rem
 
         .NavMenuButtonWrapper
             width: 100%
@@ -50,15 +51,16 @@
                 justify-content: flex-start
                 transition: none
                 min-width: 40px
+                color: $white
+                font-weight: normal
+                padding: 1rem 2rem
 
                 &:hover
-                    background: $primary
-                    border: 1px solid $primary
+                    background: $bg-primary-hover
 
                     .NavMenuText, svg
                         color: $white
-                        background: $primary
-                        border: 0
+                        background: $bg-primary-hover
 
                 .NavMenuText
                     font-weight: bold

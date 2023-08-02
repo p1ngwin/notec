@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./styles.module.sass";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import Image from "next/image";
 import logo from "../../assets/img/logo.svg";
 import { useRouter } from "next/router";
@@ -15,6 +15,7 @@ import {
 } from "@mui/icons-material";
 import classNames from "classnames";
 import { useSidebar } from "@/context/mobileSidebar/useSidebar";
+import { useUserStore } from "@/stores/useUserStore";
 
 type Props = {
   isMobile?: boolean;
@@ -32,6 +33,8 @@ export const MenuNav = ({ isMobile = false }: Props) => {
   } = styles;
 
   const { toggleDrawer } = useSidebar();
+
+  const user = useUserStore((state) => state.user);
 
   const handleOnMenuItemClicked = (path: string) => {
     router.push(path);
@@ -52,8 +55,18 @@ export const MenuNav = ({ isMobile = false }: Props) => {
           alt="logo"
         />
       </div>
+
       <Spacer />
       <div className={NavMenuWrapper}>
+        {isMobile && (
+          <div className={NavMenuButtonWrapper}>
+            <div className={NavMenuButton}>
+              <Typography color={"white"}>
+                Pozdrav, {user?.email}
+              </Typography>
+            </div>
+          </div>
+        )}
         <div className={NavMenuButtonWrapper}>
           <Button
             className={NavMenuButton}
