@@ -26,3 +26,6 @@ export const servicesDeleteUrl = (id: string) =>
 
 export const revenueUrl = (query?: URLSearchParams) =>
   `${ROOT}/revenue/all/?${query ? query : ""}`;
+
+export const expensesGetUrl = (query?: URLSearchParams) =>
+  `${ROOT}/expenses/all/?${query ? query : ""}`;
