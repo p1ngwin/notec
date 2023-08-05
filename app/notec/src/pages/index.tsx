@@ -2,28 +2,25 @@ import { useState } from "react";
 import { Grid, Container, Typography, Divider } from "@mui/material";
 import { Person, FactCheck, CreditCard } from "@mui/icons-material";
 import React, { useEffect } from "react";
-import { useUserStore } from "@/stores/useUserStore";
 import { PaperCard } from "@/components/PaperCard";
 import dayjs from "dayjs";
 import { appointmentsUrl, personsUrl } from "@/utils/api/urls";
 import { useRouter } from "next/router";
 import { useFetchStore } from "@/stores/useFetchStore";
-import Spacer from "@/components/Spacer";
 
 const HomePage = () => {
-  const user = useUserStore((state) => state.user);
   const router = useRouter();
   const [appointmentsCount, setAppointmentsCount] = useState();
   const [personCount, setPersonCount] = useState();
   const [expenses, setExpenses] = useState();
 
-  const actions = useFetchStore();
+  const { fetch, isLoading } = useFetchStore();
 
   useEffect(() => {
     (async () => {
-      const persons = await actions.fetch(personsUrl());
+      const persons = await fetch(personsUrl());
 
-      const appointments = await actions.fetch(
+      const appointments = await fetch(
         appointmentsUrl(
           new URLSearchParams({ dateOnly: dayjs().format("YYYY-MM-DD") })
         )
@@ -31,11 +28,10 @@ const HomePage = () => {
       setAppointmentsCount(appointments?.length ?? 0);
 
       setPersonCount(persons?.length ?? 0);
-
-      const expenses = await actions.fetch(personsUrl());
+      const expenses = await fetch(personsUrl());
       setExpenses(expenses?.length ?? 0);
     })();
-  }, []);
+  }, [fetch]);
 
   return (
     <div className="content">
@@ -58,7 +54,7 @@ const HomePage = () => {
               title="Število naročil danes:"
               subtitle={dayjs().format("dddd. MM. YYYY").toString()}
               value={appointmentsCount}
-              isLoading={actions.isLoading}
+              isLoading={isLoading}
               extend
             />
           </Grid>
@@ -74,7 +70,7 @@ const HomePage = () => {
               title="Odhodki / dohodki"
               subtitle={dayjs().format("MMMM. YYYY")}
               value={expenses + "€"}
-              isLoading={actions.isLoading}
+              isLoading={isLoading}
               extend
             />
           </Grid>
@@ -90,7 +86,7 @@ const HomePage = () => {
               title="Stranke"
               subtitle="Število aktivnih strank"
               value={personCount}
-              isLoading={actions.isLoading}
+              isLoading={isLoading}
               extend
             />
           </Grid>

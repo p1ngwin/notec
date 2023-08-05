@@ -2,11 +2,13 @@ import View from "@/components/View";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { servicesUrl } from "@/utils/api/urls";
-import { fetchData } from "@/utils/api/fetch";
 import { IService } from "@/types/Service";
+import { useFetchStore } from "@/stores/useFetchStore";
 
 const ServicesEdit = () => {
   const { query } = useRouter();
+
+  const { fetch } = useFetchStore();
 
   const serviceId = query.id as string;
 
@@ -14,7 +16,7 @@ const ServicesEdit = () => {
 
   useEffect(() => {
     (async () => {
-      const services = await fetchData(servicesUrl(serviceId));
+      const services = await fetch(servicesUrl(serviceId));
       services && setPerson(services);
     })();
   }, [serviceId]);

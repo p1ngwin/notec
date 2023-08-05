@@ -14,13 +14,64 @@
   .PageContentWrapper
     padding: 1rem!important
 
-  .fc .fc-toolbar.fc-header-toolbar
-    display: flex
-    text-align: center
-    flex-direction: column
+  .fc
+    & .fc-toolbar-chunk
+      width: 100%
 
-  .fc-view-harness
-    margin-bottom: 2rem
+    & .fc-toolbar.fc-header-toolbar
+      display: flex
+      text-align: center
+      flex-direction: column
+
+    & .fc-view-harness
+      margin-bottom: 2rem
+    & .fc-button-group
+      width: 100%
+      margin: 1rem 0
+
+      & button.fc-button
+        background-color: $white
+        border: 0
+        color: $primary
+        font-weight: bold
+        text-transform: uppercase
+        margin: 0 .5rem
+
+      & button:first-child
+        margin-right: 2rem
+        background: $white
+        color: $primary
+        border: 0
+        padding: 0
+        & span
+          font-weight: bold
+          font-size: 2rem
+
+      & button:last-child
+        margin-left: 2rem!important
+        background: $white
+        color: $primary
+        border: 0
+        padding: 0
+        & span
+          font-size: 2rem
+          font-weight: bold
+
+      & .fc-button-active
+        background-color: $primary!important
+        border-radius: 15px!important
+
+        &:focus
+          box-shadow: none!important
+
+      & .fc-button-primary
+        &:focus
+          box-shadow: none!important
+
+  .MuiTableCell-root
+    padding: .2rem
+
+// End of mobile
 
 :root
   --fc-border-color: #ebebeb
@@ -42,11 +93,11 @@ body
     fill: $white
 
 div#__next > div
-  margin: 0
-  min-height: calc(1vh * 100)
-  display: flex
-  align-items: stretch
-  flex-direction: column
+    margin: 0
+    min-height: calc(1vh * 100)
+    display: flex
+    align-items: stretch
+    flex-direction: column
 
 .main-container
   display: flex
@@ -102,6 +153,10 @@ div#__next > div
   align-items: center
   font-size: 1.2rem
   font-weight: 500
+
+.fc
+  & .fc-toolbar
+    flex-direction: column
 
 .fc-daygrid-event-harness:nth-child(2n) > .fc-event
   background: $secondary

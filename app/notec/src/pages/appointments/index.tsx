@@ -6,7 +6,6 @@ import View from "@/components/View";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { IAppointment } from "@/types/Appointment";
-import { fetchData } from "@/utils/api/fetch";
 import { appointmentsUrl } from "@/utils/api/urls";
 import styles from "./styles.module.sass";
 import { capitalize, formatTime, parseDateTime } from "@/utils/helpers/utils";
@@ -14,9 +13,12 @@ import { useRouter } from "next/router";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import HeaderActions from "@/components/HeaderActions";
 import { Button } from "@mui/material";
+import { useFetchStore } from "@/stores/useFetchStore";
 
 const Appointments = () => {
   const { AppointmentsView, EventCell } = styles;
+
+  const { fetch } = useFetchStore();
 
   const router = useRouter();
 
@@ -27,10 +29,10 @@ const Appointments = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await fetchData(appointmentsUrl());
+      const res = await fetch(appointmentsUrl());
       res && setAppointments(res);
     })();
-  }, []);
+  }, [fetch]);
 
   const handleDateClick = (arg: DateClickArg) => {
     if (!calendarApi) return;
@@ -96,7 +98,7 @@ const Appointments = () => {
               : []
           }
           headerToolbar={{
-            right: "prev,timeGridDay,timeGridWeek,next",
+            right: "prev,timeGridDay,timeGridWeek,dayGridMonth,next",
           }}
           views={{
             dayGrid: {
