@@ -4,19 +4,24 @@ import HeaderActions from "@/components/HeaderActions";
 import View from "@/components/View";
 import { IPerson } from "@/types/Person";
 import { deleteData } from "@/utils/api/delete";
-import { fetchData } from "@/utils/api/fetch";
 import { deletePersonUrl, personsUrl } from "@/utils/api/urls";
-import { Button, CircularProgress, Stack } from "@mui/material";
+import { Button, CircularProgress, Stack, useMediaQuery } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import AddIcon from "@mui/icons-material/Add";
+import { theme } from "@/assets/styles/theme";
+import { useFetchStore } from "@/stores/useFetchStore";
 
 const Appointments = () => {
   const router = useRouter();
 
   const [currentPersons, setPersons] = useState<IPerson[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const { fetch } = useFetchStore();
 
   const handleDeletePerson = async (id: string) => {
     if (!id) return;
@@ -25,7 +30,7 @@ const Appointments = () => {
       deleteData(deletePersonUrl(), {
         id,
       }).then(() => {
-        fetchData(personsUrl()).then((persons) => {
+        fetch(personsUrl()).then((persons) => {
           persons && setPersons(persons);
         });
       }),
@@ -40,11 +45,11 @@ const Appointments = () => {
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-      const persons = await fetchData(personsUrl());
+      const persons = await fetch(personsUrl());
       persons && setPersons(persons);
       setIsLoading(false);
     })();
-  }, []);
+  }, [fetch]);
 
   const EMPTY_CELL = <span>/</span>;
 
@@ -97,7 +102,7 @@ const Appointments = () => {
         <CircularProgress />
       ) : (
         <Table
-          showRowCount
+          showRowCount={!isMobile}
           rows={currentPersons}
           columns={tableColumns}
           rowActions={rowActions}

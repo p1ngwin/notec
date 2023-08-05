@@ -17,9 +17,23 @@ import dynamic from "next/dynamic";
 import { useUserStore } from "@/stores/useUserStore";
 
 import View from "@/components/View";
+import { useLayoutStore } from "@/stores/useLayoutStore";
+import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.between(0, "sm"));
+
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
+  const { setIsDesktop, setIsMobile, setIsTablet } = useLayoutStore();
+
+  useEffect(() => {
+    if (isMobile) setIsMobile();
+    else if (isTablet) setIsTablet();
+    else setIsDesktop();
+  }, [isMobile, isTablet, setIsDesktop, setIsMobile, setIsTablet]);
+
+  const mobile = useLayoutStore((state) => state.isMobile);
 
   const baseClasses = classNames(font.className, { Mobile: isMobile });
   const isLoading = useUserStore((state) => state.isLoading);
@@ -36,9 +50,9 @@ function MyApp({ Component, pageProps }: AppProps) {
               </View>
             ) : (
               <SidebarProvider>
-                {isMobile ? <HeaderMobile /> : <Header />}
+                {mobile ? <HeaderMobile /> : <Header />}
                 <div className="AppContentWrapper">
-                  {!isMobile ? <SideMenuLayout /> : <MobileMenu />}
+                  {!mobile ? <SideMenuLayout /> : <MobileMenu />}
                   <div className="PageContentWrapper">
                     <Component {...pageProps} />
                   </div>

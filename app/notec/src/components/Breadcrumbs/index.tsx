@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
+import { ChevronRight } from "@mui/icons-material";
 import styles from "./styles.module.sass";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -84,7 +84,7 @@ const Breadcrumbs = ({
                   {values?.length ? values?.[index] : segment}
                 </Link>
                 <div className={Seperator}>
-                  <ChevronRightIcon />
+                  <ChevronRight />
                 </div>
               </>
             ) : (

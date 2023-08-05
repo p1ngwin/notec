@@ -6,7 +6,6 @@ import View from "@/components/View";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { IAppointment } from "@/types/Appointment";
-import { fetchData } from "@/utils/api/fetch";
 import { appointmentsUrl } from "@/utils/api/urls";
 import styles from "./styles.module.sass";
 import { capitalize, formatTime, parseDateTime } from "@/utils/helpers/utils";
@@ -14,9 +13,12 @@ import { useRouter } from "next/router";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import HeaderActions from "@/components/HeaderActions";
 import { Button } from "@mui/material";
+import { useFetchStore } from "@/stores/useFetchStore";
 
 const Appointments = () => {
-  const { AppointmentsView, EventCell, Service } = styles;
+  const { AppointmentsView, EventCell } = styles;
+
+  const { fetch } = useFetchStore();
 
   const router = useRouter();
 
@@ -27,10 +29,10 @@ const Appointments = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await fetchData(appointmentsUrl());
+      const res = await fetch(appointmentsUrl());
       res && setAppointments(res);
     })();
-  }, []);
+  }, [fetch]);
 
   const handleDateClick = (arg: DateClickArg) => {
     if (!calendarApi) return;
@@ -54,88 +56,95 @@ const Appointments = () => {
       <div>
         <b>{event.extendedProps?.startTime}</b>
         <span>
-          &nbsp;- {event.extendedProps.first_name}
-          &nbsp;{event.extendedProps.last_name}
-        </span>
-        <span className={Service}>
-          <br />
-          &nbsp;
-          <span>{capitalize(event.extendedProps.service)}</span>
-          <br />
-          {event.extendedProps.time}
+          {" "}
+          - {event.extendedProps.first_name} {event.extendedProps.last_name} -{" "}
+          {capitalize(event.extendedProps.service)}
         </span>
       </div>
     );
   };
 
   return (
-    <View
-      fullWidth
-      className={AppointmentsView}
-    >
-      <HeaderActions>
-        <Breadcrumbs
-          depth={1}
-          values={["Naročila"]}
+    <>
+      <View
+        fullWidth
+        className={AppointmentsView}
+      >
+        <HeaderActions>
+          <Breadcrumbs
+            depth={1}
+            values={["Naročila"]}
+          />
+        </HeaderActions>
+        <FullCalendar
+          ref={calendarRef}
+          eventClassNames={EventCell}
+          aspectRatio={2.5}
+          plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
+          initialView="timeGridDay"
+          events={
+            appointments?.length
+              ? appointments.map((app) => ({
+                  title: app.service,
+                  allDay: false,
+                  start: app.date,
+                  extendedProps: {
+                    first_name: app.first_name,
+                    last_name: app.last_name,
+                    service: app.service,
+                    startTime: formatTime(app.time),
+                  },
+                }))
+              : []
+          }
+          headerToolbar={{
+            right: "prev,timeGridDay,timeGridWeek,dayGridMonth,next",
+          }}
+          views={{
+            dayGrid: {
+              // options apply to dayGridMonth, dayGridWeek, and dayGridDay views
+            },
+            timeGridDay: {
+              slotEventOverlap: true,
+            },
+            timeGridWeek: {
+              slotEventOverlap: false,
+            },
+          }}
+          eventContent={renderEventContent}
+          selectable
+          dateClick={handleDateClick}
+          buttonText={{
+            timeGridWeek: "Teden",
+            timeGridDay: "Dan",
+          }}
+          eventMinHeight={10}
+          slotEventOverlap={true}
+          slotLabelInterval={{ hours: 1 }}
+          slotLabelFormat={[
+            {
+              hour: "2-digit",
+              minute: "2-digit",
+              omitZeroMinute: false,
+              meridiem: false,
+              hour12: false,
+              hourCycle: "h24",
+            },
+          ]}
+          slotMinTime={"06:00"}
+          slotMaxTime={"19:00"}
+          allDaySlot={false}
+          nowIndicator
+          slotDuration={"00:30"}
         />
-        <Button onClick={() => router.push("/appointments/add")}>
+        <Button
+          variant="contained"
+          onClick={() => router.push("/appointments/add")}
+        >
           Novo naročilo
         </Button>
-      </HeaderActions>
-      <FullCalendar
-        ref={calendarRef}
-        eventClassNames={EventCell}
-        aspectRatio={2.5}
-        plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
-        initialView="timeGridWeek"
-        events={
-          appointments?.length
-            ? appointments.map((app) => ({
-                title: app.service,
-                allDay: false,
-                start: app.date,
-                extendedProps: {
-                  first_name: app.first_name,
-                  last_name: app.last_name,
-                  service: app.service,
-                  startTime: formatTime(app.time),
-                },
-              }))
-            : []
-        }
-        eventContent={renderEventContent}
-        selectable
-        dateClick={handleDateClick}
-        headerToolbar={{
-          right: "prev,next,timeGridDay,timeGridWeek,dayGridMonth",
-        }}
-        buttonText={{
-          dayGridMonth: "Mesec",
-          timeGridWeek: "Teden",
-          timeGridDay: "Dan",
-        }}
-        slotLabelFormat={[
-          {
-            hour: "2-digit",
-            minute: "2-digit",
-            omitZeroMinute: false,
-            meridiem: false,
-            hour12: false,
-            hourCycle: "h24",
-          },
-        ]}
-        slotMinTime={"05:00"}
-        slotMaxTime={"21:00"}
-        allDaySlot={false}
-        // Ugly solution for displaying 00:00 instead of 24:00
-        slotLabelContent={(arg) => {
-          if (arg.text === "24:00") return "00:00";
-          return arg.text;
-        }}
-        nowIndicator
-        slotDuration={"00:10"}
-      />
-    </View>
+      </View>
+    </>
   );
 };
 

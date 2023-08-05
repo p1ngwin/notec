@@ -4,16 +4,18 @@ import HeaderActions from "@/components/HeaderActions";
 import View from "@/components/View";
 import { IService } from "@/types/Service";
 import { deleteData } from "@/utils/api/delete";
-import { fetchData } from "@/utils/api/fetch";
 import { servicesDeleteUrl, servicesUrl } from "@/utils/api/urls";
 import { Button, Container, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import { useFetchStore } from "@/stores/useFetchStore";
 
 const Services = () => {
   const router = useRouter();
+
+  const { fetch } = useFetchStore();
 
   const [curretServices, setServices] = useState<IService[]>([]);
   const handleDeleteService = async (id: string) => {
@@ -23,7 +25,7 @@ const Services = () => {
       deleteData(servicesDeleteUrl(id), {
         id: id,
       }).then(() => {
-        fetchData(servicesUrl()).then((services) => {
+        fetch(servicesUrl()).then((services) => {
           services && setServices(services);
         });
       }),
@@ -37,7 +39,7 @@ const Services = () => {
 
   useEffect(() => {
     (async () => {
-      const services = await fetchData(servicesUrl());
+      const services = await fetch(servicesUrl());
       services && setServices(services);
     })();
   }, []);

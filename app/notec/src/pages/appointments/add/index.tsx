@@ -1,9 +1,9 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
 import HeaderActions from "@/components/HeaderActions";
 import CreateAppointmentForm from "@/forms/Appointments/Add";
+import { useFetchStore } from "@/stores/useFetchStore";
 import { IPerson } from "@/types/Person";
 import { IService } from "@/types/Service";
-import { fetchData } from "@/utils/api/fetch";
 import { personsUrl, servicesUrl } from "@/utils/api/urls";
 import { useEffect, useState } from "react";
 
@@ -11,17 +11,19 @@ const CreateAppointment = () => {
   const [currentPersons, setPersons] = useState<IPerson[]>([]);
   const [currentServices, setServices] = useState<IService[]>([]);
 
+  const { fetch } = useFetchStore();
+
   useEffect(() => {
     (async () => {
-      const persons = await fetchData(personsUrl());
+      const persons = await fetch(personsUrl());
       persons && setPersons(persons);
     })();
 
     (async () => {
-      const services = await fetchData(servicesUrl());
+      const services = await fetch(servicesUrl());
       services && setServices(services);
     })();
-  }, []);
+  }, [fetch]);
 
   return (
     <>
