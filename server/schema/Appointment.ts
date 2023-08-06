@@ -3,11 +3,13 @@ import { IAppointment } from "../types/appointment/types";
 const Schema = mongoose.Schema;
 
 export const AppointmentSchema = new Schema<IAppointment>({
-  service_id: {
-    ref: "Service",
-    type: Schema.Types.ObjectId,
-    required: true,
-  },
+  service_id: [
+    {
+      ref: "Service",
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+  ],
   person_id: {
     ref: "Person",
     type: Schema.Types.ObjectId,

@@ -8,7 +8,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { IAppointment } from "@/types/Appointment";
 import { appointmentsUrl } from "@/utils/api/urls";
 import styles from "./styles.module.sass";
-import { capitalize, formatTime, parseDateTime } from "@/utils/helpers/utils";
+import { formatTime, parseDateTime } from "@/utils/helpers/utils";
 import { useRouter } from "next/router";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import HeaderActions from "@/components/HeaderActions";
@@ -163,7 +163,7 @@ const RenderEventCell = ({
 }: EventCellProps) => {
   return (
     <div>
-      <b> {capitalize(service)}</b>
+      <b> {service}</b>
       <span>
         <br />
         {first_name} {last_name}

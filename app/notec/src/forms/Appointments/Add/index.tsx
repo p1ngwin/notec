@@ -19,7 +19,7 @@ type FormProps = {
   person_id: string;
   date: string;
   time: string;
-  service_id: string;
+  service_id: string[];
 };
 
 type Props = {
@@ -43,7 +43,7 @@ const CreateAppointmentForm = ({ persons, services }: Props) => {
       date: parseDateTime(),
       time: parseDateTime(),
       person_id: "",
-      service_id: "",
+      service_id: [],
     },
   });
 
@@ -125,7 +125,10 @@ const CreateAppointmentForm = ({ persons, services }: Props) => {
                         {...field}
                         variant="standard"
                         placeholder="Storitev"
-                        onChange={(event) => field.onChange(event.target.value)}
+                        multiple
+                        onChange={(event: any) =>
+                          field.onChange(event.target.value)
+                        }
                       >
                         {services?.length &&
                           services.map((service: IService, index) => (

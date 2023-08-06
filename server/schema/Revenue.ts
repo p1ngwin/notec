@@ -11,11 +11,13 @@ export const RevenueSchema = new Schema<IRevenue>({
   net_profit: Number,
   real_profit: Number,
   payment_type: String,
-  service_id: {
-    ref: "Service",
-    type: Schema.Types.ObjectId,
-    required: true,
-  },
+  service_id: [
+    {
+      ref: "Service",
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+  ],
   person_id: {
     ref: "Person",
     type: Schema.Types.ObjectId,
