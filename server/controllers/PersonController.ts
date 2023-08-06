@@ -66,11 +66,12 @@ const PersonController = {
   },
 
   updatePerson: async (req: Request, res: Response) => {
-    const { id, first_name, last_name, phone_number, email, user_uuid } =
-      req.body;
-
     const { uid } = req.user ?? {};
     if (!uid) return res.status(401).json({ error: "Not authorized" });
+
+    const id = new mongoose.Types.ObjectId(req?.params?.id);
+
+    const { first_name, last_name, phone_number, email } = req.body;
 
     try {
       const personData: IPerson = {
@@ -84,7 +85,7 @@ const PersonController = {
       const filter = { _id: id };
       const options = { new: true }; // Return the updated document
 
-      const updatedPerson = await PersonModel.findOneAndUpdate(
+      const updatedPerson = await PersonModel.findByIdAndUpdate(
         filter,
         personData,
         options
@@ -103,10 +104,10 @@ const PersonController = {
     const { uid } = req.user ?? {};
     if (!uid) return res.status(401).json({ error: "Not authorized" });
 
-    if (!isValidObjectId(req?.body?.id))
+    if (!isValidObjectId(req?.params?.id))
       return res.status(500).json({ error: "Wrong ID format!" });
 
-    const id = new mongoose.Types.ObjectId(req?.body?.id);
+    const id = new mongoose.Types.ObjectId(req.params.id);
 
     try {
       const deletedPerson = await PersonModel.findByIdAndDelete(id);

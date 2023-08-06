@@ -3,23 +3,23 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { expensesGetUrl } from "@/utils/api/urls";
 import { IExpenses } from "@/types/Expenses";
-import { useFetchStore } from "@/stores/useFetchStore";
+import { useFetchStore } from "@/stores/useRequestStore";
 
 const ServicesEdit = () => {
   const { query } = useRouter();
 
   const [expenses, setExpenses] = useState<IExpenses>();
 
-  const actions = useFetchStore();
+  const { fetch } = useFetchStore();
 
   useEffect(() => {
     (async () => {
-      const expenses = await actions.fetch(
+      const expenses = await fetch(
         expensesGetUrl(new URLSearchParams({ id: query.id as string }))
       );
       expenses && setExpenses(expenses);
     })();
-  }, []);
+  }, [fetch, query.id]);
 
   const { name, cost } = expenses ?? {};
 

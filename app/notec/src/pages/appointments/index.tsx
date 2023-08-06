@@ -13,10 +13,10 @@ import { useRouter } from "next/router";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import HeaderActions from "@/components/HeaderActions";
 import { Button } from "@mui/material";
-import { useFetchStore } from "@/stores/useFetchStore";
+import { useFetchStore } from "@/stores/useRequestStore";
 
 const Appointments = () => {
-  const { AppointmentsView, EventCell } = styles;
+  const { AppointmentsView, EventCell, SlotLabelDay } = styles;
 
   const { fetch } = useFetchStore();
 
@@ -50,17 +50,18 @@ const Appointments = () => {
   const renderEventContent = (eventInfo: EventContentArg) => {
     const { event } = eventInfo;
 
-    if (!event) return;
+    if (!event || !event.extendedProps) return;
+
+    const { startTime, first_name, last_name, service } =
+      event.extendedProps || {};
 
     return (
-      <div>
-        <b>{event.extendedProps?.startTime}</b>
-        <span>
-          {" "}
-          - {event.extendedProps.first_name} {event.extendedProps.last_name} -{" "}
-          {capitalize(event.extendedProps.service)}
-        </span>
-      </div>
+      <RenderEventCell
+        start={startTime}
+        first_name={first_name}
+        last_name={last_name}
+        service={service}
+      />
     );
   };
 
@@ -105,22 +106,20 @@ const Appointments = () => {
               // options apply to dayGridMonth, dayGridWeek, and dayGridDay views
             },
             timeGridDay: {
-              slotEventOverlap: true,
+              slotEventOverlap: false,
+              eventMinHeight: 100,
+              slotLabelClassNames: SlotLabelDay,
             },
             timeGridWeek: {
               slotEventOverlap: false,
             },
           }}
           eventContent={renderEventContent}
-          selectable
           dateClick={handleDateClick}
           buttonText={{
             timeGridWeek: "Teden",
             timeGridDay: "Dan",
           }}
-          eventMinHeight={10}
-          slotEventOverlap={true}
-          slotLabelInterval={{ hours: 1 }}
           slotLabelFormat={[
             {
               hour: "2-digit",
@@ -132,10 +131,10 @@ const Appointments = () => {
             },
           ]}
           slotMinTime={"06:00"}
-          slotMaxTime={"19:00"}
+          slotMaxTime={"22:00"}
           allDaySlot={false}
           nowIndicator
-          slotDuration={"00:30"}
+          expandRows
         />
         <Button
           variant="contained"
@@ -149,3 +148,28 @@ const Appointments = () => {
 };
 
 export default Appointments;
+
+type EventCellProps = {
+  start: string;
+  first_name: string;
+  last_name: string;
+  service: string;
+};
+const RenderEventCell = ({
+  start,
+  first_name,
+  last_name,
+  service,
+}: EventCellProps) => {
+  return (
+    <div>
+      <b> {capitalize(service)}</b>
+      <span>
+        <br />
+        {first_name} {last_name}
+        <br />
+        {start}
+      </span>
+    </div>
+  );
+};

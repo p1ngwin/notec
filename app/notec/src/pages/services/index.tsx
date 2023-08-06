@@ -3,26 +3,26 @@ import Table, { Action, Column } from "@/components/DataTable";
 import HeaderActions from "@/components/HeaderActions";
 import View from "@/components/View";
 import { IService } from "@/types/Service";
-import { deleteData } from "@/utils/api/delete";
 import { servicesDeleteUrl, servicesUrl } from "@/utils/api/urls";
 import { Button, Container, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { useFetchStore } from "@/stores/useFetchStore";
+import { useFetchStore, useDeleteStore } from "@/stores/useRequestStore";
 
 const Services = () => {
   const router = useRouter();
 
   const { fetch } = useFetchStore();
+  const { _delete } = useDeleteStore();
 
   const [curretServices, setServices] = useState<IService[]>([]);
   const handleDeleteService = async (id: string) => {
     if (!id) return toast.error("Missing person id.");
 
     toast.promise(
-      deleteData(servicesDeleteUrl(id), {
+      _delete(servicesDeleteUrl(id), {
         id: id,
       }).then(() => {
         fetch(servicesUrl()).then((services) => {
@@ -42,7 +42,7 @@ const Services = () => {
       const services = await fetch(servicesUrl());
       services && setServices(services);
     })();
-  }, []);
+  }, [fetch]);
 
   const tableColumns: Column<IService>[] = [
     { label: "Naziv storitve", field: "service", renderCell: (i) => i.service },

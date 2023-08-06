@@ -51,7 +51,7 @@ const ServiceController = {
     try {
       const serviceData: IService = {
         service,
-        price,
+        price: price.replace(",", "."),
         uuid: uid,
       };
 
@@ -66,7 +66,11 @@ const ServiceController = {
   deleteService: async (req: Request, res: Response) => {
     const { uid } = req.user ?? {};
     if (!uid) return res.status(401).json({ error: "Not authorized" });
-    const { id } = req.params;
+
+    if (!isValidObjectId(req?.params?.id))
+      return res.status(500).json({ error: "Wrong ID format!" });
+
+    const id = new mongoose.Types.ObjectId(req?.params?.id);
 
     try {
       const deletedService = await ServiceModel.findByIdAndDelete(id);
@@ -77,6 +81,37 @@ const ServiceController = {
       res.json(deletedService);
     } catch (error) {
       res.status(500).json({ error: "Error deleting appointment" });
+    }
+  },
+  updateService: async (req: Request, res: Response) => {
+    const { uid } = req.user ?? {};
+    if (!uid) return res.status(401).json({ error: "Not authorized" });
+
+    if (!isValidObjectId(req?.params?.id))
+      return res.status(500).json({ error: "Wrong ID format!" });
+
+    const id = new mongoose.Types.ObjectId(req?.params?.id);
+
+    const { service, price } = req.body ?? {};
+
+    let formattedPrice = price;
+
+    if (price && typeof price === "string") {
+      formattedPrice = price.replace(",", ".");
+    }
+
+    try {
+      const updatedService = await ServiceModel.findByIdAndUpdate(id, {
+        price: formattedPrice,
+        service: service ?? undefined,
+      });
+
+      if (!updatedService) {
+        return res.status(404).json({ error: "Error updating service!" });
+      }
+      res.json(updatedService);
+    } catch (error) {
+      res.status(500).json({ error: "Error updating service" });
     }
   },
 };

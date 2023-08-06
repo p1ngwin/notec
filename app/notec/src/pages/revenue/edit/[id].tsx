@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { servicesUrl } from "@/utils/api/urls";
 import { IService } from "@/types/Service";
-import { useFetchStore } from "@/stores/useFetchStore";
+import { useFetchStore } from "@/stores/useRequestStore";
 
 const ServicesEdit = () => {
   const { query } = useRouter();
@@ -19,7 +19,7 @@ const ServicesEdit = () => {
       const services = await fetch(servicesUrl(serviceId));
       services && setPerson(services);
     })();
-  }, [serviceId]);
+  }, [serviceId, fetch]);
 
   const { service: service_name, price } = service ?? {};
 

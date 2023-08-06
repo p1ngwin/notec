@@ -1,13 +1,13 @@
 import { auth } from "@/auth/useAuth";
 import { defaultFetchOptions } from "../helpers/utils";
 
-export const postData = async (url: RequestInfo, body: any): Promise<any> => {
+export const updateData = async (url: RequestInfo, body: any): Promise<any> => {
   const token = await auth.currentUser?.getIdToken();
   if (!token) return new Error("Provide token!");
 
   const fetchOptions = {
     ...defaultFetchOptions,
-    method: "POST",
+    method: "PATCH",
     headers: {
       ...defaultFetchOptions.headers,
       Authorization: `Bearer ${token}`,

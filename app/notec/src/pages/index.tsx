@@ -6,7 +6,7 @@ import { PaperCard } from "@/components/PaperCard";
 import dayjs from "dayjs";
 import { appointmentsUrl, personsUrl } from "@/utils/api/urls";
 import { useRouter } from "next/router";
-import { useFetchStore } from "@/stores/useFetchStore";
+import { useFetchStore } from "@/stores/useRequestStore";
 
 const HomePage = () => {
   const router = useRouter();

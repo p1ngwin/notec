@@ -5,7 +5,7 @@ import Link from "next/link";
 import styles from "./styles.module.sass";
 
 const HeaderMobile = () => {
-  const { MobileMenuWrapper, HomeButton, NavButton } = styles;
+  const { HomeButton, NavButton } = styles;
 
   const { toggleDrawer, isDrawerOpen } = useSidebar();
 

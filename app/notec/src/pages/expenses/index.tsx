@@ -6,7 +6,7 @@ import { expensesGetUrl } from "@/utils/api/urls";
 import { Container, Grid, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
-import { useFetchStore } from "@/stores/useFetchStore";
+import { useFetchStore } from "@/stores/useRequestStore";
 import dayjs from "dayjs";
 import { IExpenses } from "@/types/Expenses";
 
@@ -15,14 +15,14 @@ const Expenses = () => {
 
   const [expenses, setExpenses] = useState<IExpenses[]>([]);
 
-  const actions = useFetchStore();
+  const { fetch } = useFetchStore();
 
   useEffect(() => {
     (async () => {
-      const expenses = await actions.fetch(expensesGetUrl());
+      const expenses = await fetch(expensesGetUrl());
       expenses && setExpenses(expenses);
     })();
-  }, []);
+  }, [fetch]);
 
   const tableColumns: Column<IExpenses>[] = [
     { label: "Naziv stroška", field: "name", renderCell: (i) => i.name ?? "" },

@@ -1,7 +1,6 @@
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import styles from "./styles.module.sass";
 import { Email, Person, Phone } from "@mui/icons-material";
-import { postData } from "@/utils/api/post";
 import { createPersonUrl } from "@/utils/api/urls";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
@@ -12,6 +11,7 @@ import {
   FormControl,
   InputAdornment,
 } from "@mui/material";
+import { usePostStore } from "@/stores/useRequestStore";
 
 type FormProps = {
   first_name: string;
@@ -23,14 +23,21 @@ type FormProps = {
 const AddPersonForm = () => {
   const router = useRouter();
 
+  const { post } = usePostStore();
+
   const { FormGroup, FormContainer, FormButton } = styles;
 
   const { handleSubmit, control } = useForm<FormProps>({
-    defaultValues: {},
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      phone_number: "",
+      email: "",
+    },
   });
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
-    const response = await postData(createPersonUrl(), data);
+    const response = await post(createPersonUrl(), data);
     if (response?.ok) {
       toast.success("Person successfully added!");
       router.push("/persons");
