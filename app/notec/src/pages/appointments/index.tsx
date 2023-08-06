@@ -12,8 +12,9 @@ import { formatTime, parseDateTime } from "@/utils/helpers/utils";
 import { useRouter } from "next/router";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import HeaderActions from "@/components/HeaderActions";
-import { Button } from "@mui/material";
+import { Button, MenuItem } from "@mui/material";
 import { useFetchStore } from "@/stores/useRequestStore";
+import { ChevronRight } from "@mui/icons-material";
 
 const Appointments = () => {
   const { AppointmentsView, EventCell, SlotLabelDay } = styles;
@@ -107,7 +108,7 @@ const Appointments = () => {
             },
             timeGridDay: {
               slotEventOverlap: false,
-              eventMinHeight: 100,
+              eventMinHeight: 120,
               slotLabelClassNames: SlotLabelDay,
             },
             timeGridWeek: {
@@ -163,12 +164,16 @@ const RenderEventCell = ({
 }: EventCellProps) => {
   return (
     <div>
-      <b> {service}</b>
       <span>
-        <br />
-        {first_name} {last_name}
-        <br />
-        {start}
+        {start} - {first_name} {last_name}
+        {service.split(",").map((service, index) => (
+          <MenuItem
+            sx={{ lineHeight: 0.5, padding: 0 }}
+            key={index}
+          >
+            <ChevronRight /> {service}
+          </MenuItem>
+        ))}
       </span>
     </div>
   );
