@@ -1,25 +1,10 @@
 import { useEffect } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import styles from "./styles.module.sass";
-import {
-  CalendarMonth,
-  ModeEdit,
-  Person,
-  QueryBuilder,
-} from "@mui/icons-material";
-import { postData } from "@/utils/api/post";
 import { createAppointmentUrl } from "@/utils/api/urls";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import {
-  Box,
-  Container,
-  FormControl,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Box, FormControl, MenuItem, Select, Stack } from "@mui/material";
 import { IPerson } from "@/types/Person";
 import { IService } from "@/types/Service";
 import { QueryProps } from "@/types/general";
@@ -28,6 +13,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { parseDateTime } from "@/utils/helpers/utils";
 import { TimePicker, DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import { usePostStore } from "@/stores/useRequestStore";
 
 type FormProps = {
   person_id: string;
@@ -44,11 +30,13 @@ type Props = {
 const CreateAppointmentForm = ({ persons, services }: Props) => {
   const router = useRouter();
 
+  const { post } = usePostStore();
+
   const query = router.query as QueryProps;
 
   const { time, date } = query ?? {};
 
-  const { FormGroup, FormContainer, FormInput, FormButton, Form } = styles;
+  const { FormGroup, FormContainer, FormInput, FormButton } = styles;
 
   const { control, handleSubmit, reset } = useForm<FormProps>({
     defaultValues: {
@@ -64,7 +52,7 @@ const CreateAppointmentForm = ({ persons, services }: Props) => {
   }, [date, time, reset]);
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
-    const response = await postData(createAppointmentUrl(), data);
+    const response = await post(createAppointmentUrl(), data);
     if (response?.ok) {
       toast.success("Naročilo uspešno dodano.");
       router.push("/appointments");

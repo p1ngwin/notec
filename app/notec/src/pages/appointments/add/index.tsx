@@ -1,7 +1,7 @@
 import Breadcrumbs from "@/components/Breadcrumbs";
 import HeaderActions from "@/components/HeaderActions";
 import CreateAppointmentForm from "@/forms/Appointments/Add";
-import { useFetchStore } from "@/stores/useFetchStore";
+import { useFetchStore } from "@/stores/useRequestStore";
 import { IPerson } from "@/types/Person";
 import { IService } from "@/types/Service";
 import { personsUrl, servicesUrl } from "@/utils/api/urls";

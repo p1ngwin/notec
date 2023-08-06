@@ -7,7 +7,7 @@ import { Container, Grid, Stack } from "@mui/material";
 import { Check, Close } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
-import { useFetchStore } from "@/stores/useFetchStore";
+import { useFetchStore } from "@/stores/useRequestStore";
 import { IRevenue } from "@/types/Revenue";
 import dayjs from "dayjs";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
@@ -21,14 +21,14 @@ const Services = () => {
 
   const [revenue, setRevenue] = useState<IRevenue[]>([]);
 
-  const actions = useFetchStore();
+  const { fetch } = useFetchStore();
 
   useEffect(() => {
     (async () => {
-      const revenue = await actions.fetch(revenueUrl());
+      const revenue = await fetch(revenueUrl());
       revenue && setRevenue(revenue);
     })();
-  }, []);
+  }, [fetch]);
 
   const tableColumns: Column<IRevenue>[] = [
     { label: "Naziv storitve", field: "name", renderCell: (i) => i.name ?? "" },

@@ -9,7 +9,9 @@ export const personsUrl = (id?: string) => `${ROOT}/persons/${id ? id : "all"}`;
 
 export const createPersonUrl = () => `${ROOT}/persons/add`;
 
-export const deletePersonUrl = () => `${ROOT}/persons/delete`;
+export const deletePersonUrl = (id: string) => `${ROOT}/persons/delete/${id}`;
+
+export const updatePersonUrl = (id: string) => `${ROOT}/persons/update/${id}`;
 
 export const appointmentsUrl = (query?: URLSearchParams) =>
   `${ROOT}/appointments/all/?${query ? query : ""}`;
@@ -22,7 +24,10 @@ export const servicesUrl = (id?: string) =>
 export const servicesCreateUrl = () => `${ROOT}/services/create`;
 
 export const servicesDeleteUrl = (id: string) =>
-  `${ROOT}/services/create/${id}`;
+  `${ROOT}/services/delete/${id}`;
+
+export const servicesUpdateUrl = (id: string) =>
+  `${ROOT}/services/update/${id}`;
 
 export const revenueUrl = (query?: URLSearchParams) =>
   `${ROOT}/revenue/all/?${query ? query : ""}`;

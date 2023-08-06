@@ -9,6 +9,7 @@ type Props = {
   depth?: number;
   values?: string[];
   includeParamsAsPath?: boolean;
+  ignoreLastItem?: boolean;
 };
 
 /**
@@ -31,6 +32,7 @@ const Breadcrumbs = ({
   depth = 0,
   values,
   includeParamsAsPath = false,
+  ignoreLastItem,
 }: Props) => {
   const { Breadcrumbs, Breadcrumb, Seperator, Active } = styles;
 
@@ -42,7 +44,11 @@ const Breadcrumbs = ({
     .filter((segment) => segment !== "");
 
   if (!depth && values?.length) {
-    depth = values.length ?? 0;
+    if (ignoreLastItem) {
+      depth = values.length + 1;
+    } else {
+      depth = values.length ?? 0;
+    }
   }
 
   if (params && !includeParamsAsPath) {
@@ -57,6 +63,9 @@ const Breadcrumbs = ({
     breadcrumbs = breadcrumbs.reverse().splice(0, depth).reverse();
   }
 
+  if (ignoreLastItem) {
+    breadcrumbs.pop();
+  }
   return (
     <div className={Breadcrumbs}>
       {breadcrumbs.map((segment, index, array) => {

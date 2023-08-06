@@ -1,9 +1,9 @@
+import { useCallback } from "react";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import Table, { Action, Column } from "@/components/DataTable";
 import HeaderActions from "@/components/HeaderActions";
 import View from "@/components/View";
 import { IPerson } from "@/types/Person";
-import { deleteData } from "@/utils/api/delete";
 import { deletePersonUrl, personsUrl } from "@/utils/api/urls";
 import { Button, CircularProgress, Stack, useMediaQuery } from "@mui/material";
 import { useRouter } from "next/router";
@@ -11,7 +11,7 @@ import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import AddIcon from "@mui/icons-material/Add";
 import { theme } from "@/assets/styles/theme";
-import { useFetchStore } from "@/stores/useFetchStore";
+import { useDeleteStore, useFetchStore } from "@/stores/useRequestStore";
 
 const Appointments = () => {
   const router = useRouter();
@@ -22,25 +22,29 @@ const Appointments = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { fetch } = useFetchStore();
+  const { _delete } = useDeleteStore();
 
-  const handleDeletePerson = async (id: string) => {
-    if (!id) return;
+  const handleDeletePerson = useCallback(
+    async (id: string) => {
+      if (!id) return;
 
-    toast.promise(
-      deleteData(deletePersonUrl(), {
-        id,
-      }).then(() => {
-        fetch(personsUrl()).then((persons) => {
-          persons && setPersons(persons);
-        });
-      }),
-      {
-        loading: "Deleting person...",
-        success: "Successfully deleted person",
-        error: "Failed to delete person",
-      }
-    );
-  };
+      toast.promise(
+        _delete(deletePersonUrl(id), {
+          id,
+        }).then(() => {
+          fetch(personsUrl()).then((persons) => {
+            persons && setPersons(persons);
+          });
+        }),
+        {
+          loading: "Deleting person...",
+          success: "Successfully deleted person",
+          error: "Failed to delete person",
+        }
+      );
+    },
+    [setPersons, _delete, fetch]
+  );
 
   useEffect(() => {
     (async () => {
@@ -76,7 +80,7 @@ const Appointments = () => {
       },
       { label: "Delete", onClick: ({ _id }) => handleDeletePerson(_id) },
     ];
-  }, [router]);
+  }, [router, handleDeletePerson]);
 
   return (
     <View
