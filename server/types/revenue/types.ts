@@ -1,7 +1,7 @@
 // Odhodki
 export type IRevenue = {
   name?: string;
-  service_id?: string;
+  service_id?: [string];
   person_id?: string;
   payment_type?: PaymentTypeEnum;
   date?: Date;

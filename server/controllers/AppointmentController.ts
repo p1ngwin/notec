@@ -36,19 +36,36 @@ const AppointmentController = {
       {
         $lookup: {
           from: "services",
-          localField: "service_id",
-          foreignField: "_id",
-          as: "service",
+          let: { service_ids: "$service_id" }, // Store the array of service_ids in a variable
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $in: ["$_id", "$$service_ids"], // Use the $in operator to match with the array
+                },
+              },
+            },
+          ],
+          as: "services", // Store the matched services in the "services" field
         },
-      },
-      {
-        $unwind: "$service",
       },
       {
         $project: {
           date: "$date",
           time: "$time",
-          service: "$service.service",
+          service: {
+            $reduce: {
+              input: "$services",
+              initialValue: "",
+              in: {
+                $concat: [
+                  "$$value",
+                  { $cond: [{ $eq: ["$$value", ""] }, "", ", "] },
+                  "$$this.service",
+                ],
+              },
+            },
+          },
           person_id: "$person._id",
           first_name: "$person.first_name",
           last_name: "$person.last_name",
@@ -113,6 +130,12 @@ const AppointmentController = {
         return res.status(404).json({ error: "Person not found!" });
       }
 
+      const services = await ServiceModel.find({
+        _id: { $in: service_id },
+      })
+        .select("price")
+        .lean();
+
       const appointmentData: IAppointment = {
         person_id,
         date: date,
@@ -125,12 +148,10 @@ const AppointmentController = {
 
       await appointment.save();
 
-      const service = await ServiceModel.findById(service_id);
-
       const revenueData: IRevenue = {
         service_id,
         person_id,
-        net_profit: service?.price,
+        net_profit: services.reduce((acc, ser) => acc + ser.price!, 0),
         date,
         is_paid: false,
         uuid: uid,

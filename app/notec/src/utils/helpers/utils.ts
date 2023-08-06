@@ -7,6 +7,8 @@ dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
 export const capitalize = (str: string): string => {
+  if (!str) return "";
+
   if (str.length === 0) {
     return str;
   }
