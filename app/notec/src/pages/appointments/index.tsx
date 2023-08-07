@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
-import { EventContentArg } from "@fullcalendar/core";
+import { EventContentArg, EventClickArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import View from "@/components/View";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
@@ -53,17 +53,23 @@ const Appointments = () => {
 
     if (!event || !event.extendedProps) return;
 
-    const { startTime, first_name, last_name, service } =
+    const { _id, startTime, first_name, last_name, service } =
       event.extendedProps || {};
 
     return (
       <RenderEventCell
+        id={_id}
         start={startTime}
         first_name={first_name}
         last_name={last_name}
         service={service}
       />
     );
+  };
+
+  const handleEventClick = (e: EventClickArg) => {
+    const { id } = e.event;
+    router.push(`/appointments/edit/${id}`);
   };
 
   return (
@@ -87,6 +93,7 @@ const Appointments = () => {
           events={
             appointments?.length
               ? appointments.map((app) => ({
+                  id: app._id,
                   title: app.service,
                   allDay: false,
                   start: app.date,
@@ -136,9 +143,12 @@ const Appointments = () => {
           allDaySlot={false}
           nowIndicator
           expandRows
+          eventClick={handleEventClick}
         />
         <Button
+          sx={{ marginTop: "2rem" }}
           variant="contained"
+          fullWidth
           onClick={() => router.push("/appointments/add")}
         >
           Novo naročilo
@@ -151,12 +161,14 @@ const Appointments = () => {
 export default Appointments;
 
 type EventCellProps = {
+  id: string;
   start: string;
   first_name: string;
   last_name: string;
   service: string;
 };
 const RenderEventCell = ({
+  id,
   start,
   first_name,
   last_name,
@@ -169,7 +181,7 @@ const RenderEventCell = ({
         {service.split(",").map((service, index) => (
           <MenuItem
             sx={{ lineHeight: 0.5, padding: 0 }}
-            key={index}
+            key={id ?? index}
           >
             <ChevronRight /> {service}
           </MenuItem>

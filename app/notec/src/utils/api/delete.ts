@@ -1,7 +1,7 @@
 import { auth } from "@/auth/useAuth";
 import { defaultFetchOptions } from "../helpers/utils";
 
-export const deleteData = async (url: RequestInfo, id: any): Promise<any> => {
+export const deleteData = async (url: RequestInfo, body: any): Promise<any> => {
   const token = await auth.currentUser?.getIdToken();
   if (!token) return new Error("Provide token!");
 
@@ -13,9 +13,10 @@ export const deleteData = async (url: RequestInfo, id: any): Promise<any> => {
       Authorization: `Bearer ${token}`,
     },
   };
+
   const response = await fetch(url, {
     ...fetchOptions,
-    body: JSON.stringify(id),
+    body: JSON.stringify(body),
   });
 
   if (response.ok) {

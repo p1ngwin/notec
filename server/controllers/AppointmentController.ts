@@ -1,4 +1,4 @@
-import { FilterQuery } from "mongoose";
+import mongoose, { FilterQuery, isValidObjectId } from "mongoose";
 import { AppointmentModel } from "../models/Appointment";
 import { PersonModel } from "../models/Person";
 import { IAppointment } from "../types/appointment/types";
@@ -14,7 +14,7 @@ const AppointmentController = {
     const { uid } = req.user ?? {};
     if (!uid) return res.status(401).json({ error: "Not authorized" });
 
-    const { date, dateOnly } = req.query ?? req.body ?? {};
+    const { date, dateOnly, id } = req.query ?? req.body ?? {};
 
     const pipeline: FilterQuery<IAppointment[]> = [
       {
@@ -84,6 +84,15 @@ const AppointmentController = {
       pipeline.unshift({
         $match: {
           date: dateType(date as string),
+        },
+      });
+    }
+
+    if (id && mongoose.Types.ObjectId.isValid(id as string)) {
+      const _id = new mongoose.Types.ObjectId(id as string);
+      pipeline.unshift({
+        $match: {
+          _id,
         },
       });
     }
@@ -170,10 +179,14 @@ const AppointmentController = {
   updateAppointment: async (req: Request, res: Response) => {
     const { uid } = req.user ?? {};
     if (!uid) return res.status(401).json({ error: "Not authorized" });
-    const { id, person_id, date, time, service_id, uuid } = req.body;
+
+    if (!isValidObjectId(req?.params?.id))
+      return res.status(500).json({ error: "Wrong ID format!" });
+
+    const id = new mongoose.Types.ObjectId(req.params.id);
+    const { person_id, date, time, service_id, uuid } = req.body;
     try {
       const appointmentData: IAppointment = {
-        id,
         person_id,
         date,
         time,
@@ -202,7 +215,11 @@ const AppointmentController = {
   deleteAppointment: async (req: Request, res: Response) => {
     const { uid } = req.user ?? {};
     if (!uid) return res.status(401).json({ error: "Not authorized" });
-    const { id } = req.body;
+
+    if (!isValidObjectId(req?.params?.id))
+      return res.status(500).json({ error: "Wrong ID format!" });
+
+    const id = new mongoose.Types.ObjectId(req.params.id);
 
     try {
       const deletedAppointment = await AppointmentModel.findByIdAndDelete(id);

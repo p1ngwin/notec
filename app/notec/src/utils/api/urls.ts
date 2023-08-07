@@ -18,6 +18,12 @@ export const appointmentsUrl = (query?: URLSearchParams) =>
 
 export const createAppointmentUrl = () => `${ROOT}/appointments/create`;
 
+export const updateAppointmentUrl = (id: string) =>
+  `${ROOT}/appointments/update/${id}`;
+
+export const deleteAppointmentUrl = (id: string) =>
+  `${ROOT}/appointments/delete/${id}`;
+
 export const servicesUrl = (id?: string) =>
   `${ROOT}/services/${id ? id : "all"}`;
 
