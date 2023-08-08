@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Table as DataTable,
   TableBody,
@@ -8,6 +8,10 @@ import {
   TableRow,
   Menu,
   MenuItem,
+  TablePagination,
+  TextField,
+  Stack,
+  Button,
 } from "@mui/material";
 import { useRef } from "react";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -94,15 +98,69 @@ const Table = <RowData extends HasId>({
   rowActions,
   showRowCount = false,
 }: Props<RowData>) => {
-  const { Table, TableHeadCell } = styles;
+  const { Table, TableHeadCell, FooterPagination, TableBodyCell } = styles;
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [filterResults, setFilterResults] = useState("");
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const visibleRows = useMemo(() => {
+    if (rows && rows.length) {
+      if (filterResults && filterResults !== "") {
+        return rows.filter((row) => {
+          return Object.values(row).some((t) =>
+            t
+              .toString()
+              .toLowerCase()
+              .includes(filterResults.toString().toLowerCase())
+          );
+        });
+      }
+      return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+    } else return [];
+  }, [page, rowsPerPage, rows, filterResults]);
 
   return (
     <div className={Table}>
+      <Stack>
+        <TextField
+          variant="outlined"
+          size="small"
+          fullWidth={false}
+          placeholder="Iskanje"
+          onChange={(e) => setFilterResults(e.currentTarget.value)}
+          value={filterResults}
+          InputProps={{
+            endAdornment: (
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setFilterResults("");
+                }}
+                sx={{ position: "absolute", right: 0, border: 0 }}
+              >
+                X
+              </Button>
+            ),
+          }}
+        />
+      </Stack>
       <TableContainer>
         <DataTable>
           <TableHead>
             <TableRow>
-              {showRowCount && <Cell />}
+              {showRowCount && <Cell className={classNames([TableHeadCell])} />}
               {columns.map(({ field, label, headClassName }) => (
                 <Cell
                   className={classNames([TableHeadCell], { headClassName })}
@@ -111,19 +169,25 @@ const Table = <RowData extends HasId>({
                   {label}
                 </Cell>
               ))}
-              {rowActions && <Cell />}
+              {rowActions && <Cell className={classNames([TableHeadCell])} />}
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {rows.length > 0 &&
-              rows.map((row, index) => (
+            {visibleRows &&
+              visibleRows?.map((row, index) => (
                 <TableRow key={index}>
-                  {showRowCount && <Cell>{index + 1}</Cell>}
+                  {showRowCount && (
+                    <Cell className={classNames([TableBodyCell])}>
+                      {index + 1}
+                    </Cell>
+                  )}
                   {columns.map(
-                    ({ field, label, headClassName, renderCell }) => (
+                    ({ field, label, cellClassName, renderCell }) => (
                       <Cell
-                        className={headClassName && headClassName}
+                        className={classNames([TableBodyCell], {
+                          cellClassName,
+                        })}
                         key={`${index}-${field}`}
                       >
                         {renderCell ? renderCell(row) : label}
@@ -131,7 +195,7 @@ const Table = <RowData extends HasId>({
                     )
                   )}
                   {rowActions && (
-                    <Cell>
+                    <Cell className={classNames([TableBodyCell])}>
                       <RowAction
                         row={row}
                         actions={rowActions}
@@ -143,6 +207,18 @@ const Table = <RowData extends HasId>({
           </TableBody>
         </DataTable>
       </TableContainer>
+      {rows.length && (
+        <TablePagination
+          className={FooterPagination}
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={rows?.length ?? 0}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      )}
     </div>
   );
 };

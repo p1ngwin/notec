@@ -149,7 +149,7 @@ div#__next > div
   width: 70px!important
 
 .MuiInputBase-input
-  display: flex
+  display: flex!important
   align-items: center
   font-size: 1.2rem
   font-weight: 500
@@ -157,6 +157,9 @@ div#__next > div
 .fc
   & .fc-toolbar
     flex-direction: column
+
+  & .fc-event
+    position: relative
 
 .fc-timegrid-col-events div a
   background: #3EAC2a
@@ -192,3 +195,12 @@ div#__next > div
 .ToastPrimary
   font-family: 'Nunito Sans'
   font-weight: bold
+
+.AsyncPrimary
+  font-size: 1rem
+  & > div
+    padding: 0.8rem 0.2rem
+
+  & .MultiValueGeneric
+    padding: 10px
+    font-size: 100%

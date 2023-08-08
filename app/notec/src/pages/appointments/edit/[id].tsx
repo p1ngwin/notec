@@ -1,60 +1,109 @@
-import { useEffect } from "react";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import styles from "./styles.module.sass";
-import { createAppointmentUrl, personsUrl } from "@/utils/api/urls";
-import toast from "react-hot-toast";
+import View from "@/components/View";
 import { useRouter } from "next/router";
-import { Box, FormControl, Stack, Typography } from "@mui/material";
-import { IPerson } from "@/types/Person";
-import { IService } from "@/types/Service";
-import { QueryProps } from "@/types/general";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { parseDateTime } from "@/utils/helpers/utils";
-import { TimePicker, DatePicker } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
-import { useFetchStore, usePostStore } from "@/stores/useRequestStore";
-import { servicesUrl } from "@/utils/api/urls";
+import styles from "../styles.module.sass";
 import AsyncSelect from "react-select/async";
+import React, { useEffect, useState } from "react";
+import {
+  appointmentsUrl,
+  deleteAppointmentUrl,
+  personsUrl,
+  servicesUrl,
+  updateAppointmentUrl,
+} from "@/utils/api/urls";
+import { IPerson } from "@/types/Person";
+import {
+  useDeleteStore,
+  useFetchStore,
+  useUpdateStore,
+} from "@/stores/useRequestStore";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import { Box, Stack, Typography, FormControl, Button } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import dayjs from "dayjs";
+import { IAppointment } from "@/types/Appointment";
+import {
+  DatePicker,
+  LocalizationProvider,
+  TimePicker,
+} from "@mui/x-date-pickers";
+import { IService } from "@/types/Service";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { formatDate, formatTime, parseDateTime } from "@/utils/helpers/utils";
 
-type FormProps = {
+type FormValues = {
   person_id: string;
   date: string;
   time: string;
   service_id: string[];
 };
 
-const CreateAppointmentForm = () => {
+export default function Page() {
   const router = useRouter();
+  const { query } = router;
 
-  const { post } = usePostStore();
+  const appointmentId = query.id as string;
+
   const { fetch, isLoading } = useFetchStore();
+  const { update } = useUpdateStore();
+  const { _delete } = useDeleteStore();
 
-  const query = router.query as QueryProps;
+  const { PersonView } = styles;
 
-  const { time, date } = query ?? {};
+  const [currentAppointment, setAppointment] = useState<IAppointment>();
 
-  const { FormGroup, FormContainer, FormInput, FormButton } = styles;
+  const { service_id, person_id, date, time } = currentAppointment ?? {};
 
-  const { control, handleSubmit, reset } = useForm<FormProps>({
+  const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {
-      date: parseDateTime(),
-      time: parseDateTime(),
-      person_id: "",
-      service_id: [""],
+      date: parseDateTime(date),
+      time: parseDateTime(time),
+      person_id: person_id,
+      service_id: service_id,
     },
   });
 
   useEffect(() => {
-    reset({ date: parseDateTime(date), time: parseDateTime(time) });
-  }, [date, time, reset]);
+    (async () => {
+      const appointment = await fetch(
+        appointmentsUrl(new URLSearchParams({ id: appointmentId }))
+      );
+      if (appointment) {
+        setAppointment(appointment[0]);
+        reset(appointment);
+      }
+    })();
+  }, [appointmentId, fetch, reset]);
 
-  const onSubmit: SubmitHandler<FormProps> = async (data) => {
-    const response = await post(createAppointmentUrl(), data);
-    if (response?.ok) {
-      toast.success("Naročilo uspešno dodano.");
+  const onUpdate = async (data: FormValues) => {
+    const updatedAppointment = await update(
+      updateAppointmentUrl(appointmentId),
+      data
+    );
+    updatedAppointment && setAppointment(updatedAppointment);
+    const appointment = await fetch(
+      appointmentsUrl(new URLSearchParams({ id: appointmentId }))
+    );
+    if (appointment) {
+      setAppointment(appointment);
+      reset(appointment);
+
+      toast.success("Oseba uspešno posodobljena.");
+    } else {
+      toast.error("Napaka pri posodabljanju osebe.");
+    }
+  };
+
+  const handleOnDeleteClick = async () => {
+    const deletedAppointment = await _delete(
+      deleteAppointmentUrl(appointmentId),
+      { id: appointmentId }
+    );
+
+    if (deletedAppointment) {
+      toast.success("Naročilo uspešno izbrisano");
       router.push("/appointments");
-    } else toast.error("Napaka!");
+    }
   };
 
   const fetchServices = async () => {
@@ -99,19 +148,23 @@ const CreateAppointmentForm = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div>
-        <Typography
-          variant="h4"
-          align="center"
-        >
-          Novo naročilo
+      <View
+        className={PersonView}
+        fullWidth
+      >
+        <Breadcrumbs
+          ignoreLastItem
+          values={["Naročilo", "Urejanje"]}
+        />
+        <Typography variant="h6">
+          {currentAppointment?.first_name} {currentAppointment?.last_name} -{" "}
+          {formatDate(currentAppointment?.date)}, {" "}
+          {formatTime(currentAppointment?.time)}
         </Typography>
+
         <Box sx={{ mt: 1 }}>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className={FormContainer}
-          >
-            <div className={FormGroup}>
+          <form onSubmit={handleSubmit(onUpdate)}>
+            <div>
               <Stack
                 spacing={{ xs: 1, sm: 2 }}
                 direction="row"
@@ -122,12 +175,10 @@ const CreateAppointmentForm = () => {
                 <Controller
                   name="date"
                   control={control}
-                  rules={{ required: "Prosimo izberite storitev." }}
                   render={({ field }) => (
                     <>
                       <DatePicker
                         {...field}
-                        className={FormInput}
                         format="dddd, DD. MMMM YYYY"
                         onChange={(date) => field.onChange(date!)}
                         slotProps={{
@@ -142,12 +193,10 @@ const CreateAppointmentForm = () => {
                 <Controller
                   name="time"
                   control={control}
-                  rules={{ required: "Prosimo izberite čas" }}
                   render={({ field }) => (
                     <FormControl>
                       <TimePicker
                         {...field}
-                        className={FormInput}
                         onChange={(date) => field.onChange(date!)}
                         slotProps={{
                           textField: {
@@ -164,14 +213,13 @@ const CreateAppointmentForm = () => {
                 <Controller
                   name="service_id"
                   control={control}
-                  rules={{ required: "Prosimo izberite osebo" }}
                   render={({ ...field }) => (
                     <FormControl>
                       <AsyncSelect<IService, true>
                         {...field}
                         cacheOptions
+                        placeholder="Izberite storitve"
                         className="AsyncPrimary"
-                        placeholder="Izberite storitev"
                         loadOptions={serviceOptions}
                         isMulti
                         defaultOptions
@@ -194,11 +242,10 @@ const CreateAppointmentForm = () => {
                   render={({ ...field }) => (
                     <FormControl>
                       <AsyncSelect<IPerson, false>
-                        {...field}
                         className="AsyncPrimary"
                         cacheOptions
-                        placeholder="Izberite stranko"
                         loadOptions={personOptions}
+                        placeholder="Izberite stranko"
                         defaultOptions
                         getOptionLabel={(person) =>
                           `${person.first_name} ${person.last_name}`
@@ -208,24 +255,30 @@ const CreateAppointmentForm = () => {
                           field.field.onChange(value?._id || "")
                         }
                         isLoading={isLoading}
+                        {...field}
                       />
                     </FormControl>
                   )}
                 />
-                <div className={FormGroup}>
-                  <input
-                    type="submit"
-                    value="Dodaj"
-                    className={FormButton}
-                  />
-                </div>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                >
+                  Posodobi
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleOnDeleteClick}
+                >
+                  Izbriši naročilo
+                </Button>
               </Stack>
             </div>
           </form>
         </Box>
-      </div>
+      </View>
     </LocalizationProvider>
   );
-};
-
-export default CreateAppointmentForm;
+}

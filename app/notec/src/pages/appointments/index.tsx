@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
-import { EventContentArg } from "@fullcalendar/core";
+import { EventContentArg, EventClickArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import View from "@/components/View";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
@@ -17,7 +17,7 @@ import { useFetchStore } from "@/stores/useRequestStore";
 import { ChevronRight } from "@mui/icons-material";
 
 const Appointments = () => {
-  const { AppointmentsView, EventCell, SlotLabelDay } = styles;
+  const { AppointmentsView, EventCell, SlotLabelDay, SlotServiceItem } = styles;
 
   const { fetch } = useFetchStore();
 
@@ -53,17 +53,28 @@ const Appointments = () => {
 
     if (!event || !event.extendedProps) return;
 
-    const { startTime, first_name, last_name, service } =
+    const { _id, startTime, first_name, last_name, service } =
       event.extendedProps || {};
 
     return (
       <RenderEventCell
+        id={_id}
         start={startTime}
         first_name={first_name}
         last_name={last_name}
         service={service}
+        className={SlotServiceItem}
       />
     );
+  };
+
+  const handleEventClick = (e: EventClickArg) => {
+    const { id } = e.event;
+    router.push(`/appointments/edit/${id}`);
+  };
+
+  const parseAppointmentStart = (date: string, time: string) => {
+    return `${date.split("T")[0]}T${time.split("T")[1]}`;
   };
 
   return (
@@ -87,9 +98,10 @@ const Appointments = () => {
           events={
             appointments?.length
               ? appointments.map((app) => ({
+                  id: app._id,
                   title: app.service,
                   allDay: false,
-                  start: app.date,
+                  start: parseAppointmentStart(app.date, app.time),
                   extendedProps: {
                     first_name: app.first_name,
                     last_name: app.last_name,
@@ -136,9 +148,12 @@ const Appointments = () => {
           allDaySlot={false}
           nowIndicator
           expandRows
+          eventClick={handleEventClick}
         />
         <Button
+          sx={{ marginTop: "2rem" }}
           variant="contained"
+          fullWidth
           onClick={() => router.push("/appointments/add")}
         >
           Novo naročilo
@@ -151,16 +166,20 @@ const Appointments = () => {
 export default Appointments;
 
 type EventCellProps = {
+  id: string;
   start: string;
   first_name: string;
   last_name: string;
   service: string;
+  className?: string;
 };
 const RenderEventCell = ({
+  id,
   start,
   first_name,
   last_name,
   service,
+  className,
 }: EventCellProps) => {
   return (
     <div>
@@ -169,7 +188,8 @@ const RenderEventCell = ({
         {service.split(",").map((service, index) => (
           <MenuItem
             sx={{ lineHeight: 0.5, padding: 0 }}
-            key={index}
+            key={id ?? index}
+            className={className}
           >
             <ChevronRight /> {service}
           </MenuItem>
