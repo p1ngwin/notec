@@ -17,7 +17,7 @@ import { useFetchStore } from "@/stores/useRequestStore";
 import { ChevronRight } from "@mui/icons-material";
 
 const Appointments = () => {
-  const { AppointmentsView, EventCell, SlotLabelDay } = styles;
+  const { AppointmentsView, EventCell, SlotLabelDay, SlotServiceItem } = styles;
 
   const { fetch } = useFetchStore();
 
@@ -63,6 +63,7 @@ const Appointments = () => {
         first_name={first_name}
         last_name={last_name}
         service={service}
+        className={SlotServiceItem}
       />
     );
   };
@@ -70,6 +71,10 @@ const Appointments = () => {
   const handleEventClick = (e: EventClickArg) => {
     const { id } = e.event;
     router.push(`/appointments/edit/${id}`);
+  };
+
+  const parseAppointmentStart = (date: string, time: string) => {
+    return `${date.split("T")[0]}T${time.split("T")[1]}`;
   };
 
   return (
@@ -96,7 +101,7 @@ const Appointments = () => {
                   id: app._id,
                   title: app.service,
                   allDay: false,
-                  start: app.date,
+                  start: parseAppointmentStart(app.date, app.time),
                   extendedProps: {
                     first_name: app.first_name,
                     last_name: app.last_name,
@@ -166,6 +171,7 @@ type EventCellProps = {
   first_name: string;
   last_name: string;
   service: string;
+  className?: string;
 };
 const RenderEventCell = ({
   id,
@@ -173,6 +179,7 @@ const RenderEventCell = ({
   first_name,
   last_name,
   service,
+  className,
 }: EventCellProps) => {
   return (
     <div>
@@ -182,6 +189,7 @@ const RenderEventCell = ({
           <MenuItem
             sx={{ lineHeight: 0.5, padding: 0 }}
             key={id ?? index}
+            className={className}
           >
             <ChevronRight /> {service}
           </MenuItem>

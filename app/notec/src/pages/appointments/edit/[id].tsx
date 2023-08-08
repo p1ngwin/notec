@@ -63,13 +63,6 @@ export default function Page() {
     },
   });
 
-  const fetchServices = async () => {
-    const services = await fetch(servicesUrl());
-    if (services) {
-      return services;
-    }
-  };
-
   useEffect(() => {
     (async () => {
       const appointment = await fetch(
@@ -77,11 +70,7 @@ export default function Page() {
       );
       if (appointment) {
         setAppointment(appointment[0]);
-        reset({
-          ...appointment,
-          time: parseDateTime(appointment[0].time),
-          date: parseDateTime(appointment[0].date),
-        });
+        reset(appointment);
       }
     })();
   }, [appointmentId, fetch, reset]);
@@ -117,14 +106,44 @@ export default function Page() {
     }
   };
 
-  const serviceOptions = (): Promise<IService[]> =>
+  const fetchServices = async () => {
+    const services = await fetch(servicesUrl());
+    if (services) {
+      return services;
+    }
+  };
+
+  const fetchPersons = async () => {
+    const services = await fetch(personsUrl());
+    if (services) {
+      return services;
+    }
+  };
+
+  const serviceOptions = (filterValue: string): Promise<IService[]> =>
     new Promise((resolve) => {
-      resolve(fetchServices());
+      resolve(
+        fetchServices().then((res) =>
+          res.filter((item: IService) =>
+            item.service.toLowerCase().includes(filterValue.toLowerCase())
+          )
+        )
+      );
     });
 
-  const personOptions = (): Promise<IPerson[]> =>
+  const personOptions = (filterValue: string): Promise<IPerson[]> =>
     new Promise((resolve) => {
-      resolve(fetch(personsUrl()));
+      resolve(
+        fetchPersons().then((res) =>
+          res.filter(
+            (item: IPerson) =>
+              item.first_name
+                .toLowerCase()
+                .includes(filterValue.toLowerCase()) ||
+              item.last_name.toLowerCase().includes(filterValue.toLowerCase())
+          )
+        )
+      );
     });
 
   return (
@@ -137,10 +156,9 @@ export default function Page() {
           ignoreLastItem
           values={["Naročilo", "Urejanje"]}
         />
-        <Typography variant="h4">
-          Urejanje naročila - {currentAppointment?.first_name}{" "}
-          {currentAppointment?.last_name} -{" "}
-          {formatDate(currentAppointment?.date)} ob ,{" "}
+        <Typography variant="h6">
+          {currentAppointment?.first_name} {currentAppointment?.last_name} -{" "}
+          {formatDate(currentAppointment?.date)}, {" "}
           {formatTime(currentAppointment?.time)}
         </Typography>
 
@@ -157,7 +175,6 @@ export default function Page() {
                 <Controller
                   name="date"
                   control={control}
-                  rules={{ required: "Prosimo izberite storitev." }}
                   render={({ field }) => (
                     <>
                       <DatePicker
@@ -176,7 +193,6 @@ export default function Page() {
                 <Controller
                   name="time"
                   control={control}
-                  rules={{ required: "Prosimo izberite čas" }}
                   render={({ field }) => (
                     <FormControl>
                       <TimePicker
@@ -197,13 +213,12 @@ export default function Page() {
                 <Controller
                   name="service_id"
                   control={control}
-                  rules={{ required: "Prosimo izberite osebo" }}
                   render={({ ...field }) => (
                     <FormControl>
                       <AsyncSelect<IService, true>
                         {...field}
                         cacheOptions
-                        placeholder={currentAppointment?.service}
+                        placeholder="Izberite storitve"
                         className="AsyncPrimary"
                         loadOptions={serviceOptions}
                         isMulti
@@ -227,11 +242,10 @@ export default function Page() {
                   render={({ ...field }) => (
                     <FormControl>
                       <AsyncSelect<IPerson, false>
-                        {...field}
-                        placeholder={`${currentAppointment?.first_name} ${currentAppointment?.last_name}`}
                         className="AsyncPrimary"
                         cacheOptions
                         loadOptions={personOptions}
+                        placeholder="Izberite stranko"
                         defaultOptions
                         getOptionLabel={(person) =>
                           `${person.first_name} ${person.last_name}`
@@ -241,6 +255,7 @@ export default function Page() {
                           field.field.onChange(value?._id || "")
                         }
                         isLoading={isLoading}
+                        {...field}
                       />
                     </FormControl>
                   )}

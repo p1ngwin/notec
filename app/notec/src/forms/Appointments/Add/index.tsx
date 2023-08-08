@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import styles from "./styles.module.sass";
-import { createAppointmentUrl } from "@/utils/api/urls";
+import { createAppointmentUrl, personsUrl } from "@/utils/api/urls";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import { Box, FormControl, MenuItem, Select, Stack } from "@mui/material";
+import { Box, FormControl, Stack, Typography } from "@mui/material";
 import { IPerson } from "@/types/Person";
 import { IService } from "@/types/Service";
 import { QueryProps } from "@/types/general";
@@ -13,7 +13,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { parseDateTime } from "@/utils/helpers/utils";
 import { TimePicker, DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { usePostStore } from "@/stores/useRequestStore";
+import { useFetchStore, usePostStore } from "@/stores/useRequestStore";
+import { servicesUrl } from "@/utils/api/urls";
+import AsyncSelect from "react-select/async";
 
 type FormProps = {
   person_id: string;
@@ -22,15 +24,11 @@ type FormProps = {
   service_id: string[];
 };
 
-type Props = {
-  persons: IPerson[];
-  services: IService[];
-};
-
-const CreateAppointmentForm = ({ persons, services }: Props) => {
+const CreateAppointmentForm = () => {
   const router = useRouter();
 
   const { post } = usePostStore();
+  const { fetch, isLoading } = useFetchStore();
 
   const query = router.query as QueryProps;
 
@@ -43,7 +41,7 @@ const CreateAppointmentForm = ({ persons, services }: Props) => {
       date: parseDateTime(),
       time: parseDateTime(),
       person_id: "",
-      service_id: [],
+      service_id: [""],
     },
   });
 
@@ -59,12 +57,60 @@ const CreateAppointmentForm = ({ persons, services }: Props) => {
     } else toast.error("Napaka!");
   };
 
+  const fetchServices = async () => {
+    const services = await fetch(servicesUrl());
+    if (services) {
+      return services;
+    }
+  };
+
+  const fetchPersons = async () => {
+    const services = await fetch(personsUrl());
+    if (services) {
+      return services;
+    }
+  };
+
+  const serviceOptions = (filterValue: string): Promise<IService[]> =>
+    new Promise((resolve) => {
+      resolve(
+        fetchServices().then((res) =>
+          res.filter((item: IService) =>
+            item.service.toLowerCase().includes(filterValue.toLowerCase())
+          )
+        )
+      );
+    });
+
+  const personOptions = (filterValue: string): Promise<IPerson[]> =>
+    new Promise((resolve) => {
+      resolve(
+        fetchPersons().then((res) =>
+          res.filter(
+            (item: IPerson) =>
+              item.first_name
+                .toLowerCase()
+                .includes(filterValue.toLowerCase()) ||
+              item.last_name.toLowerCase().includes(filterValue.toLowerCase())
+          )
+        )
+      );
+    });
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className={FormContainer}>
-        <h2>Novo naročilo</h2>
+      <div>
+        <Typography
+          variant="h4"
+          align="center"
+        >
+          Novo naročilo
+        </Typography>
         <Box sx={{ mt: 1 }}>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className={FormContainer}
+          >
             <div className={FormGroup}>
               <Stack
                 spacing={{ xs: 1, sm: 2 }}
@@ -86,7 +132,7 @@ const CreateAppointmentForm = ({ persons, services }: Props) => {
                         onChange={(date) => field.onChange(date!)}
                         slotProps={{
                           textField: {
-                            variant: "standard",
+                            variant: "outlined",
                           },
                         }}
                       />
@@ -105,7 +151,7 @@ const CreateAppointmentForm = ({ persons, services }: Props) => {
                         onChange={(date) => field.onChange(date!)}
                         slotProps={{
                           textField: {
-                            variant: "standard",
+                            variant: "outlined",
                             placeholder: dayjs().format("HH:mm"),
                           },
                         }}
@@ -119,28 +165,25 @@ const CreateAppointmentForm = ({ persons, services }: Props) => {
                   name="service_id"
                   control={control}
                   rules={{ required: "Prosimo izberite osebo" }}
-                  render={({ field }) => (
+                  render={({ ...field }) => (
                     <FormControl>
-                      <Select
+                      <AsyncSelect<IService, true>
                         {...field}
-                        variant="standard"
-                        placeholder="Storitev"
-                        multiple
-                        onChange={(event: any) =>
-                          field.onChange(event.target.value)
+                        cacheOptions
+                        className="AsyncPrimary"
+                        placeholder="Izberite storitev"
+                        loadOptions={serviceOptions}
+                        isMulti
+                        defaultOptions
+                        getOptionLabel={(opt) =>
+                          `${opt.service} - (${opt.price}€)`
                         }
-                      >
-                        {services?.length &&
-                          services.map((service: IService, index) => (
-                            <MenuItem
-                              key={index}
-                              value={service?._id}
-                            >
-                              {service.service}
-                              <i> ({service.price} €)</i>
-                            </MenuItem>
-                          ))}
-                      </Select>
+                        getOptionValue={(opt) => opt._id}
+                        onChange={(value) => {
+                          field.field.onChange(value.map((val) => val._id));
+                        }}
+                        isLoading={isLoading}
+                      />
                     </FormControl>
                   )}
                 />
@@ -148,24 +191,24 @@ const CreateAppointmentForm = ({ persons, services }: Props) => {
                   name="person_id"
                   control={control}
                   rules={{ required: "Prosimo izberite osebo" }}
-                  render={({ field }) => (
+                  render={({ ...field }) => (
                     <FormControl>
-                      <Select
+                      <AsyncSelect<IPerson, false>
                         {...field}
-                        variant="standard"
-                        placeholder="Oseba"
-                        onChange={(event) => field.onChange(event.target.value)}
-                      >
-                        {persons?.length &&
-                          persons.map((person: IPerson, index) => (
-                            <MenuItem
-                              key={index}
-                              value={person?._id}
-                            >
-                              {person?.first_name} {person?.last_name}
-                            </MenuItem>
-                          ))}
-                      </Select>
+                        className="AsyncPrimary"
+                        cacheOptions
+                        placeholder="Izberite stranko"
+                        loadOptions={personOptions}
+                        defaultOptions
+                        getOptionLabel={(person) =>
+                          `${person.first_name} ${person.last_name}`
+                        }
+                        getOptionValue={(opt) => opt._id}
+                        onChange={(value) =>
+                          field.field.onChange(value?._id || "")
+                        }
+                        isLoading={isLoading}
+                      />
                     </FormControl>
                   )}
                 />
