@@ -3,7 +3,7 @@ import styles from "./styles.module.sass";
 import { Box, Paper, Typography, CircularProgress } from "@mui/material";
 
 type Props = {
-  title: string;
+  title?: string;
   subtitle?: string;
   value?: string | number;
   icon?: React.ReactNode;
@@ -11,6 +11,7 @@ type Props = {
   isLoading?: boolean;
   children?: React.ReactNode;
   extend?: boolean;
+  centerContent?: boolean;
 };
 
 export const PaperCard = ({
@@ -22,6 +23,7 @@ export const PaperCard = ({
   isLoading,
   children,
   extend,
+  centerContent,
 }: Props) => {
   const { PaperCard, Title, Subtitle, Value, Clickable } = styles;
 
@@ -36,6 +38,8 @@ export const PaperCard = ({
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        placeContent: centerContent ? "center" : "initial",
+        placeItems: centerContent ? "center" : "initial",
         flex: extend ? 1 : "initial",
       }}
       onClick={onClick}
@@ -44,7 +48,7 @@ export const PaperCard = ({
         <CircularProgress />
       ) : (
         <>
-          <Box sx={{ display: "flex" }}>
+          <Box>
             <Typography
               variant="h5"
               className={Title}
@@ -73,7 +77,7 @@ export const PaperCard = ({
             >
               {value}
             </Typography>
-            <Box>{children}</Box>
+            {children}
           </Box>
         </>
       )}

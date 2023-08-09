@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 
-import { ChevronRight } from "@mui/icons-material";
+import { ArrowRightRounded as SeperatorIcon } from "@mui/icons-material";
 import styles from "./styles.module.sass";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -87,13 +87,17 @@ const Breadcrumbs = ({
             className={Breadcrumb}
             key={index}
           >
+            <Link href={"../"}>Domov</Link>
+            <div className={Seperator}>
+              <SeperatorIcon />
+            </div>
             {index !== array.length - 1 ? (
               <>
                 <Link href={url}>
                   {values?.length ? values?.[index] : segment}
                 </Link>
                 <div className={Seperator}>
-                  <ChevronRight />
+                  <SeperatorIcon />
                 </div>
               </>
             ) : (

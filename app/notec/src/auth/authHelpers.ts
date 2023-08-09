@@ -7,8 +7,14 @@ import {
   signOut,
   AuthError,
   sendEmailVerification,
+  updateProfile,
+  sendPasswordResetEmail,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+  updatePassword,
 } from "firebase/auth";
 import toast from "react-hot-toast";
+import { auth } from "./useAuth";
 
 type AuthRegisterResponse = {
   user?: User;
@@ -70,8 +76,6 @@ export const getUser = () => {
 };
 
 export const useAuthActions = () => {
-  //const setUser = useUserStore((state) => state.setUser);
-
   const handleSignOut = async () => {
     const auth = getAuth();
     try {
@@ -98,4 +102,53 @@ export const sendEmailVerificationToUser = async (user: User | null) => {
   toast.success("Email verificaiton sent, check your email.");
 
   return { message: { status: "ok", code: "verification_code_sent" } };
+};
+
+type UpdateUserProfileProps = {
+  displayName?: string;
+  photoURL?: string;
+  password?: string;
+};
+
+export const updateUserProfile = async ({
+  displayName,
+  photoURL,
+  password,
+}: UpdateUserProfileProps): Promise<any> => {
+  if (!displayName || displayName === "" || !auth.currentUser) {
+    return;
+  }
+
+  const { email } = auth.currentUser;
+
+  if (email) {
+    try {
+      if (password && password !== "") {
+        const credential = EmailAuthProvider.credential(email, password);
+        await reauthenticateWithCredential(auth.currentUser, credential);
+        await updatePassword(auth.currentUser, password);
+      }
+      await updateProfile(auth.currentUser, {
+        displayName,
+        photoURL,
+      });
+      return { message: "Successfully updated profile.", status: "ok" };
+    } catch (error) {
+      return error;
+    }
+  }
+};
+
+export const resetUserPassword = async (email: string): Promise<any> => {
+  const auth = getAuth();
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      return {
+        message: "Password reset sucessfully sent. Please check your email",
+        status: "ok",
+      };
+    })
+    .catch((error) => {
+      return { ...error };
+    });
 };
