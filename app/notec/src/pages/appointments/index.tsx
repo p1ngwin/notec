@@ -102,7 +102,6 @@ const Appointments = () => {
 
     const { id } = e.event;
 
-    console.log(id);
     handleDialogOpen(
       <EventDetails
         id={id}
@@ -118,6 +117,7 @@ const Appointments = () => {
   };
 
   const handleDatesSet = async (dateInfo: DateQueryArgs) => {
+    if (!dateInfo.startStr && !dateInfo.endStr) return;
     const res = await fetch(
       appointmentsUrl(
         new URLSearchParams({
