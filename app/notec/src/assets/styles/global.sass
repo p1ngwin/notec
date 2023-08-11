@@ -135,7 +135,6 @@ div#__next > div
   border-radius: 3px
   font-size: 14px
   min-height: 40px
-  background: white
   box-sizing: initial
   display: flex
   justify-content: center
@@ -149,7 +148,7 @@ div#__next > div
   width: 70px!important
 
 .MuiInputBase-input
-  display: flex!important
+  display: flex
   align-items: center
   font-size: 1.2rem
   font-weight: 500
@@ -161,13 +160,18 @@ div#__next > div
   & .fc-event
     position: relative
 
-.fc-timegrid-col-events div a
-  background: #3EAC2a
-.fc-timegrid-col-events div:nth-child(2n) a
-  background: #63db4e
-.fc-timegrid-col-events div:nth-child(3n) a
-  background: #76b86a
+.fc-event:hover
+  background: $bg-primary-hover!important
 
+.fc-timegrid-col-events, .fc-daygrid-day-events
+  & div a
+    background: #3EAC2a
+.fc-timegrid-col-events, .fc-daygrid-day-events
+  & div:nth-child(2n) a
+    background: #63db4e
+.fc-timegrid-col-events, .fc-daygrid-day-events
+  & div:nth-child(3n) a
+    background: #76b86a
 
 .react-datepicker
   font-family: 'Nunito Sans'!important

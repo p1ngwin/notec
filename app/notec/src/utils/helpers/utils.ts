@@ -62,3 +62,11 @@ export const defaultFetchOptions: RequestInit = {
     "Content-type": "application/json",
   },
 };
+
+export const DEFAULT_DATE_FORMAT_MONTH = "MMMM YYYY";
+
+export const DEFAULT_DATE_FORMAT_DAY = "DD.  MMMM YYYY";
+
+export const DATE_FORMAT_DAY_MONTH_LONG = "dddd, DD. MMMM YYYY";
+
+export const DATE_FORMAT_WEEK_VIEW = "ddd, D";

@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { PaperCard } from "@/components/PaperCard";
+import DateNav from "@/components/DateNav";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -129,6 +130,7 @@ const Services = () => {
               values={["Prihodki"]}
             />
           </Stack>
+          <DateNav />
         </HeaderActions>
         <Table
           rows={revenue}
