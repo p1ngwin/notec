@@ -8,7 +8,7 @@ import { Box, TextField, Stack } from "@mui/material";
 
 type FormProps = {
   service: string;
-  price: number;
+  price?: number;
 };
 
 const AddServiceForm = () => {
@@ -18,7 +18,7 @@ const AddServiceForm = () => {
 
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
-      price: 0,
+      price: undefined,
       service: "",
     },
   });

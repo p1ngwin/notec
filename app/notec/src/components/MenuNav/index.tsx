@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./styles.module.sass";
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import Image from "next/image";
 import logo from "../../assets/img/logo.svg";
 import { useRouter } from "next/router";
@@ -12,6 +12,7 @@ import {
   Home,
   AddCard,
   AccountBalance,
+  Person,
 } from "@mui/icons-material";
 import classNames from "classnames";
 import { useSidebar } from "@/context/mobileSidebar/useSidebar";
@@ -59,13 +60,20 @@ export const MenuNav = ({ isMobile = false }: Props) => {
       <Spacer />
       <div className={NavMenuWrapper}>
         {isMobile && (
-          <div className={NavMenuButtonWrapper}>
-            <div className={NavMenuButton}>
-              <Typography color={"white"}>
-                Pozdrav, {user?.email}
-              </Typography>
+          <>
+            <div className={NavMenuButtonWrapper}>
+              <Button
+                className={NavMenuButton}
+                onClick={() => handleOnMenuItemClicked("/profile")}
+              >
+                <Person />
+                <div className={NavMenuText}>
+                  {user?.displayName ?? user?.email}
+                </div>
+              </Button>
             </div>
-          </div>
+            <Spacer />
+          </>
         )}
         <div className={NavMenuButtonWrapper}>
           <Button

@@ -1,4 +1,4 @@
-import { ReactNode, useRef, useState } from "react";
+import { ReactNode, useRef, useState, useEffect, useCallback } from "react";
 import FullCalendar from "@fullcalendar/react";
 import { EventContentArg, EventClickArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -8,11 +8,27 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { IAppointment } from "@/types/Appointment";
 import { appointmentsUrl, deleteAppointmentUrl } from "@/utils/api/urls";
 import styles from "./styles.module.sass";
-import { formatDate, formatTime, parseDateTime } from "@/utils/helpers/utils";
+import {
+  DATE_FORMAT_DAY_MONTH_LONG,
+  DATE_FORMAT_WEEK_VIEW,
+  DEFAULT_DATE_FORMAT_DAY,
+  DEFAULT_DATE_FORMAT_MONTH,
+  formatDate,
+  formatTime,
+  parseDateTime,
+} from "@/utils/helpers/utils";
 import { useRouter } from "next/router";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import HeaderActions from "@/components/HeaderActions";
-import { Button, Divider, Grid, MenuItem, Typography } from "@mui/material";
+import {
+  Button,
+  Divider,
+  Grid,
+  MenuItem,
+  Typography,
+  IconButton,
+  Stack,
+} from "@mui/material";
 import { useDeleteStore, useFetchStore } from "@/stores/useRequestStore";
 import Modal from "@/components/Modal";
 import {
@@ -20,13 +36,23 @@ import {
   CalendarTodayOutlined,
   TimerOutlined,
   PersonOutline,
+  NavigateBefore as PrevMonthIcon,
+  NavigateNext as NextMonthIcon,
 } from "@mui/icons-material";
 import toast from "react-hot-toast";
+import { useDateStore } from "@/stores/useDateStore";
+import dayjs from "dayjs";
 
 type DateQueryArgs = {
   endStr: string;
   startStr: string;
 };
+
+enum CalendarType {
+  timeGridDay = "timeGridDay",
+  timeGridWeek = "timeGridWeek",
+  dayGridMonth = "dayGridMonth",
+}
 
 const Appointments = () => {
   const {
@@ -35,19 +61,30 @@ const Appointments = () => {
     SlotLabelDay,
     SlotLabelWeek,
     SlotServiceItem,
+    DateNavArrow,
+    DateNavCn,
   } = styles;
 
   const { fetch } = useFetchStore();
 
   const router = useRouter();
 
+  const { getSelectedDate } = useDateStore();
+
   const calendarRef = useRef<FullCalendar | null>(null);
   const calendarApi = calendarRef.current?.getApi();
+
+  useEffect(() => {
+    calendarApi?.gotoDate(dayjs().toISOString());
+  }, [calendarApi, getSelectedDate]);
 
   const [appointments, setAppointments] = useState<IAppointment[]>();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState<ReactNode | null>(null);
+
+  const [currentStart, setCurrentStart] = useState("");
+  const [currentEnd, setCurrentEnd] = useState("");
 
   const handleDialogOpen = (content: ReactNode) => {
     setDialogContent(content);
@@ -60,16 +97,11 @@ const Appointments = () => {
 
   const handleDateClick = (arg: DateClickArg) => {
     if (!calendarApi) return;
-
-    // TODO: will se about that
-    //if (arg.view.type === "timeGridDay" && !arg.allDay) {
     router.push(
       `/appointments/add?date=${parseDateTime(
         arg.dateStr
       )}&time=${parseDateTime(arg.dateStr)}`
     );
-    //}
-    //calendarApi.changeView("timeGridDay", arg.dateStr);
   };
 
   const renderEventContent = (eventInfo: EventContentArg) => {
@@ -118,6 +150,31 @@ const Appointments = () => {
 
   const handleDatesSet = async (dateInfo: DateQueryArgs) => {
     if (!dateInfo.startStr && !dateInfo.endStr) return;
+
+    const dateType = calendarApi?.view.type;
+
+    if (dateType === CalendarType.timeGridWeek) {
+      setCurrentStart(
+        dayjs(calendarApi?.view.currentStart).format(DEFAULT_DATE_FORMAT_DAY)
+      );
+      setCurrentEnd(
+        " - " +
+          dayjs(calendarApi?.view.currentStart)
+            .add(6, "days")
+            .format(DEFAULT_DATE_FORMAT_DAY)
+      );
+    } else if (dateType === CalendarType.timeGridDay) {
+      setCurrentStart(
+        dayjs(calendarApi?.view.currentStart).format(DEFAULT_DATE_FORMAT_DAY)
+      );
+      setCurrentEnd("");
+    } else if (dateType === CalendarType.dayGridMonth) {
+      setCurrentStart(
+        dayjs(calendarApi?.view.currentStart).format(DEFAULT_DATE_FORMAT_MONTH)
+      );
+      setCurrentEnd("");
+    }
+
     const res = await fetch(
       appointmentsUrl(
         new URLSearchParams({
@@ -127,6 +184,14 @@ const Appointments = () => {
       )
     );
     res && setAppointments(res);
+  };
+
+  const handleOnPrevMonth = () => {
+    calendarApi?.prev();
+  };
+
+  const handleOnNextMonth = () => {
+    calendarApi?.next();
   };
 
   return (
@@ -141,12 +206,97 @@ const Appointments = () => {
             values={["Naročila"]}
           />
         </HeaderActions>
+        <Grid
+          container
+          sx={{ justifyContent: "center" }}
+          alignItems="center"
+          className={DateNavCn}
+        >
+          <Grid
+            item
+            xs={2}
+            display="flex"
+            justifyContent="flex-start"
+          >
+            <IconButton
+              onClick={handleOnPrevMonth}
+              className={DateNavArrow}
+            >
+              <PrevMonthIcon />
+            </IconButton>
+          </Grid>
+          <Grid
+            item
+            xs={8}
+            display="flex"
+            justifyContent="center"
+          >
+            <Grid
+              container
+              textAlign="center"
+              spacing={3}
+              justifyContent="center"
+            >
+              <Typography
+                variant="h4"
+                width="100%"
+                align="center"
+                marginBottom={3}
+              >
+                {currentStart} {currentEnd}
+              </Typography>
+              <Stack
+                direction="row"
+                spacing={3}
+                justifyContent="center"
+              >
+                <Button
+                  variant="contained"
+                  onClick={() =>
+                    calendarApi?.changeView(CalendarType.timeGridDay)
+                  }
+                >
+                  Dan
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() =>
+                    calendarApi?.changeView(CalendarType.timeGridWeek)
+                  }
+                >
+                  Teden
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() =>
+                    calendarApi?.changeView(CalendarType.dayGridMonth)
+                  }
+                >
+                  Mesec
+                </Button>
+              </Stack>
+            </Grid>
+          </Grid>
+          <Grid
+            item
+            xs={2}
+            display="flex"
+            justifyContent="flex-end"
+          >
+            <IconButton
+              onClick={handleOnNextMonth}
+              className={DateNavArrow}
+            >
+              <NextMonthIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
         <FullCalendar
           ref={calendarRef}
           eventClassNames={EventCell}
-          aspectRatio={2.5}
+          aspectRatio={2.9}
           plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
-          initialView="timeGridWeek"
+          initialView={CalendarType.timeGridWeek}
           events={
             appointments?.length
               ? appointments.map((app) => ({
@@ -165,7 +315,9 @@ const Appointments = () => {
               : []
           }
           headerToolbar={{
-            right: "prev,timeGridDay,timeGridWeek,dayGridMonth,next",
+            right: undefined,
+            center: undefined,
+            left: undefined,
           }}
           views={{
             timeGridDay: {
@@ -176,6 +328,11 @@ const Appointments = () => {
             timeGridWeek: {
               slotEventOverlap: false,
               slotLabelClassNames: SlotLabelWeek,
+              dayHeaderContent: (args) =>
+                dayjs(args.date).format(DATE_FORMAT_WEEK_VIEW),
+            },
+            dayGridMonth: {
+              dayHeaders: false,
             },
           }}
           eventContent={renderEventContent}
@@ -201,6 +358,7 @@ const Appointments = () => {
           expandRows
           eventClick={handleEventClick}
           datesSet={handleDatesSet}
+          firstDay={1}
         />
         <Button
           sx={{ marginTop: "2rem" }}
