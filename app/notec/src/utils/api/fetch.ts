@@ -17,7 +17,7 @@ export const fetchData = async (url: RequestInfo): Promise<any> => {
 
       const response = await fetch(url, fetchOptions);
 
-      if (response.ok) {
+      if (response.status === 200) {
         const json = await response.json();
         return json;
       }

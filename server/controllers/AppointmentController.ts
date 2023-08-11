@@ -6,7 +6,6 @@ import { Request, Response } from "express";
 import { dateType } from "../utils/helpers/queryTypeHelpers";
 import { IRevenue } from "../types/revenue/types";
 import { RevenueModel } from "../models/Revenue";
-import { IService } from "../types/service/types";
 import { ServiceModel } from "../models/Services";
 
 const AppointmentController = {
@@ -14,7 +13,8 @@ const AppointmentController = {
     const { uid } = req.user ?? {};
     if (!uid) return res.status(401).json({ error: "Not authorized" });
 
-    const { date, dateOnly, id } = req.query ?? req.body ?? {};
+    const { date, dateOnly, id, dateStart, dateEnd } =
+      req.query ?? req.body ?? {};
 
     const pipeline: FilterQuery<IAppointment[]> = [
       {
@@ -105,6 +105,17 @@ const AppointmentController = {
               { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
               dateOnly, // Assuming dateOnly is a Date object
             ],
+          },
+        },
+      });
+    }
+
+    if (dateStart && dateEnd) {
+      pipeline.unshift({
+        $match: {
+          date: {
+            $gte: dateType(dateStart as string), // Greater than or equal to dateStart
+            $lte: dateType(dateEnd as string), // Less than or equal to dateEnd
           },
         },
       });

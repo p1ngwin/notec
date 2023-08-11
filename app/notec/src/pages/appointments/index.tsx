@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import { EventContentArg, EventClickArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -6,18 +6,36 @@ import View from "@/components/View";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { IAppointment } from "@/types/Appointment";
-import { appointmentsUrl } from "@/utils/api/urls";
+import { appointmentsUrl, deleteAppointmentUrl } from "@/utils/api/urls";
 import styles from "./styles.module.sass";
-import { formatTime, parseDateTime } from "@/utils/helpers/utils";
+import { formatDate, formatTime, parseDateTime } from "@/utils/helpers/utils";
 import { useRouter } from "next/router";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import HeaderActions from "@/components/HeaderActions";
-import { Button, MenuItem } from "@mui/material";
-import { useFetchStore } from "@/stores/useRequestStore";
-import { ChevronRight } from "@mui/icons-material";
+import { Button, Divider, Grid, MenuItem, Typography } from "@mui/material";
+import { useDeleteStore, useFetchStore } from "@/stores/useRequestStore";
+import Modal from "@/components/Modal";
+import {
+  ChevronRightOutlined,
+  CalendarTodayOutlined,
+  TimerOutlined,
+  PersonOutline,
+} from "@mui/icons-material";
+import toast from "react-hot-toast";
+
+type DateQueryArgs = {
+  endStr: string;
+  startStr: string;
+};
 
 const Appointments = () => {
-  const { AppointmentsView, EventCell, SlotLabelDay, SlotServiceItem } = styles;
+  const {
+    AppointmentsView,
+    EventCell,
+    SlotLabelDay,
+    SlotLabelWeek,
+    SlotServiceItem,
+  } = styles;
 
   const { fetch } = useFetchStore();
 
@@ -28,24 +46,30 @@ const Appointments = () => {
 
   const [appointments, setAppointments] = useState<IAppointment[]>();
 
-  useEffect(() => {
-    (async () => {
-      const res = await fetch(appointmentsUrl());
-      res && setAppointments(res);
-    })();
-  }, [fetch]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogContent, setDialogContent] = useState<ReactNode | null>(null);
+
+  const handleDialogOpen = (content: ReactNode) => {
+    setDialogContent(content);
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
 
   const handleDateClick = (arg: DateClickArg) => {
     if (!calendarApi) return;
 
-    if (arg.view.type === "timeGridDay" && !arg.allDay) {
-      router.push(
-        `/appointments/add?date=${parseDateTime(
-          arg.dateStr
-        )}&time=${parseDateTime(arg.dateStr)}`
-      );
-    }
-    calendarApi.changeView("timeGridDay", arg.dateStr);
+    // TODO: will se about that
+    //if (arg.view.type === "timeGridDay" && !arg.allDay) {
+    router.push(
+      `/appointments/add?date=${parseDateTime(
+        arg.dateStr
+      )}&time=${parseDateTime(arg.dateStr)}`
+    );
+    //}
+    //calendarApi.changeView("timeGridDay", arg.dateStr);
   };
 
   const renderEventContent = (eventInfo: EventContentArg) => {
@@ -53,28 +77,56 @@ const Appointments = () => {
 
     if (!event || !event.extendedProps) return;
 
-    const { _id, startTime, first_name, last_name, service } =
+    const { _id, startTime, first_name, last_name, service, date } =
       event.extendedProps || {};
 
     return (
       <RenderEventCell
         id={_id}
-        start={startTime}
-        first_name={first_name}
-        last_name={last_name}
-        service={service}
+        startTime={startTime}
+        date={date}
+        eventDetails={{
+          startTime,
+          first_name,
+          last_name,
+          service,
+        }}
         className={SlotServiceItem}
       />
     );
   };
 
   const handleEventClick = (e: EventClickArg) => {
+    const { startTime, first_name, last_name, service, date } =
+      e?.event?.extendedProps || {};
+
     const { id } = e.event;
-    router.push(`/appointments/edit/${id}`);
+
+    handleDialogOpen(
+      <EventDetails
+        id={id}
+        startTime={startTime}
+        date={date}
+        eventDetails={{ first_name, startTime, last_name, service }}
+      />
+    );
   };
 
   const parseAppointmentStart = (date: string, time: string) => {
     return `${date.split("T")[0]}T${time.split("T")[1]}`;
+  };
+
+  const handleDatesSet = async (dateInfo: DateQueryArgs) => {
+    if (!dateInfo.startStr && !dateInfo.endStr) return;
+    const res = await fetch(
+      appointmentsUrl(
+        new URLSearchParams({
+          dateStart: dateInfo.startStr,
+          dateEnd: dateInfo.endStr,
+        })
+      )
+    );
+    res && setAppointments(res);
   };
 
   return (
@@ -94,7 +146,7 @@ const Appointments = () => {
           eventClassNames={EventCell}
           aspectRatio={2.5}
           plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
-          initialView="timeGridDay"
+          initialView="timeGridWeek"
           events={
             appointments?.length
               ? appointments.map((app) => ({
@@ -107,6 +159,7 @@ const Appointments = () => {
                     last_name: app.last_name,
                     service: app.service,
                     startTime: formatTime(app.time),
+                    date: formatDate(app.date),
                   },
                 }))
               : []
@@ -115,9 +168,6 @@ const Appointments = () => {
             right: "prev,timeGridDay,timeGridWeek,dayGridMonth,next",
           }}
           views={{
-            dayGrid: {
-              // options apply to dayGridMonth, dayGridWeek, and dayGridDay views
-            },
             timeGridDay: {
               slotEventOverlap: false,
               eventMinHeight: 120,
@@ -125,6 +175,7 @@ const Appointments = () => {
             },
             timeGridWeek: {
               slotEventOverlap: false,
+              slotLabelClassNames: SlotLabelWeek,
             },
           }}
           eventContent={renderEventContent}
@@ -149,6 +200,7 @@ const Appointments = () => {
           nowIndicator
           expandRows
           eventClick={handleEventClick}
+          datesSet={handleDatesSet}
         />
         <Button
           sx={{ marginTop: "2rem" }}
@@ -158,6 +210,12 @@ const Appointments = () => {
         >
           Novo naročilo
         </Button>
+        <Modal
+          open={dialogOpen}
+          onClose={handleDialogClose}
+        >
+          {dialogContent}
+        </Modal>
       </View>
     </>
   );
@@ -165,36 +223,123 @@ const Appointments = () => {
 
 export default Appointments;
 
-type EventCellProps = {
-  id: string;
-  start: string;
+type EventCellDetailsProps = {
+  startTime: string;
   first_name: string;
   last_name: string;
   service: string;
+};
+
+type EventCellProps = {
+  id: string;
+  startTime: string;
+  date: string;
+  eventDetails: EventCellDetailsProps;
   className?: string;
 };
-const RenderEventCell = ({
-  id,
-  start,
-  first_name,
-  last_name,
-  service,
-  className,
-}: EventCellProps) => {
+
+const RenderEventCell = ({ eventDetails, className }: EventCellProps) => {
+  const { startTime } = eventDetails;
+
   return (
-    <div>
-      <span>
-        {start} - {first_name} {last_name}
-        {service.split(",").map((service, index) => (
-          <MenuItem
-            sx={{ lineHeight: 0.5, padding: 0 }}
-            key={id ?? index}
-            className={className}
-          >
-            <ChevronRight /> {service}
-          </MenuItem>
-        ))}
-      </span>
+    <div className={className}>
+      <span>{startTime}</span>
     </div>
+  );
+};
+
+const EventDetails = ({
+  id,
+  startTime,
+  date,
+  eventDetails,
+}: EventCellProps) => {
+  const router = useRouter();
+
+  const { _delete } = useDeleteStore();
+
+  const { first_name, last_name, service } = eventDetails;
+
+  const { ModalActions } = styles;
+
+  const handleAppointmentDelete = async (id: string) => {
+    const deletedAppointment = await await _delete(deleteAppointmentUrl(id), {
+      id,
+    });
+    if (deletedAppointment) {
+      toast.success("Naročilo izbrisano.");
+      window.location.reload();
+    } else {
+      toast.error("Napaka pri brisanju naročila.");
+    }
+  };
+
+  return (
+    <>
+      <Grid container>
+        <Grid
+          item
+          xs={12}
+        >
+          <Typography variant="h4">
+            <CalendarTodayOutlined sx={{ marginRight: 1 }} />
+            {date}
+            <br /> <TimerOutlined sx={{ marginRight: 1 }} />
+            {startTime}
+            <br />
+            <PersonOutline sx={{ marginRight: 1 }} />
+            {first_name} {last_name}
+          </Typography>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+        >
+          <Divider sx={{ margin: "1rem 0" }} />
+          <Typography variant="h6">Storitve</Typography>
+          {service &&
+            service.split(",").map((service, index) => (
+              <MenuItem key={id ?? index}>
+                <ChevronRightOutlined sx={{ marginRight: 1 }} />
+                {service}
+              </MenuItem>
+            ))}
+          <Divider sx={{ margin: "1rem 0" }} />
+        </Grid>
+
+        <Grid
+          className={ModalActions}
+          container
+          marginTop={2}
+        >
+          <Grid
+            item
+            xs={6}
+            textAlign={"center"}
+          >
+            <Button
+              color="warning"
+              variant="contained"
+              onClick={() => router.push(`/appointments/edit/${id}`)}
+            >
+              Uredi naročilo
+            </Button>
+          </Grid>
+          <Grid
+            item
+            xs={6}
+            textAlign={"center"}
+          >
+            <Button
+              color="error"
+              variant="contained"
+              onClick={() => handleAppointmentDelete(id)}
+            >
+              Izbriši naročilo
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+    </>
   );
 };

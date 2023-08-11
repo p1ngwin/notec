@@ -66,8 +66,17 @@ const Breadcrumbs = ({
   if (ignoreLastItem) {
     breadcrumbs.pop();
   }
+
+  const homePath = "../".repeat(breadcrumbs.length);
+
   return (
     <div className={Breadcrumbs}>
+      <div className={Breadcrumb}>
+        <Link href={homePath}>Domov</Link>
+        <div className={Seperator}>
+          <SeperatorIcon />
+        </div>
+      </div>
       {breadcrumbs.map((segment, index, array) => {
         // Either remove or keep params as part of url path
         const location = !includeParamsAsPath
@@ -87,10 +96,6 @@ const Breadcrumbs = ({
             className={Breadcrumb}
             key={index}
           >
-            <Link href={"../"}>Domov</Link>
-            <div className={Seperator}>
-              <SeperatorIcon />
-            </div>
             {index !== array.length - 1 ? (
               <>
                 <Link href={url}>
