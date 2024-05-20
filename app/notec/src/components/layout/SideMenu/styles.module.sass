@@ -3,3 +3,33 @@
 .SideMenuWrapper
     background: $bg-primary
     padding-top: 1rem
+    padding: 1.5rem
+    display: flex
+    flex-direction: column
+
+    .Top
+        flex-grow: 1
+
+    .Middle
+        flex-grow: 4
+
+    .Bottom
+        flex-grow: 0
+
+    .Logo
+        padding: 1.5rem
+
+    .ActionItem
+        color: $white
+        margin-top: 1rem
+        border-radius: 25px
+
+        svg
+            padding-right: 1rem
+
+        &:hover
+            background: $bg-primary-hover
+
+        &.Active
+            background: $white
+            color: $bg-primary
