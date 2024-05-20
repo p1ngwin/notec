@@ -1,10 +1,10 @@
-import React from "react";
-import styles from "./styles.module.sass";
-import { Button } from "@mui/material";
-import Image from "next/image";
-import logo from "../../assets/img/logo.svg";
-import { useRouter } from "next/router";
-import Spacer from "@/components/Spacer";
+import React from 'react';
+import styles from './styles.module.sass';
+import { Button } from '@mui/material';
+import Image from 'next/image';
+import logo from '../../assets/img/logo.svg';
+import { useRouter } from 'next/router';
+import Spacer from '@/components/Spacer';
 import {
   Summarize,
   CalendarMonth,
@@ -13,10 +13,11 @@ import {
   AddCard,
   AccountBalance,
   Person,
-} from "@mui/icons-material";
-import classNames from "classnames";
-import { useSidebar } from "@/context/mobileSidebar/useSidebar";
-import { useUserStore } from "@/stores/useUserStore";
+} from '@mui/icons-material';
+import classNames from 'classnames';
+import { useSidebar } from '@/context/mobileSidebar/useSidebar';
+import { useUserStore } from '@/stores/useUserStore';
+import { useTranslation } from 'next-i18next';
 
 type Props = {
   isMobile?: boolean;
@@ -33,6 +34,7 @@ export const MenuNav = ({ isMobile = false }: Props) => {
     Logo,
   } = styles;
 
+  const { t } = useTranslation('menu');
   const { toggleDrawer } = useSidebar();
 
   const user = useUserStore((state) => state.user);
@@ -51,10 +53,7 @@ export const MenuNav = ({ isMobile = false }: Props) => {
       })}
     >
       <div className={Logo}>
-        <Image
-          src={logo}
-          alt="logo"
-        />
+        <Image src={logo} alt="logo" />
       </div>
 
       <Spacer />
@@ -64,7 +63,7 @@ export const MenuNav = ({ isMobile = false }: Props) => {
             <div className={NavMenuButtonWrapper}>
               <Button
                 className={NavMenuButton}
-                onClick={() => handleOnMenuItemClicked("/profile")}
+                onClick={() => handleOnMenuItemClicked('/profile')}
               >
                 <Person />
                 <div className={NavMenuText}>
@@ -78,55 +77,55 @@ export const MenuNav = ({ isMobile = false }: Props) => {
         <div className={NavMenuButtonWrapper}>
           <Button
             className={NavMenuButton}
-            onClick={() => handleOnMenuItemClicked("/")}
+            onClick={() => handleOnMenuItemClicked('/')}
           >
             <Home />
-            <div className={NavMenuText}>Domov</div>
+            <div className={NavMenuText}>{t('general.home')}</div>
           </Button>
         </div>
         <div className={NavMenuButtonWrapper}>
           <Button
             className={NavMenuButton}
-            onClick={() => handleOnMenuItemClicked("/persons")}
+            onClick={() => handleOnMenuItemClicked('/persons')}
           >
             <People />
-            <div className={NavMenuText}>Stranke</div>
+            <div className={NavMenuText}>{t('clients')}</div>
           </Button>
         </div>
         <div className={NavMenuButtonWrapper}>
           <Button
             className={NavMenuButton}
-            onClick={() => handleOnMenuItemClicked("/appointments")}
+            onClick={() => handleOnMenuItemClicked('/appointments')}
           >
             <CalendarMonth />
-            <div className={NavMenuText}>Urnik</div>
+            <div className={NavMenuText}>{t('general.schedule')}</div>
           </Button>
         </div>
         <div className={NavMenuButtonWrapper}>
           <Button
             className={NavMenuButton}
-            onClick={() => handleOnMenuItemClicked("/services")}
+            onClick={() => handleOnMenuItemClicked('/services')}
           >
             <Summarize />
-            <div className={NavMenuText}>Cenik</div>
+            <div className={NavMenuText}>{t('general.price_list')}</div>
           </Button>
         </div>
         <div className={NavMenuButtonWrapper}>
           <Button
             className={NavMenuButton}
-            onClick={() => handleOnMenuItemClicked("/revenue")}
+            onClick={() => handleOnMenuItemClicked('/revenue')}
           >
             <AddCard />
-            <div className={NavMenuText}>Prihodki</div>
+            <div className={NavMenuText}>{t('general.income')}</div>
           </Button>
         </div>
         <div className={NavMenuButtonWrapper}>
           <Button
             className={NavMenuButton}
-            onClick={() => handleOnMenuItemClicked("/expenses")}
+            onClick={() => handleOnMenuItemClicked('/expenses')}
           >
             <AccountBalance />
-            <div className={NavMenuText}>Odhodki</div>
+            <div className={NavMenuText}>{t('general.expenses')}</div>
           </Button>
         </div>
       </div>

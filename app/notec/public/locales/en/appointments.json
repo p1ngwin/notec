@@ -1,0 +1,13 @@
+{
+  "general": {
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "year": "Year"
+  },
+  "appointment": {
+    "new": "New appointment",
+    "edit": "Edit appointment",
+    "delete": "Delete appointment"
+  }
+}

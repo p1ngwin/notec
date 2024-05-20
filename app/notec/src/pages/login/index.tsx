@@ -1,6 +1,6 @@
-import { signInUserWithEmail } from "@/auth/authHelpers";
-import View from "@/components/View";
-import { useUserStore } from "@/stores/useUserStore";
+import { signInUserWithEmail } from '@/auth/authHelpers';
+import View from '@/components/View';
+import { useUserStore } from '@/stores/useUserStore';
 import {
   Container,
   Box,
@@ -9,11 +9,14 @@ import {
   Button,
   Grid,
   Avatar,
-} from "@mui/material";
-import { useRouter } from "next/router";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import { LockOutlined } from "@mui/icons-material";
+} from '@mui/material';
+import { useRouter } from 'next/router';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { LockOutlined } from '@mui/icons-material';
+import { GetStaticProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 
 type FormProps = {
   email: string;
@@ -24,10 +27,12 @@ const Login = () => {
   const router = useRouter();
   const actions = useUserStore();
 
+  const { t } = useTranslation();
+
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
@@ -44,7 +49,7 @@ const Login = () => {
       toast.success(`Successfully logged in as ${user.email}.`);
       actions.setUser(user);
       actions.setToken(token);
-      return router.push("/");
+      return router.push('/');
     }
   };
 
@@ -53,24 +58,21 @@ const Login = () => {
       <Container
         component="main"
         maxWidth="xs"
-        sx={{ display: "flex", placeItems: "center" }}
+        sx={{ display: 'flex', placeItems: 'center' }}
       >
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlined />
           </Avatar>
           <>
-            <Typography
-              component="h1"
-              variant="h5"
-            >
-              Sign in
+            <Typography component="h1" variant="h5">
+              {t('login.sign_in')}
             </Typography>
             <Box sx={{ mt: 1 }}>
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -84,7 +86,7 @@ const Login = () => {
                       margin="normal"
                       required
                       fullWidth
-                      label="Email Address"
+                      label={t('login.email_address')}
                       autoComplete="email"
                       autoFocus
                     />
@@ -100,7 +102,7 @@ const Login = () => {
                       margin="normal"
                       required
                       fullWidth
-                      label="Password"
+                      label={t('login.password')}
                       autoComplete="password"
                       type="password"
                     />
@@ -112,18 +114,14 @@ const Login = () => {
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  Sign In
+                  {t('login.sign_in')}
                 </Button>
-                <Grid
-                  item
-                  alignContent={"center"}
-                  alignItems={"center"}
-                >
+                <Grid item alignContent={'center'} alignItems={'center'}>
                   <Button
-                    sx={{ alignItems: "center", alignContent: "center" }}
-                    onClick={() => router.push("/register")}
+                    sx={{ alignItems: 'center', alignContent: 'center' }}
+                    onClick={() => router.push('/register')}
                   >
-                    {"Don't have an account? Sign Up"}
+                    {t('login.no_account')}
                   </Button>
                 </Grid>
               </form>
@@ -136,3 +134,9 @@ const Login = () => {
 };
 
 export default Login;
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? 'en')),
+  },
+});

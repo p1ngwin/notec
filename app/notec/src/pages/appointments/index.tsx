@@ -1,25 +1,24 @@
-import { ReactNode, useRef, useState, useEffect, useCallback } from "react";
-import FullCalendar from "@fullcalendar/react";
-import { EventContentArg, EventClickArg } from "@fullcalendar/core";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import View from "@/components/View";
-import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import { IAppointment } from "@/types/Appointment";
-import { appointmentsUrl, deleteAppointmentUrl } from "@/utils/api/urls";
-import styles from "./styles.module.sass";
+import { ReactNode, useRef, useState, useEffect } from 'react';
+import FullCalendar from '@fullcalendar/react';
+import { EventContentArg, EventClickArg } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import View from '@/components/View';
+import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import { IAppointment } from '@/types/Appointment';
+import { appointmentsUrl, deleteAppointmentUrl } from '@/utils/api/urls';
+import styles from './styles.module.sass';
 import {
-  DATE_FORMAT_DAY_MONTH_LONG,
   DATE_FORMAT_WEEK_VIEW,
   DEFAULT_DATE_FORMAT_DAY,
   DEFAULT_DATE_FORMAT_MONTH,
   formatDate,
   formatTime,
   parseDateTime,
-} from "@/utils/helpers/utils";
-import { useRouter } from "next/router";
-import Breadcrumbs from "@/components/Breadcrumbs";
-import HeaderActions from "@/components/HeaderActions";
+} from '@/utils/helpers/utils';
+import { useRouter } from 'next/router';
+import Breadcrumbs from '@/components/Breadcrumbs';
+import HeaderActions from '@/components/HeaderActions';
 import {
   Button,
   Divider,
@@ -28,9 +27,9 @@ import {
   Typography,
   IconButton,
   Stack,
-} from "@mui/material";
-import { useDeleteStore, useFetchStore } from "@/stores/useRequestStore";
-import Modal from "@/components/Modal";
+} from '@mui/material';
+import { useDeleteStore, useFetchStore } from '@/stores/useRequestStore';
+import Modal from '@/components/Modal';
 import {
   ChevronRightOutlined,
   CalendarTodayOutlined,
@@ -38,10 +37,13 @@ import {
   PersonOutline,
   NavigateBefore as PrevMonthIcon,
   NavigateNext as NextMonthIcon,
-} from "@mui/icons-material";
-import toast from "react-hot-toast";
-import { useDateStore } from "@/stores/useDateStore";
-import dayjs from "dayjs";
+} from '@mui/icons-material';
+import toast from 'react-hot-toast';
+import { useDateStore } from '@/stores/useDateStore';
+import dayjs from 'dayjs';
+import { GetStaticProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
 
 type DateQueryArgs = {
   endStr: string;
@@ -49,9 +51,9 @@ type DateQueryArgs = {
 };
 
 enum CalendarType {
-  timeGridDay = "timeGridDay",
-  timeGridWeek = "timeGridWeek",
-  dayGridMonth = "dayGridMonth",
+  timeGridDay = 'timeGridDay',
+  timeGridWeek = 'timeGridWeek',
+  dayGridMonth = 'dayGridMonth',
 }
 
 const Appointments = () => {
@@ -69,6 +71,8 @@ const Appointments = () => {
 
   const router = useRouter();
 
+  const { t } = useTranslation('appointments');
+
   const { getSelectedDate } = useDateStore();
 
   const calendarRef = useRef<FullCalendar | null>(null);
@@ -83,8 +87,8 @@ const Appointments = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState<ReactNode | null>(null);
 
-  const [currentStart, setCurrentStart] = useState("");
-  const [currentEnd, setCurrentEnd] = useState("");
+  const [currentStart, setCurrentStart] = useState('');
+  const [currentEnd, setCurrentEnd] = useState('');
 
   const handleDialogOpen = (content: ReactNode) => {
     setDialogContent(content);
@@ -99,8 +103,8 @@ const Appointments = () => {
     if (!calendarApi) return;
     router.push(
       `/appointments/add?date=${parseDateTime(
-        arg.dateStr
-      )}&time=${parseDateTime(arg.dateStr)}`
+        arg.dateStr,
+      )}&time=${parseDateTime(arg.dateStr)}`,
     );
   };
 
@@ -140,12 +144,12 @@ const Appointments = () => {
         startTime={startTime}
         date={date}
         eventDetails={{ first_name, startTime, last_name, service }}
-      />
+      />,
     );
   };
 
   const parseAppointmentStart = (date: string, time: string) => {
-    return `${date.split("T")[0]}T${time.split("T")[1]}`;
+    return `${date.split('T')[0]}T${time.split('T')[1]}`;
   };
 
   const handleDatesSet = async (dateInfo: DateQueryArgs) => {
@@ -155,24 +159,24 @@ const Appointments = () => {
 
     if (dateType === CalendarType.timeGridWeek) {
       setCurrentStart(
-        dayjs(calendarApi?.view.currentStart).format(DEFAULT_DATE_FORMAT_DAY)
+        dayjs(calendarApi?.view.currentStart).format(DEFAULT_DATE_FORMAT_DAY),
       );
       setCurrentEnd(
-        " - " +
+        ' - ' +
           dayjs(calendarApi?.view.currentStart)
-            .add(6, "days")
-            .format(DEFAULT_DATE_FORMAT_DAY)
+            .add(6, 'days')
+            .format(DEFAULT_DATE_FORMAT_DAY),
       );
     } else if (dateType === CalendarType.timeGridDay) {
       setCurrentStart(
-        dayjs(calendarApi?.view.currentStart).format(DEFAULT_DATE_FORMAT_DAY)
+        dayjs(calendarApi?.view.currentStart).format(DEFAULT_DATE_FORMAT_DAY),
       );
-      setCurrentEnd("");
+      setCurrentEnd('');
     } else if (dateType === CalendarType.dayGridMonth) {
       setCurrentStart(
-        dayjs(calendarApi?.view.currentStart).format(DEFAULT_DATE_FORMAT_MONTH)
+        dayjs(calendarApi?.view.currentStart).format(DEFAULT_DATE_FORMAT_MONTH),
       );
-      setCurrentEnd("");
+      setCurrentEnd('');
     }
 
     const res = await fetch(
@@ -180,8 +184,8 @@ const Appointments = () => {
         new URLSearchParams({
           dateStart: dateInfo.startStr,
           dateEnd: dateInfo.endStr,
-        })
-      )
+        }),
+      ),
     );
     res && setAppointments(res);
   };
@@ -196,41 +200,22 @@ const Appointments = () => {
 
   return (
     <>
-      <View
-        fullWidth
-        className={AppointmentsView}
-      >
+      <View fullWidth className={AppointmentsView}>
         <HeaderActions>
-          <Breadcrumbs
-            depth={1}
-            values={["Naročila"]}
-          />
+          <Breadcrumbs depth={1} values={['Appointments']} />
         </HeaderActions>
         <Grid
           container
-          sx={{ justifyContent: "center" }}
+          sx={{ justifyContent: 'center' }}
           alignItems="center"
           className={DateNavCn}
         >
-          <Grid
-            item
-            xs={2}
-            display="flex"
-            justifyContent="flex-start"
-          >
-            <IconButton
-              onClick={handleOnPrevMonth}
-              className={DateNavArrow}
-            >
+          <Grid item xs={2} display="flex" justifyContent="flex-start">
+            <IconButton onClick={handleOnPrevMonth} className={DateNavArrow}>
               <PrevMonthIcon />
             </IconButton>
           </Grid>
-          <Grid
-            item
-            xs={8}
-            display="flex"
-            justifyContent="center"
-          >
+          <Grid item xs={8} display="flex" justifyContent="center">
             <Grid
               container
               textAlign="center"
@@ -245,18 +230,14 @@ const Appointments = () => {
               >
                 {currentStart} {currentEnd}
               </Typography>
-              <Stack
-                direction="row"
-                spacing={3}
-                justifyContent="center"
-              >
+              <Stack direction="row" spacing={3} justifyContent="center">
                 <Button
                   variant="contained"
                   onClick={() =>
                     calendarApi?.changeView(CalendarType.timeGridDay)
                   }
                 >
-                  Dan
+                  {t('day')}
                 </Button>
                 <Button
                   variant="contained"
@@ -264,7 +245,7 @@ const Appointments = () => {
                     calendarApi?.changeView(CalendarType.timeGridWeek)
                   }
                 >
-                  Teden
+                  {t('week')}
                 </Button>
                 <Button
                   variant="contained"
@@ -272,21 +253,13 @@ const Appointments = () => {
                     calendarApi?.changeView(CalendarType.dayGridMonth)
                   }
                 >
-                  Mesec
+                  {t('month')}
                 </Button>
               </Stack>
             </Grid>
           </Grid>
-          <Grid
-            item
-            xs={2}
-            display="flex"
-            justifyContent="flex-end"
-          >
-            <IconButton
-              onClick={handleOnNextMonth}
-              className={DateNavArrow}
-            >
+          <Grid item xs={2} display="flex" justifyContent="flex-end">
+            <IconButton onClick={handleOnNextMonth} className={DateNavArrow}>
               <NextMonthIcon />
             </IconButton>
           </Grid>
@@ -338,21 +311,21 @@ const Appointments = () => {
           eventContent={renderEventContent}
           dateClick={handleDateClick}
           buttonText={{
-            timeGridWeek: "Teden",
-            timeGridDay: "Dan",
+            timeGridWeek: t('week'),
+            timeGridDay: t('day'),
           }}
           slotLabelFormat={[
             {
-              hour: "2-digit",
-              minute: "2-digit",
+              hour: '2-digit',
+              minute: '2-digit',
               omitZeroMinute: false,
               meridiem: false,
               hour12: false,
-              hourCycle: "h24",
+              hourCycle: 'h24',
             },
           ]}
-          slotMinTime={"06:00"}
-          slotMaxTime={"22:00"}
+          slotMinTime={'06:00'}
+          slotMaxTime={'22:00'}
           allDaySlot={false}
           nowIndicator
           expandRows
@@ -361,17 +334,14 @@ const Appointments = () => {
           firstDay={1}
         />
         <Button
-          sx={{ marginTop: "2rem" }}
+          sx={{ marginTop: '2rem' }}
           variant="contained"
           fullWidth
-          onClick={() => router.push("/appointments/add")}
+          onClick={() => router.push('/appointments/add')}
         >
-          Novo naročilo
+          {t('appointment.new')}
         </Button>
-        <Modal
-          open={dialogOpen}
-          onClose={handleDialogClose}
-        >
+        <Modal open={dialogOpen} onClose={handleDialogClose}>
           {dialogContent}
         </Modal>
       </View>
@@ -414,6 +384,8 @@ const EventDetails = ({
 }: EventCellProps) => {
   const router = useRouter();
 
+  const { t } = useTranslation(['common', 'appointments']);
+
   const { _delete } = useDeleteStore();
 
   const { first_name, last_name, service } = eventDetails;
@@ -425,20 +397,17 @@ const EventDetails = ({
       id,
     });
     if (deletedAppointment) {
-      toast.success("Naročilo izbrisano.");
+      toast.success('Naročilo izbrisano.');
       window.location.reload();
     } else {
-      toast.error("Napaka pri brisanju naročila.");
+      toast.error('Napaka pri brisanju naročila.');
     }
   };
 
   return (
     <>
       <Grid container>
-        <Grid
-          item
-          xs={12}
-        >
+        <Grid item xs={12}>
           <Typography variant="h4">
             <CalendarTodayOutlined sx={{ marginRight: 1 }} />
             {date}
@@ -449,51 +418,36 @@ const EventDetails = ({
             {first_name} {last_name}
           </Typography>
         </Grid>
-        <Grid
-          item
-          xs={12}
-        >
-          <Divider sx={{ margin: "1rem 0" }} />
-          <Typography variant="h6">Storitve</Typography>
+        <Grid item xs={12}>
+          <Divider sx={{ margin: '1rem 0' }} />
+          <Typography variant="h6">{t('services')}</Typography>
           {service &&
-            service.split(",").map((service, index) => (
+            service.split(',').map((service, index) => (
               <MenuItem key={id ?? index}>
                 <ChevronRightOutlined sx={{ marginRight: 1 }} />
                 {service}
               </MenuItem>
             ))}
-          <Divider sx={{ margin: "1rem 0" }} />
+          <Divider sx={{ margin: '1rem 0' }} />
         </Grid>
 
-        <Grid
-          className={ModalActions}
-          container
-          marginTop={2}
-        >
-          <Grid
-            item
-            xs={6}
-            textAlign={"center"}
-          >
+        <Grid className={ModalActions} container marginTop={2}>
+          <Grid item xs={6} textAlign={'center'}>
             <Button
               color="warning"
               variant="contained"
               onClick={() => router.push(`/appointments/edit/${id}`)}
             >
-              Uredi naročilo
+              {t('appointment.edit')}
             </Button>
           </Grid>
-          <Grid
-            item
-            xs={6}
-            textAlign={"center"}
-          >
+          <Grid item xs={6} textAlign={'center'}>
             <Button
               color="error"
               variant="contained"
               onClick={() => handleAppointmentDelete(id)}
             >
-              Izbriši naročilo
+              {t('appointment.delete')}
             </Button>
           </Grid>
         </Grid>
@@ -501,3 +455,9 @@ const EventDetails = ({
     </>
   );
 };
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? 'en')),
+  },
+});

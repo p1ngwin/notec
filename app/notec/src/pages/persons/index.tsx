@@ -1,17 +1,19 @@
-import { useCallback } from "react";
-import Breadcrumbs from "@/components/Breadcrumbs";
-import Table, { Action, Column } from "@/components/DataTable";
-import HeaderActions from "@/components/HeaderActions";
-import View from "@/components/View";
-import { IPerson } from "@/types/Person";
-import { deletePersonUrl, personsUrl } from "@/utils/api/urls";
-import { Button, CircularProgress, Stack, useMediaQuery } from "@mui/material";
-import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
-import toast from "react-hot-toast";
-import AddIcon from "@mui/icons-material/Add";
-import { theme } from "@/assets/styles/theme";
-import { useDeleteStore, useFetchStore } from "@/stores/useRequestStore";
+import { useCallback } from 'react';
+import Breadcrumbs from '@/components/Breadcrumbs';
+import Table, { Action, Column } from '@/components/DataTable';
+import HeaderActions from '@/components/HeaderActions';
+import View from '@/components/View';
+import { IPerson } from '@/types/Person';
+import { deletePersonUrl, personsUrl } from '@/utils/api/urls';
+import { Button, CircularProgress, Stack, useMediaQuery } from '@mui/material';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import AddIcon from '@mui/icons-material/Add';
+import { theme } from '@/assets/styles/theme';
+import { useDeleteStore, useFetchStore } from '@/stores/useRequestStore';
+import { GetStaticProps } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Appointments = () => {
   const router = useRouter();
@@ -19,7 +21,7 @@ const Appointments = () => {
   const [currentPersons, setPersons] = useState<IPerson[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { fetch } = useFetchStore();
   const { _delete } = useDeleteStore();
@@ -37,13 +39,13 @@ const Appointments = () => {
           });
         }),
         {
-          loading: "Deleting person...",
-          success: "Successfully deleted person",
-          error: "Failed to delete person",
-        }
+          loading: 'Deleting person...',
+          success: 'Successfully deleted person',
+          error: 'Failed to delete person',
+        },
       );
     },
-    [setPersons, _delete, fetch]
+    [setPersons, _delete, fetch],
   );
 
   useEffect(() => {
@@ -58,16 +60,16 @@ const Appointments = () => {
   const EMPTY_CELL = <span>/</span>;
 
   const tableColumns: Column<IPerson>[] = [
-    { label: "Ime", field: "first_name", renderCell: (i) => i.first_name },
-    { label: "Priimek", field: "last_name", renderCell: (i) => i.last_name },
+    { label: 'Ime', field: 'first_name', renderCell: (i) => i.first_name },
+    { label: 'Priimek', field: 'last_name', renderCell: (i) => i.last_name },
     {
-      label: "Tel. št.",
-      field: "phone_number",
+      label: 'Tel. št.',
+      field: 'phone_number',
       renderCell: (i) => i.phone_number ?? EMPTY_CELL,
     },
     {
-      label: "Email",
-      field: "email",
+      label: 'Email',
+      field: 'email',
       renderCell: (i) => i.email ?? EMPTY_CELL,
     },
   ];
@@ -75,29 +77,23 @@ const Appointments = () => {
   const rowActions = useMemo<Action<IPerson>[]>(() => {
     return [
       {
-        label: "Edit",
+        label: 'Edit',
         onClick: ({ _id }) => router.push(`persons/edit/${_id}`),
       },
-      { label: "Delete", onClick: ({ _id }) => handleDeletePerson(_id) },
+      { label: 'Delete', onClick: ({ _id }) => handleDeletePerson(_id) },
     ];
   }, [router, handleDeletePerson]);
 
   return (
-    <View
-      fullWidth
-      container
-    >
+    <View fullWidth container>
       <HeaderActions>
         <Stack
           direction="row"
           justifyContent="space-between"
           alignItems="center"
         >
-          <Breadcrumbs
-            depth={1}
-            values={["Stranke"]}
-          />
-          <Button onClick={() => router.push("/persons/add")}>
+          <Breadcrumbs depth={1} values={['Stranke']} />
+          <Button onClick={() => router.push('/persons/add')}>
             Dodaj <AddIcon />
           </Button>
         </Stack>
@@ -117,3 +113,9 @@ const Appointments = () => {
 };
 
 export default Appointments;
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? 'en')),
+  },
+});

@@ -1,9 +1,10 @@
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
-import { ArrowRightRounded as SeperatorIcon } from "@mui/icons-material";
-import styles from "./styles.module.sass";
-import { useRouter } from "next/router";
-import Link from "next/link";
+import { ArrowRightRounded as SeperatorIcon } from '@mui/icons-material';
+import styles from './styles.module.sass';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
 
 type Props = {
   depth?: number;
@@ -35,13 +36,14 @@ const Breadcrumbs = ({
   ignoreLastItem,
 }: Props) => {
   const { Breadcrumbs, Breadcrumb, Seperator, Active } = styles;
+  const { t } = useTranslation();
 
   const params = useParams();
   const path = useRouter();
 
   let breadcrumbs = path.pathname
-    .split("/")
-    .filter((segment) => segment !== "");
+    .split('/')
+    .filter((segment) => segment !== '');
 
   if (!depth && values?.length) {
     if (ignoreLastItem) {
@@ -55,7 +57,7 @@ const Breadcrumbs = ({
     Object.values(params)
       .filter((value) => value)
       .forEach((param) =>
-        breadcrumbs.splice(breadcrumbs.indexOf(param as string), 1)
+        breadcrumbs.splice(breadcrumbs.indexOf(param as string), 1),
       );
   }
 
@@ -67,12 +69,12 @@ const Breadcrumbs = ({
     breadcrumbs.pop();
   }
 
-  const homePath = "../".repeat(breadcrumbs.length);
+  const homePath = '../'.repeat(breadcrumbs.length);
 
   return (
     <div className={Breadcrumbs}>
       <div className={Breadcrumb}>
-        <Link href={homePath}>Domov</Link>
+        <Link href={homePath}>{t('home')}</Link>
         <div className={Seperator}>
           <SeperatorIcon />
         </div>
@@ -82,20 +84,17 @@ const Breadcrumbs = ({
         const location = !includeParamsAsPath
           ? Object.values(params).reduce(
               (acc: string, value: string | undefined) =>
-                acc.split(value ?? "").join(""),
-              path.pathname
+                acc.split(value ?? '').join(''),
+              path.pathname,
             )
           : path.pathname;
 
         const url = location
           .split(array[index + 1])[0]
-          .replace(/\/$/, ""); /* Strip trailing slash */
+          .replace(/\/$/, ''); /* Strip trailing slash */
 
         return (
-          <div
-            className={Breadcrumb}
-            key={index}
-          >
+          <div className={Breadcrumb} key={index}>
             {index !== array.length - 1 ? (
               <>
                 <Link href={url}>
