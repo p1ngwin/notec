@@ -1,15 +1,17 @@
-import Breadcrumbs from "@/components/Breadcrumbs";
-import Table, { Action, Column } from "@/components/DataTable";
-import HeaderActions from "@/components/HeaderActions";
-import View from "@/components/View";
-import { IService } from "@/types/Service";
-import { servicesDeleteUrl, servicesUrl } from "@/utils/api/urls";
-import { Button, Container, Stack } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
-import toast from "react-hot-toast";
-import { useFetchStore, useDeleteStore } from "@/stores/useRequestStore";
+import Breadcrumbs from '@/components/Breadcrumbs';
+import Table, { Action, Column } from '@/components/DataTable';
+import HeaderActions from '@/components/HeaderActions';
+import View from '@/components/View';
+import { IService } from '@/types/Service';
+import { servicesDeleteUrl, servicesUrl } from '@/utils/api/urls';
+import { Button, Container, Stack } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useFetchStore, useDeleteStore } from '@/stores/useRequestStore';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { GetStaticProps } from 'next';
 
 const Services = () => {
   const router = useRouter();
@@ -19,7 +21,7 @@ const Services = () => {
 
   const [curretServices, setServices] = useState<IService[]>([]);
   const handleDeleteService = async (id: string) => {
-    if (!id) return toast.error("Missing person id.");
+    if (!id) return toast.error('Missing person id.');
 
     toast.promise(
       _delete(servicesDeleteUrl(id), {
@@ -30,10 +32,10 @@ const Services = () => {
         });
       }),
       {
-        loading: "Deleting person...",
-        success: "Successfully deleted person",
-        error: "Failed to delete person",
-      }
+        loading: 'Deleting person...',
+        success: 'Successfully deleted person',
+        error: 'Failed to delete person',
+      },
     );
   };
 
@@ -45,10 +47,10 @@ const Services = () => {
   }, [fetch]);
 
   const tableColumns: Column<IService>[] = [
-    { label: "Naziv storitve", field: "service", renderCell: (i) => i.service },
+    { label: 'Naziv storitve', field: 'service', renderCell: (i) => i.service },
     {
-      label: "Cena",
-      field: "price",
+      label: 'Cena',
+      field: 'price',
       renderCell: (i) => (
         <span>
           <b>{i.price} €</b>
@@ -60,10 +62,10 @@ const Services = () => {
   const rowActions = useMemo<Action<IService>[]>(() => {
     return [
       {
-        label: "Edit",
+        label: 'Edit',
         onClick: ({ _id }) => router.push(`services/edit/${_id}`),
       },
-      { label: "Delete", onClick: ({ _id }) => handleDeleteService(_id) },
+      { label: 'Delete', onClick: ({ _id }) => handleDeleteService(_id) },
     ];
   }, [router]);
 
@@ -76,11 +78,8 @@ const Services = () => {
             justifyContent="space-between"
             alignItems="center"
           >
-            <Breadcrumbs
-              depth={1}
-              values={["Cenik"]}
-            />
-            <Button onClick={() => router.push("/services/add")}>
+            <Breadcrumbs depth={1} values={['Cenik']} />
+            <Button onClick={() => router.push('/services/add')}>
               Dodaj <AddIcon />
             </Button>
           </Stack>
@@ -97,3 +96,9 @@ const Services = () => {
 };
 
 export default Services;
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? 'en')),
+  },
+});

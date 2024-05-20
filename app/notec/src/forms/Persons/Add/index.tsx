@@ -1,17 +1,17 @@
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import styles from "./styles.module.sass";
-import { Email, Person, Phone } from "@mui/icons-material";
-import { createPersonUrl } from "@/utils/api/urls";
-import toast from "react-hot-toast";
-import { useRouter } from "next/router";
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import styles from './styles.module.sass';
+import { Email, Person, Phone } from '@mui/icons-material';
+import { createPersonUrl } from '@/utils/api/urls';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/router';
 import {
   Box,
   TextField,
   Stack,
   FormControl,
   InputAdornment,
-} from "@mui/material";
-import { usePostStore } from "@/stores/useRequestStore";
+} from '@mui/material';
+import { usePostStore } from '@/stores/useRequestStore';
 
 type FormProps = {
   first_name: string;
@@ -29,24 +29,24 @@ const AddPersonForm = () => {
 
   const { handleSubmit, control } = useForm<FormProps>({
     defaultValues: {
-      first_name: "",
-      last_name: "",
-      phone_number: "",
-      email: "",
+      first_name: '',
+      last_name: '',
+      phone_number: '',
+      email: '',
     },
   });
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
     const response = await post(createPersonUrl(), data);
     if (response?.ok) {
-      toast.success("Person successfully added!");
-      router.push("/persons");
+      toast.success('Person successfully added!');
+      router.push('/persons');
     }
   };
 
   return (
     <div className={FormContainer}>
-      <h2>Dodaj stranko</h2>
+      <h2>New client</h2>
       <Box sx={{ mt: 1 }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={FormGroup}>
@@ -67,7 +67,7 @@ const AddPersonForm = () => {
                       margin="normal"
                       required
                       fullWidth
-                      label="Ime"
+                      label="First name"
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -88,7 +88,7 @@ const AddPersonForm = () => {
                     margin="normal"
                     required
                     fullWidth
-                    label="Priimek"
+                    label="Last name"
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -107,7 +107,7 @@ const AddPersonForm = () => {
                     {...field}
                     margin="normal"
                     fullWidth
-                    label="Tel. št."
+                    label="Phone number"
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -139,11 +139,7 @@ const AddPersonForm = () => {
                 )}
               />
               <div className={FormGroup}>
-                <input
-                  type="submit"
-                  value="Dodaj"
-                  className={FormButton}
-                />
+                <input type="submit" value="Add" className={FormButton} />
               </div>
             </Stack>
           </div>

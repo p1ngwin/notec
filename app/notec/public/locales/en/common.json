@@ -1,0 +1,23 @@
+{
+  "home": "Homchie",
+  "welcome": "Welcome to portal",
+  "services": "Services",
+  "add": "Add",
+  "navigation": {
+    "appointments": {
+      "title": "Appointments",
+      "new_appointment": "New appointment"
+    },
+    "expenses": {}
+  },
+  "actions": {
+    "update": "Update",
+    "edit": "Edit"
+  },
+  "login": {
+    "sign_in": "Sign in",
+    "no_account": "Don't have an account? Sign Up",
+    "email_address": "Email adress",
+    "password": "Password"
+  }
+}

@@ -1,7 +1,7 @@
-import Breadcrumbs from "@/components/Breadcrumbs";
-import HeaderActions from "@/components/HeaderActions";
-import Avatar from "@mui/material/Avatar";
-import View from "@/components/View";
+import Breadcrumbs from '@/components/Breadcrumbs';
+import HeaderActions from '@/components/HeaderActions';
+import Avatar from '@mui/material/Avatar';
+import View from '@/components/View';
 import {
   Box,
   Grid,
@@ -16,10 +16,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-} from "@mui/material";
+} from '@mui/material';
 
-import { useState } from "react";
-import toast from "react-hot-toast";
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 import {
   Person,
   Email,
@@ -27,12 +27,14 @@ import {
   ErrorOutline,
   Key,
   LockReset,
-} from "@mui/icons-material";
-import { PaperCard } from "@/components/PaperCard";
-import { useUserStore } from "@/stores/useUserStore";
-import { lightBlue } from "@mui/material/colors";
-import { resetUserPassword, updateUserProfile } from "@/auth/authHelpers";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+} from '@mui/icons-material';
+import { PaperCard } from '@/components/PaperCard';
+import { useUserStore } from '@/stores/useUserStore';
+import { lightBlue } from '@mui/material/colors';
+import { resetUserPassword, updateUserProfile } from '@/auth/authHelpers';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { GetStaticProps } from 'next';
 
 type FormProps = {
   displayName?: string;
@@ -52,11 +54,11 @@ const Profile = () => {
   }) => {
     try {
       updateUserProfile({ displayName, password }).then((res) => {
-        if (res.status === "ok") {
-          toast.success("Successfully updated profile");
+        if (res.status === 'ok') {
+          toast.success('Successfully updated profile');
         } else {
-          if (res.code === "auth/wrong-password") {
-            toast.error("Wrong password!");
+          if (res.code === 'auth/wrong-password') {
+            toast.error('Wrong password!');
           } else {
             return toast.error(res.message);
           }
@@ -76,16 +78,13 @@ const Profile = () => {
 
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
-      displayName: user?.displayName ?? "",
-      password: "",
+      displayName: user?.displayName ?? '',
+      password: '',
     },
   });
 
   return (
-    <View
-      fullWidth
-      container
-    >
+    <View fullWidth container>
       <Dialog
         open={showDialog}
         onClose={() => setShowDialog(false)}
@@ -112,44 +111,27 @@ const Profile = () => {
           >
             Cancel
           </Button>
-          <Button
-            onClick={handlePasswordReset}
-            autoFocus
-            variant="contained"
-          >
+          <Button onClick={handlePasswordReset} autoFocus variant="contained">
             Reset password
           </Button>
         </DialogActions>
       </Dialog>
       <HeaderActions>
         <Typography variant="h4">Profil</Typography>
-        <Breadcrumbs
-          depth={1}
-          values={["Profil"]}
-        />
+        <Breadcrumbs depth={1} values={['Profil']} />
       </HeaderActions>
-      <Grid
-        container
-        spacing={2}
-        marginTop={"2rem"}
-      >
-        <Grid
-          item
-          xs={12}
-          md={4}
-          display={"flex"}
-          sx={{ flexGrow: 1 }}
-        >
+      <Grid container spacing={2} marginTop={'2rem'}>
+        <Grid item xs={12} md={4} display={'flex'} sx={{ flexGrow: 1 }}>
           <PaperCard centerContent>
             <Box>
               <Grid
                 item
                 marginBottom={3}
-                justifyContent={"center"}
-                display={"flex"}
+                justifyContent={'center'}
+                display={'flex'}
               >
                 <Avatar
-                  sx={{ width: 200, height: 200, bgcolor: lightBlue["800"] }}
+                  sx={{ width: 200, height: 200, bgcolor: lightBlue['800'] }}
                 >
                   <Typography variant="h4">
                     {displayName ? displayName.charAt(0) : <Avatar />}
@@ -159,7 +141,7 @@ const Profile = () => {
               <Typography
                 variant="subtitle1"
                 align="center"
-                sx={{ display: "flex", placeContent: "center" }}
+                sx={{ display: 'flex', placeContent: 'center' }}
                 marginBottom={5}
               >
                 {emailVerified ? (
@@ -174,7 +156,7 @@ const Profile = () => {
               </Typography>
               <Button
                 fullWidth
-                sx={{ alignSelf: "flex-end", marginBottom: 2 }}
+                sx={{ alignSelf: 'flex-end', marginBottom: 2 }}
                 size="small"
                 variant="contained"
                 color="info"
@@ -195,24 +177,11 @@ const Profile = () => {
             </Box>
           </PaperCard>
         </Grid>
-        <Grid
-          item
-          xs={12}
-          md={8}
-          display={"flex"}
-          sx={{ flexGrow: 1 }}
-        >
+        <Grid item xs={12} md={8} display={'flex'} sx={{ flexGrow: 1 }}>
           <PaperCard>
             <form onSubmit={handleSubmit(handleOnProfileUpdate)}>
-              <Grid
-                container
-                spacing={2}
-                padding={2}
-              >
-                <Grid
-                  item
-                  xs={12}
-                >
+              <Grid container spacing={2} padding={2}>
+                <Grid item xs={12}>
                   <Stack marginBottom={5}>
                     <Typography variant="h4">User profile</Typography>
                   </Stack>
@@ -234,10 +203,7 @@ const Profile = () => {
                     )}
                   />
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                >
+                <Grid item xs={12}>
                   <TextField
                     type="text"
                     disabled
@@ -251,21 +217,11 @@ const Profile = () => {
                     }}
                   />
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                >
+                <Grid item xs={12}>
                   <Divider />
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                >
-                  <Grid
-                    item
-                    xs={12}
-                    marginBottom={2}
-                  >
+                <Grid item xs={12}>
+                  <Grid item xs={12} marginBottom={2}>
                     <Controller
                       name="password"
                       control={control}
@@ -285,11 +241,7 @@ const Profile = () => {
                       )}
                     />
                   </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    marginBottom={2}
-                  >
+                  <Grid item xs={12} marginBottom={2}>
                     <TextField
                       label="New password"
                       type="password"
@@ -302,10 +254,7 @@ const Profile = () => {
                       }}
                     />
                   </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                  >
+                  <Grid item xs={12}>
                     <TextField
                       label="Verify password"
                       type="password"
@@ -323,10 +272,7 @@ const Profile = () => {
             </form>
           </PaperCard>
         </Grid>
-        <Grid
-          item
-          xs={12}
-        >
+        <Grid item xs={12}>
           <Button
             variant="contained"
             fullWidth
@@ -341,3 +287,9 @@ const Profile = () => {
 };
 
 export default Profile;
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? 'en')),
+  },
+});

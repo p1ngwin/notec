@@ -35,7 +35,7 @@ const defaultPort = process.env.SERVER_PORT
 const env = process.env.ENVIRONMENT;
 const port = env !== "local" ? defaultPort : 8000;
 
-const uri = String(process.env.DATABASE_CONNECTION);
+const uri = String(process.env.DB_LOCAL ?? process.env.DATABASE_CONNECTION);
 
 mongoose.set("strictQuery", true);
 

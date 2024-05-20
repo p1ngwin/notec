@@ -1,35 +1,36 @@
-import View from "@/components/View";
-import { useRouter } from "next/router";
-import styles from "../styles.module.sass";
-import AsyncSelect from "react-select/async";
-import React, { useEffect, useState } from "react";
+import View from '@/components/View';
+import { useRouter } from 'next/router';
+import styles from '../styles.module.sass';
+import AsyncSelect from 'react-select/async';
+import React, { useEffect, useState } from 'react';
 import {
   appointmentsUrl,
   deleteAppointmentUrl,
   personsUrl,
   servicesUrl,
   updateAppointmentUrl,
-} from "@/utils/api/urls";
-import { IPerson } from "@/types/Person";
+} from '@/utils/api/urls';
+import { IPerson } from '@/types/Person';
 import {
   useDeleteStore,
   useFetchStore,
   useUpdateStore,
-} from "@/stores/useRequestStore";
-import Breadcrumbs from "@/components/Breadcrumbs";
-import { Box, Stack, Typography, FormControl, Button } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import dayjs from "dayjs";
-import { IAppointment } from "@/types/Appointment";
+} from '@/stores/useRequestStore';
+import Breadcrumbs from '@/components/Breadcrumbs';
+import { Box, Stack, Typography, FormControl, Button } from '@mui/material';
+import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import dayjs from 'dayjs';
+import { IAppointment } from '@/types/Appointment';
 import {
   DatePicker,
   LocalizationProvider,
   TimePicker,
-} from "@mui/x-date-pickers";
-import { IService } from "@/types/Service";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { formatDate, formatTime, parseDateTime } from "@/utils/helpers/utils";
+} from '@mui/x-date-pickers';
+import { IService } from '@/types/Service';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { formatDate, formatTime, parseDateTime } from '@/utils/helpers/utils';
+import { useTranslation } from 'next-i18next';
 
 type FormValues = {
   person_id: string;
@@ -43,6 +44,8 @@ export default function Page() {
   const { query } = router;
 
   const appointmentId = query.id as string;
+
+  const { t } = useTranslation();
 
   const { fetch, isLoading } = useFetchStore();
   const { update } = useUpdateStore();
@@ -66,7 +69,7 @@ export default function Page() {
   useEffect(() => {
     (async () => {
       const appointment = await fetch(
-        appointmentsUrl(new URLSearchParams({ id: appointmentId }))
+        appointmentsUrl(new URLSearchParams({ id: appointmentId })),
       );
       if (appointment) {
         setAppointment(appointment[0]);
@@ -78,31 +81,31 @@ export default function Page() {
   const onUpdate = async (data: FormValues) => {
     const updatedAppointment = await update(
       updateAppointmentUrl(appointmentId),
-      data
+      data,
     );
     updatedAppointment && setAppointment(updatedAppointment);
     const appointment = await fetch(
-      appointmentsUrl(new URLSearchParams({ id: appointmentId }))
+      appointmentsUrl(new URLSearchParams({ id: appointmentId })),
     );
     if (appointment) {
       setAppointment(appointment);
       reset(appointment);
 
-      toast.success("Oseba uspešno posodobljena.");
+      toast.success('Oseba uspešno posodobljena.');
     } else {
-      toast.error("Napaka pri posodabljanju osebe.");
+      toast.error('Napaka pri posodabljanju osebe.');
     }
   };
 
   const handleOnDeleteClick = async () => {
     const deletedAppointment = await _delete(
       deleteAppointmentUrl(appointmentId),
-      { id: appointmentId }
+      { id: appointmentId },
     );
 
     if (deletedAppointment) {
-      toast.success("Naročilo uspešno izbrisano");
-      router.push("/appointments");
+      toast.success('Naročilo uspešno izbrisano');
+      router.push('/appointments');
     }
   };
 
@@ -125,9 +128,9 @@ export default function Page() {
       resolve(
         fetchServices().then((res) =>
           res.filter((item: IService) =>
-            item.service.toLowerCase().includes(filterValue.toLowerCase())
-          )
-        )
+            item.service.toLowerCase().includes(filterValue.toLowerCase()),
+          ),
+        ),
       );
     });
 
@@ -140,25 +143,19 @@ export default function Page() {
               item.first_name
                 .toLowerCase()
                 .includes(filterValue.toLowerCase()) ||
-              item.last_name.toLowerCase().includes(filterValue.toLowerCase())
-          )
-        )
+              item.last_name.toLowerCase().includes(filterValue.toLowerCase()),
+          ),
+        ),
       );
     });
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <View
-        className={PersonView}
-        fullWidth
-      >
-        <Breadcrumbs
-          ignoreLastItem
-          values={["Naročilo", "Urejanje"]}
-        />
+      <View className={PersonView} fullWidth>
+        <Breadcrumbs ignoreLastItem values={['Naročilo', 'Urejanje']} />
         <Typography variant="h6">
-          {currentAppointment?.first_name} {currentAppointment?.last_name} -{" "}
-          {formatDate(currentAppointment?.date)}, {" "}
+          {currentAppointment?.first_name} {currentAppointment?.last_name} -{' '}
+          {formatDate(currentAppointment?.date)},{' '}
           {formatTime(currentAppointment?.time)}
         </Typography>
 
@@ -183,7 +180,7 @@ export default function Page() {
                         onChange={(date) => field.onChange(date!)}
                         slotProps={{
                           textField: {
-                            variant: "outlined",
+                            variant: 'outlined',
                           },
                         }}
                       />
@@ -200,11 +197,11 @@ export default function Page() {
                         onChange={(date) => field.onChange(date!)}
                         slotProps={{
                           textField: {
-                            variant: "outlined",
-                            placeholder: dayjs().format("HH:mm"),
+                            variant: 'outlined',
+                            placeholder: dayjs().format('HH:mm'),
                           },
                         }}
-                        views={["hours", "minutes"]}
+                        views={['hours', 'minutes']}
                         ampm={false}
                       />
                     </FormControl>
@@ -238,7 +235,7 @@ export default function Page() {
                 <Controller
                   name="person_id"
                   control={control}
-                  rules={{ required: "Prosimo izberite osebo" }}
+                  rules={{ required: 'Prosimo izberite osebo' }}
                   render={({ ...field }) => (
                     <FormControl>
                       <AsyncSelect<IPerson, false>
@@ -252,7 +249,7 @@ export default function Page() {
                         }
                         getOptionValue={(opt) => opt._id}
                         onChange={(value) =>
-                          field.field.onChange(value?._id || "")
+                          field.field.onChange(value?._id || '')
                         }
                         isLoading={isLoading}
                         {...field}
@@ -260,19 +257,15 @@ export default function Page() {
                     </FormControl>
                   )}
                 />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                >
-                  Posodobi
+                <Button type="submit" variant="contained" color="primary">
+                  {t('actions.update')}
                 </Button>
                 <Button
                   variant="contained"
                   color="error"
                   onClick={handleOnDeleteClick}
                 >
-                  Izbriši naročilo
+                  {t('appointments.delete')}
                 </Button>
               </Stack>
             </div>

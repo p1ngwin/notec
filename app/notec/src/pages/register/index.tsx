@@ -1,4 +1,4 @@
-import { useUserStore } from "@/stores/useUserStore";
+import { useUserStore } from '@/stores/useUserStore';
 import {
   Container,
   Box,
@@ -7,13 +7,15 @@ import {
   Button,
   Grid,
   Avatar,
-} from "@mui/material";
-import { useRouter } from "next/router";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import { registerUser } from "@/auth/authHelpers";
-import View from "@/components/View";
-import { LockOutlined } from "@mui/icons-material";
+} from '@mui/material';
+import { useRouter } from 'next/router';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { registerUser } from '@/auth/authHelpers';
+import View from '@/components/View';
+import { LockOutlined } from '@mui/icons-material';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { GetStaticProps } from 'next';
 
 type FormProps = {
   email: string;
@@ -27,8 +29,8 @@ const Register = () => {
 
   const { control, handleSubmit } = useForm<FormProps>({
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
@@ -40,7 +42,7 @@ const Register = () => {
     }
     if (result.user) {
       toast.success(`Verification email sent to ${result.user.email}.`);
-      router.push("/");
+      router.push('/');
     }
   };
 
@@ -49,22 +51,19 @@ const Register = () => {
       <Container
         component="main"
         maxWidth="xs"
-        sx={{ display: "flex", placeItems: "center" }}
+        sx={{ display: 'flex', placeItems: 'center' }}
       >
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlined />
           </Avatar>
-          <Typography
-            component="h1"
-            variant="h5"
-          >
+          <Typography component="h1" variant="h5">
             Register new user
           </Typography>
           <Box sx={{ mt: 1 }}>
@@ -111,7 +110,7 @@ const Register = () => {
               </Button>
               <Grid container>
                 <Grid item>
-                  <Button onClick={() => router.push("/login")}>
+                  <Button onClick={() => router.push('/login')}>
                     Already registered?
                   </Button>
                 </Grid>
@@ -125,3 +124,9 @@ const Register = () => {
 };
 
 export default Register;
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? 'en')),
+  },
+});
