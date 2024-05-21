@@ -9,7 +9,6 @@ import { IAppointment } from '@/types/Appointment';
 import { appointmentsUrl, deleteAppointmentUrl } from '@/utils/api/urls';
 import styles from './styles.module.sass';
 import {
-  DATE_FORMAT_WEEK_VIEW,
   DEFAULT_DATE_FORMAT_DAY,
   DEFAULT_DATE_FORMAT_MONTH,
   formatDate,
@@ -17,8 +16,6 @@ import {
   parseDateTime,
 } from '@/utils/helpers/utils';
 import { useRouter } from 'next/router';
-import Breadcrumbs from '@/components/Breadcrumbs';
-import HeaderActions from '@/components/HeaderActions';
 import {
   Button,
   Divider,
@@ -26,7 +23,8 @@ import {
   MenuItem,
   Typography,
   IconButton,
-  Stack,
+  ToggleButtonGroup,
+  ToggleButton,
 } from '@mui/material';
 import { useDeleteStore, useFetchStore } from '@/stores/useRequestStore';
 import Modal from '@/components/Modal';
@@ -44,6 +42,8 @@ import dayjs from 'dayjs';
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
+import classNames from 'classnames';
+import ActionButton from '@/components/ActionButton';
 
 type DateQueryArgs = {
   endStr: string;
@@ -60,11 +60,17 @@ const Appointments = () => {
   const {
     AppointmentsView,
     EventCell,
-    SlotLabelDay,
-    SlotLabelWeek,
     SlotServiceItem,
     DateNavArrow,
     DateNavCn,
+    DayCell,
+    SlotLane,
+    IsToday,
+    NowIndicator,
+    SwitcherButton,
+    SwitcherActive,
+    HeaderCellBlack,
+    EventModal,
   } = styles;
 
   const { fetch } = useFetchStore();
@@ -88,7 +94,6 @@ const Appointments = () => {
   const [dialogContent, setDialogContent] = useState<ReactNode | null>(null);
 
   const [currentStart, setCurrentStart] = useState('');
-  const [currentEnd, setCurrentEnd] = useState('');
 
   const handleDialogOpen = (content: ReactNode) => {
     setDialogContent(content);
@@ -159,24 +164,16 @@ const Appointments = () => {
 
     if (dateType === CalendarType.timeGridWeek) {
       setCurrentStart(
-        dayjs(calendarApi?.view.currentStart).format(DEFAULT_DATE_FORMAT_DAY),
-      );
-      setCurrentEnd(
-        ' - ' +
-          dayjs(calendarApi?.view.currentStart)
-            .add(6, 'days')
-            .format(DEFAULT_DATE_FORMAT_DAY),
+        dayjs(calendarApi?.view.currentStart).format(DEFAULT_DATE_FORMAT_MONTH),
       );
     } else if (dateType === CalendarType.timeGridDay) {
       setCurrentStart(
         dayjs(calendarApi?.view.currentStart).format(DEFAULT_DATE_FORMAT_DAY),
       );
-      setCurrentEnd('');
     } else if (dateType === CalendarType.dayGridMonth) {
       setCurrentStart(
         dayjs(calendarApi?.view.currentStart).format(DEFAULT_DATE_FORMAT_MONTH),
       );
-      setCurrentEnd('');
     }
 
     const res = await fetch(
@@ -200,148 +197,188 @@ const Appointments = () => {
 
   return (
     <>
-      <View fullWidth className={AppointmentsView}>
-        <HeaderActions>
-          <Breadcrumbs depth={1} values={['Appointments']} />
-        </HeaderActions>
+      <View fullWidth direction="column" className={AppointmentsView}>
         <Grid
           container
           sx={{ justifyContent: 'center' }}
           alignItems="center"
           className={DateNavCn}
         >
-          <Grid item xs={2} display="flex" justifyContent="flex-start">
-            <IconButton onClick={handleOnPrevMonth} className={DateNavArrow}>
-              <PrevMonthIcon />
-            </IconButton>
-          </Grid>
-          <Grid item xs={8} display="flex" justifyContent="center">
+          <Grid
+            item
+            xs={12}
+            display="flex"
+            justifyContent="start"
+            alignItems="center"
+          >
             <Grid
-              container
-              textAlign="center"
-              spacing={3}
-              justifyContent="center"
+              xs={3}
+              justifyContent="start"
+              display="flex"
+              alignItems="center"
             >
-              <Typography
-                variant="h4"
-                width="100%"
-                align="center"
-                marginBottom={3}
+              <Typography variant="h4">{currentStart}</Typography>
+              <IconButton onClick={handleOnPrevMonth} className={DateNavArrow}>
+                <PrevMonthIcon />
+              </IconButton>
+              <IconButton onClick={handleOnNextMonth} className={DateNavArrow}>
+                <NextMonthIcon />
+              </IconButton>
+            </Grid>
+            <Grid xs={6} justifyContent={'center'} display="flex">
+              <ActionButton
+                isPrimary
+                onClick={() => router.push('/appointments/add')}
+                label={t('appointment.new')}
+              />
+            </Grid>
+            <Grid item xs={3} display="flex" justifyContent="end">
+              <ToggleButtonGroup
+                value={calendarApi?.view.type}
+                exclusive
+                aria-label="day alignment"
               >
-                {currentStart} {currentEnd}
-              </Typography>
-              <Stack direction="row" spacing={3} justifyContent="center">
-                <Button
-                  variant="contained"
+                <ToggleButton
+                  className={classNames(
+                    SwitcherButton,
+                    calendarApi?.view.type === CalendarType.timeGridDay &&
+                      SwitcherActive,
+                  )}
+                  value={CalendarType.timeGridDay}
+                  aria-label="week aligned"
+                  sx={{ borderRadius: '25px' }}
                   onClick={() =>
                     calendarApi?.changeView(CalendarType.timeGridDay)
                   }
                 >
-                  {t('day')}
-                </Button>
-                <Button
-                  variant="contained"
+                  Day
+                </ToggleButton>
+                <ToggleButton
+                  className={classNames(
+                    SwitcherButton,
+                    calendarApi?.view.type === CalendarType.timeGridWeek &&
+                      SwitcherActive,
+                  )}
+                  value={CalendarType.timeGridWeek}
+                  aria-label="centered"
                   onClick={() =>
                     calendarApi?.changeView(CalendarType.timeGridWeek)
                   }
                 >
-                  {t('week')}
-                </Button>
-                <Button
-                  variant="contained"
+                  Week
+                </ToggleButton>
+                <ToggleButton
+                  className={classNames(
+                    SwitcherButton,
+                    calendarApi?.view.type === CalendarType.dayGridMonth &&
+                      SwitcherActive,
+                  )}
+                  value={CalendarType.dayGridMonth}
+                  aria-label="month aligned"
+                  sx={{ borderRadius: '25px' }}
                   onClick={() =>
                     calendarApi?.changeView(CalendarType.dayGridMonth)
                   }
                 >
-                  {t('month')}
-                </Button>
-              </Stack>
+                  Month
+                </ToggleButton>
+              </ToggleButtonGroup>
             </Grid>
           </Grid>
-          <Grid item xs={2} display="flex" justifyContent="flex-end">
-            <IconButton onClick={handleOnNextMonth} className={DateNavArrow}>
-              <NextMonthIcon />
-            </IconButton>
-          </Grid>
         </Grid>
-        <FullCalendar
-          ref={calendarRef}
-          eventClassNames={EventCell}
-          aspectRatio={2.9}
-          plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
-          initialView={CalendarType.timeGridWeek}
-          events={
-            appointments?.length
-              ? appointments.map((app) => ({
-                  id: app._id,
-                  title: app.service,
-                  allDay: false,
-                  start: parseAppointmentStart(app.date, app.time),
-                  extendedProps: {
-                    first_name: app.first_name,
-                    last_name: app.last_name,
-                    service: app.service,
-                    startTime: formatTime(app.time),
-                    date: formatDate(app.date),
-                  },
-                }))
-              : []
-          }
-          headerToolbar={{
-            right: undefined,
-            center: undefined,
-            left: undefined,
-          }}
-          views={{
-            timeGridDay: {
-              slotEventOverlap: false,
-              eventMinHeight: 120,
-              slotLabelClassNames: SlotLabelDay,
-            },
-            timeGridWeek: {
-              slotEventOverlap: false,
-              slotLabelClassNames: SlotLabelWeek,
-              dayHeaderContent: (args) =>
-                dayjs(args.date).format(DATE_FORMAT_WEEK_VIEW),
-            },
-            dayGridMonth: {
-              dayHeaders: false,
-            },
-          }}
-          eventContent={renderEventContent}
-          dateClick={handleDateClick}
-          buttonText={{
-            timeGridWeek: t('week'),
-            timeGridDay: t('day'),
-          }}
-          slotLabelFormat={[
-            {
-              hour: '2-digit',
-              minute: '2-digit',
-              omitZeroMinute: false,
-              meridiem: false,
-              hour12: false,
-              hourCycle: 'h24',
-            },
-          ]}
-          slotMinTime={'06:00'}
-          slotMaxTime={'22:00'}
-          allDaySlot={false}
-          nowIndicator
-          expandRows
-          eventClick={handleEventClick}
-          datesSet={handleDatesSet}
-          firstDay={1}
-        />
-        <Button
-          sx={{ marginTop: '2rem' }}
-          variant="contained"
-          fullWidth
-          onClick={() => router.push('/appointments/add')}
+        <div className="CalendarWrapper">
+          <FullCalendar
+            ref={calendarRef}
+            eventClassNames={EventCell}
+            aspectRatio={1.9}
+            plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
+            initialView={CalendarType.timeGridWeek}
+            events={
+              appointments?.length
+                ? appointments.map((app) => ({
+                    id: app._id,
+                    title: app.service,
+                    allDay: false,
+                    start: parseAppointmentStart(app.date, app.time),
+                    extendedProps: {
+                      first_name: app.first_name,
+                      last_name: app.last_name,
+                      service: app.service,
+                      startTime: formatTime(app.time),
+                      date: formatDate(app.date),
+                    },
+                  }))
+                : []
+            }
+            headerToolbar={{
+              right: undefined,
+              center: undefined,
+              left: undefined,
+            }}
+            views={{
+              timeGridDay: {
+                slotEventOverlap: false,
+                slotLabelInterval: { hours: 2 },
+                dayHeaderContent: (args) => {
+                  return <HeaderCell args={args} />;
+                },
+                dayHeaderClassNames(args) {
+                  if (args.isToday) return [HeaderCellBlack];
+                  else return [];
+                },
+              },
+              timeGridWeek: {
+                slotEventOverlap: false,
+                dayHeaderContent: (args) => {
+                  return <HeaderCell args={args} />;
+                },
+                dayHeaderClassNames(args) {
+                  if (args.isToday) return [IsToday];
+                  else return [];
+                },
+                dayCellClassNames: DayCell,
+                slotLaneClassNames: SlotLane,
+              },
+              dayGridMonth: {
+                dayHeaders: false,
+              },
+            }}
+            eventContent={renderEventContent}
+            dateClick={handleDateClick}
+            buttonText={{
+              timeGridWeek: t('week'),
+              timeGridDay: t('day'),
+            }}
+            slotLabelFormat={[
+              {
+                hour: '2-digit',
+                minute: '2-digit',
+                omitZeroMinute: false,
+                meridiem: false,
+                hour12: false,
+                hourCycle: 'h24',
+              },
+            ]}
+            slotMinTime={'06:00'}
+            slotMaxTime={'22:00'}
+            allDaySlot={false}
+            nowIndicator
+            expandRows
+            eventClick={handleEventClick}
+            datesSet={handleDatesSet}
+            slotLabelInterval={{ hours: 2 }}
+            slotLabelContent={(renderProps) => {
+              return <SlotCell args={renderProps} />;
+            }}
+            nowIndicatorClassNames={NowIndicator}
+          />
+        </div>
+
+        <Modal
+          open={dialogOpen}
+          onClose={handleDialogClose}
+          className={EventModal}
         >
-          {t('appointment.new')}
-        </Button>
-        <Modal open={dialogOpen} onClose={handleDialogClose}>
           {dialogContent}
         </Modal>
       </View>
@@ -367,11 +404,20 @@ type EventCellProps = {
 };
 
 const RenderEventCell = ({ eventDetails, className }: EventCellProps) => {
-  const { startTime } = eventDetails;
+  const { ServiceText } = styles;
+  const { startTime, first_name, last_name, service } = eventDetails;
 
   return (
     <div className={className}>
       <span>{startTime}</span>
+      <br />
+      <span className={ServiceText}>
+        <b>{service}</b>
+      </span>
+      <br />
+      <span>
+        {first_name} {last_name}
+      </span>
     </div>
   );
 };
@@ -384,7 +430,7 @@ const EventDetails = ({
 }: EventCellProps) => {
   const router = useRouter();
 
-  const { t } = useTranslation(['common', 'appointments']);
+  const { t } = useTranslation('appointments');
 
   const { _delete } = useDeleteStore();
 
@@ -420,7 +466,6 @@ const EventDetails = ({
         </Grid>
         <Grid item xs={12}>
           <Divider sx={{ margin: '1rem 0' }} />
-          <Typography variant="h6">{t('services')}</Typography>
           {service &&
             service.split(',').map((service, index) => (
               <MenuItem key={id ?? index}>
@@ -431,24 +476,33 @@ const EventDetails = ({
           <Divider sx={{ margin: '1rem 0' }} />
         </Grid>
 
-        <Grid className={ModalActions} container marginTop={2}>
-          <Grid item xs={6} textAlign={'center'}>
-            <Button
-              color="warning"
-              variant="contained"
+        <Grid
+          className={ModalActions}
+          container
+          marginTop={2}
+          xs={12}
+          display="flex"
+          justifyContent="space-between"
+        >
+          <Grid item xs={6} display="flex" textAlign={'center'}>
+            <ActionButton
+              isPrimary
               onClick={() => router.push(`/appointments/edit/${id}`)}
-            >
-              {t('appointment.edit')}
-            </Button>
+              label={t('appointment.edit')}
+            ></ActionButton>
           </Grid>
-          <Grid item xs={6} textAlign={'center'}>
-            <Button
-              color="error"
-              variant="contained"
+          <Grid
+            item
+            xs={6}
+            display="flex"
+            justifyContent="end"
+            textAlign={'center'}
+          >
+            <ActionButton
+              isSecondary
               onClick={() => handleAppointmentDelete(id)}
-            >
-              {t('appointment.delete')}
-            </Button>
+              label={t('appointment.delete')}
+            ></ActionButton>
           </Grid>
         </Grid>
       </Grid>
@@ -461,3 +515,29 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => ({
     ...(await serverSideTranslations(locale ?? 'en')),
   },
 });
+
+const HeaderCell = ({ args }: any) => {
+  const { HeaderCellWrapper, HeaderCellDay, HeaderCellString } = styles;
+
+  const { date } = args;
+
+  const dayNumber = dayjs(date).format('D');
+  const dayString = dayjs(date).format('dddd');
+
+  return (
+    <div className={`${HeaderCellWrapper}`}>
+      <div className={HeaderCellString}>{dayString}</div>
+      <div className={HeaderCellDay}>{dayNumber}</div>
+    </div>
+  );
+};
+
+const SlotCell = ({ args }: any) => {
+  const { SlotCellClass } = styles;
+
+  return (
+    <div className={`${SlotCellClass}`}>
+      <div>{args.text}</div>
+    </div>
+  );
+};

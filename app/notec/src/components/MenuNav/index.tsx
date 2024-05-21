@@ -1,8 +1,6 @@
 import React from 'react';
 import styles from './styles.module.sass';
 import { Button } from '@mui/material';
-import Image from 'next/image';
-import logo from '../../assets/img/logo.svg';
 import { useRouter } from 'next/router';
 import Spacer from '@/components/Spacer';
 import {
@@ -31,7 +29,7 @@ export const MenuNav = ({ isMobile = false }: Props) => {
     SideMenuWrapper,
     MobileMenuWrapper,
     NavMenuButtonWrapper,
-    Logo,
+    Active,
   } = styles;
 
   const { t } = useTranslation('menu');
@@ -45,6 +43,9 @@ export const MenuNav = ({ isMobile = false }: Props) => {
   };
 
   const router = useRouter();
+
+  const { route } = router;
+
   return (
     <div
       className={classNames({
@@ -52,11 +53,6 @@ export const MenuNav = ({ isMobile = false }: Props) => {
         [MobileMenuWrapper]: isMobile,
       })}
     >
-      <div className={Logo}>
-        <Image src={logo} alt="logo" />
-      </div>
-
-      <Spacer />
       <div className={NavMenuWrapper}>
         {isMobile && (
           <>
@@ -74,9 +70,12 @@ export const MenuNav = ({ isMobile = false }: Props) => {
             <Spacer />
           </>
         )}
-        <div className={NavMenuButtonWrapper}>
+        <div className={classNames([NavMenuButtonWrapper])}>
           <Button
-            className={NavMenuButton}
+            className={classNames([
+              NavMenuButton,
+              route === '/' && Active,
+            ])}
             onClick={() => handleOnMenuItemClicked('/')}
           >
             <Home />
@@ -85,7 +84,10 @@ export const MenuNav = ({ isMobile = false }: Props) => {
         </div>
         <div className={NavMenuButtonWrapper}>
           <Button
-            className={NavMenuButton}
+            className={classNames([
+              NavMenuButton,
+              route === '/persons' && Active,
+            ])}
             onClick={() => handleOnMenuItemClicked('/persons')}
           >
             <People />
@@ -94,7 +96,10 @@ export const MenuNav = ({ isMobile = false }: Props) => {
         </div>
         <div className={NavMenuButtonWrapper}>
           <Button
-            className={NavMenuButton}
+            className={classNames([
+              NavMenuButton,
+              route === '/appointments' && Active,
+            ])}
             onClick={() => handleOnMenuItemClicked('/appointments')}
           >
             <CalendarMonth />
@@ -103,7 +108,10 @@ export const MenuNav = ({ isMobile = false }: Props) => {
         </div>
         <div className={NavMenuButtonWrapper}>
           <Button
-            className={NavMenuButton}
+            className={classNames([
+              NavMenuButton,
+              route === '/services' && Active,
+            ])}
             onClick={() => handleOnMenuItemClicked('/services')}
           >
             <Summarize />
@@ -112,7 +120,10 @@ export const MenuNav = ({ isMobile = false }: Props) => {
         </div>
         <div className={NavMenuButtonWrapper}>
           <Button
-            className={NavMenuButton}
+            className={classNames([
+              NavMenuButton,
+              route === '/revenue' && Active,
+            ])}
             onClick={() => handleOnMenuItemClicked('/revenue')}
           >
             <AddCard />
@@ -121,7 +132,10 @@ export const MenuNav = ({ isMobile = false }: Props) => {
         </div>
         <div className={NavMenuButtonWrapper}>
           <Button
-            className={NavMenuButton}
+            className={classNames([
+              NavMenuButton,
+              route === '/expenses' && Active,
+            ])}
             onClick={() => handleOnMenuItemClicked('/expenses')}
           >
             <AccountBalance />

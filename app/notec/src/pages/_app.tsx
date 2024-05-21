@@ -51,14 +51,14 @@ function MyApp({ Component, pageProps }: AppProps) {
               </View>
             ) : (
               <SidebarProvider>
-                {mobile ? <HeaderMobile /> : <Header />}
+                {mobile && <HeaderMobile />}
                 <div className="AppContentWrapper">
                   {!mobile ? <SideMenuLayout /> : <MobileMenu />}
                   <div className="PageContentWrapper">
                     <Component {...pageProps} />
                   </div>
                 </div>
-                <Footer />
+                {/* <Footer /> */}
               </SidebarProvider>
             )}
           </div>

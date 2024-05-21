@@ -2,9 +2,7 @@
 
 .SideMenuWrapper
     background: $bg-primary
-
-    .Logo
-        padding: 1.5rem
+    height: 100%
 
     .NavMenuWrapper
         padding: 1rem 0
@@ -14,8 +12,18 @@
             width: 100%
             justify-content: flex-start
             transition: none
-            padding: 1rem
+            padding: .7rem 1rem
             color: $white
+            border-radius: 35px
+            margin: .5rem 0
+
+            &.Active
+                background: $white
+                color: $bg-primary
+
+                .NavMenuText
+                    color: $bg-primary
+                    font-weight: bold
 
             &:hover
                 background: $bg-primary-hover

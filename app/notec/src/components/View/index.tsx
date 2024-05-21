@@ -9,6 +9,7 @@ type Props = {
   fullWidth?: boolean;
   fullScreen?: boolean;
   container?: boolean;
+  direction?: "row" | "column"
 };
 
 const View = ({
@@ -17,12 +18,15 @@ const View = ({
   fullWidth = false,
   fullScreen = false,
   container = false,
+  direction
 }: Props) => {
-  const { View, FullScreen, FullWidth } = styles;
+  const { View, FullScreen, FullWidth, DirectionRow, DirectionColumn } = styles;
 
   const viewCn = classNames([className, View], {
     [FullScreen]: Boolean(fullScreen),
     [FullWidth]: Boolean(fullWidth),
+    [DirectionColumn]: Boolean(direction === "column"),
+    [DirectionRow]: Boolean(direction === "row"),
   });
 
   return container ? (

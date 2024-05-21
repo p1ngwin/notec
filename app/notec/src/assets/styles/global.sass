@@ -18,6 +18,12 @@
     & .fc-toolbar-chunk
       width: 100%
 
+    & td.fc-timegrid-slot.fc-timegrid-slot-label.fc-timegrid-slot-minor
+      border: 0!important
+
+    & .fc-timegrid-col
+      border-radius: 25px
+
     & .fc-toolbar.fc-header-toolbar
       display: flex
       text-align: center
@@ -75,6 +81,7 @@
 
 :root
   --fc-border-color: #ebebeb
+  --fc-today-bg-color: #f1f1f1!important
 
 body
   margin: 0
@@ -160,12 +167,6 @@ div#__next > div
   & .fc-event
     position: relative
 
-.fc-event:hover
-  background: $bg-primary-hover!important
-
-.fc-timegrid-col-events, .fc-daygrid-day-events
-  & div a
-    background: #3EAC2a
 .fc-timegrid-col-events, .fc-daygrid-day-events
   & div:nth-child(2n) a
     background: #63db4e
