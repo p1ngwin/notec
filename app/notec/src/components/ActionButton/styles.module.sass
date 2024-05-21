@@ -1,0 +1,32 @@
+@import ../../assets/styles/_constants
+
+.Button
+    font-size: 1rem
+    padding: .5rem 1.5rem
+    font-weight: bold
+    background-color: $primary
+    color: $white!important
+    border: 1px solid $black!important
+    border-radius: $calendar-today-border-radius
+
+    &.primary
+        background: $black
+        padding: .5rem 1.5rem
+        font-weight: bold
+
+        &:hover
+            background-color: $white!important
+            color: $black!important
+            border-color: $black
+
+    &.secondary
+        background: $white
+        color: $black!important
+        padding: .5rem 1.5rem
+        font-weight: bold
+        border-color: $black
+
+        &:hover
+            background-color: $black!important
+            color: $white!important
+            border-color: $black

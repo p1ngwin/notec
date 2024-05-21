@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState } from 'react';
 import {
   Table as DataTable,
   TableBody,
@@ -12,12 +12,12 @@ import {
   TextField,
   Stack,
   Button,
-} from "@mui/material";
-import { useRef } from "react";
-import TuneIcon from "@mui/icons-material/Tune";
-import { useOutsideClick } from "@/utils/helpers/clickHandlers";
-import styles from "./styles.module.sass";
-import classNames from "classnames";
+} from '@mui/material';
+import { useRef } from 'react';
+import TuneIcon from '@mui/icons-material/Tune';
+import { useOutsideClick } from '@/utils/helpers/clickHandlers';
+import styles from './styles.module.sass';
+import classNames from 'classnames';
 
 type HasId = { id: string };
 
@@ -68,23 +68,12 @@ const RowAction = <RowData extends HasId>({
   const { RowActionButton } = styles;
 
   return (
-    <div
-      className={RowActionButton}
-      ref={ref}
-      onClick={handleDropdownOpen}
-    >
+    <div className={RowActionButton} ref={ref} onClick={handleDropdownOpen}>
       <TuneIcon />
-      <Menu
-        id="actions"
-        anchorEl={anchorEl}
-        open={dropDownOpen}
-      >
+      <Menu id="actions" anchorEl={anchorEl} open={dropDownOpen}>
         {actions.map(({ label, onClick }, i) => (
-          <MenuItem
-            key={i}
-            onClick={() => onClick(row)}
-          >
-            {typeof label === "function" ? label(row) : label}
+          <MenuItem key={i} onClick={() => onClick(row)}>
+            {typeof label === 'function' ? label(row) : label}
           </MenuItem>
         ))}
       </Menu>
@@ -102,14 +91,14 @@ const Table = <RowData extends HasId>({
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [filterResults, setFilterResults] = useState("");
+  const [filterResults, setFilterResults] = useState('');
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -117,13 +106,13 @@ const Table = <RowData extends HasId>({
 
   const visibleRows = useMemo(() => {
     if (rows && rows.length) {
-      if (filterResults && filterResults !== "") {
+      if (filterResults && filterResults !== '') {
         return rows.filter((row) => {
           return Object.values(row).some((t) =>
             t
               .toString()
               .toLowerCase()
-              .includes(filterResults.toString().toLowerCase())
+              .includes(filterResults.toString().toLowerCase()),
           );
         });
       }
@@ -138,7 +127,7 @@ const Table = <RowData extends HasId>({
           variant="outlined"
           size="small"
           fullWidth={false}
-          placeholder="Iskanje"
+          placeholder="Search for service..."
           onChange={(e) => setFilterResults(e.currentTarget.value)}
           value={filterResults}
           InputProps={{
@@ -146,9 +135,9 @@ const Table = <RowData extends HasId>({
               <Button
                 variant="outlined"
                 onClick={() => {
-                  setFilterResults("");
+                  setFilterResults('');
                 }}
-                sx={{ position: "absolute", right: 0, border: 0 }}
+                sx={{ position: 'absolute', right: 0, border: 0 }}
               >
                 X
               </Button>
@@ -178,13 +167,17 @@ const Table = <RowData extends HasId>({
               visibleRows?.map((row, index) => (
                 <TableRow key={index}>
                   {showRowCount && (
-                    <Cell className={classNames([TableBodyCell])}>
+                    <Cell
+                      className={classNames([TableBodyCell])}
+                      classes={{ root: 'testuu' }}
+                    >
                       {index + 1}
                     </Cell>
                   )}
                   {columns.map(
                     ({ field, label, cellClassName, renderCell }) => (
                       <Cell
+                        classes={{ root: 'testuu' }}
                         className={classNames([TableBodyCell], {
                           cellClassName,
                         })}
@@ -192,14 +185,11 @@ const Table = <RowData extends HasId>({
                       >
                         {renderCell ? renderCell(row) : label}
                       </Cell>
-                    )
+                    ),
                   )}
                   {rowActions && (
                     <Cell className={classNames([TableBodyCell])}>
-                      <RowAction
-                        row={row}
-                        actions={rowActions}
-                      />
+                      <RowAction row={row} actions={rowActions} />
                     </Cell>
                   )}
                 </TableRow>

@@ -2,7 +2,7 @@ import {
   sendEmailVerificationToUser,
   useAuthActions,
 } from '@/auth/authHelpers';
-import Button from '@/components/Button';
+import Button from '@/components/ActionButton';
 import View from '@/components/View';
 import { useUserStore } from '@/stores/useUserStore';
 import { Container, Typography, Box, Grid } from '@mui/material';

@@ -14,32 +14,90 @@
         margin-bottom: 2rem
 
     .EventCell
-        padding: .5rem
-        color: white
+        padding: 1rem 2rem
+        color: $white
         font-size: 1.2rem
         margin: .2rem
         display: flex
-        border: 0
+        border: 1px solid $border-grey
+        border-radius: $calendar-today-border-radius
         cursor: pointer
+        background: $white
+        transition: all 0.2s ease
 
-    .SlotLabelDay
-        font-size: .8rem
-        font-weight: 500
-
-    .SlotLabelWeek
-        font-size: .8rem
+        &:hover
+            box-shadow: $box-hover
 
     .SlotServiceItem
         font-size: 1rem
+        color: $black
 
     .DateNavCn
-        margin: 3rem 0
 
         .DateNavArrow
             background: transparent
             border: 0
-            color: $primary
-            margin: 0
+            color: $black
 
         svg
-            font-size: 4rem
+            font-size: 2rem
+
+    .DayCell
+        border-radius: 0 0 $calendar-today-border-radius $calendar-today-border-radius
+
+    .SlotLane
+        border: 0
+
+    .HeaderCellWrapper
+        padding: 1.5rem
+        color: $grey-03
+
+        .HeaderCellDay
+            font-size: 2rem
+
+    .IsToday
+        border-radius: $calendar-today-border-radius $calendar-today-border-radius 0 0
+        background-color: $bg-today
+
+        .HeaderCellWrapper
+            color: $black
+
+    .HeaderCellBlack
+        .HeaderCellWrapper
+            color: $black
+
+    .SlotCellClass
+        padding: 1rem
+        font-size: 1.5rem
+
+    .NowIndicator
+        border-color: $grey-03
+        border-radius: $calendar-today-border-radius
+        border-width: 10px 0 0
+        z-index: 0
+
+    .SwitcherButton
+        font-weight: bold
+        font-family: 'Nunito Sans'
+        font-size: 1rem
+        padding: .5rem 1.5rem
+        border-radius: 35px 35px 35px 35px!important
+        border: 0
+        margin: 0 1rem
+
+        &:hover
+            background: $black!important
+            color: $white
+
+        &.SwitcherActive
+            color: $white
+            background: $black
+
+    .ServiceText
+        font-size: 1.2rem
+        overflow: hidden
+        text-overflow: ellipsis
+        white-space: break-spaces
+
+    .EventModal
+        border: $calendar-today-border-radius

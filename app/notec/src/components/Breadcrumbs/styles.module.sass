@@ -4,33 +4,34 @@
     margin-right: 1rem
     a
         display: flex
-        svg
-            font-size: 2rem
 
 .Breadcrumbs
     display: flex
-    font-size: 1rem
     font-weight: 500
     text-transform: capitalize
     margin: 1rem 0
+    font-weight: bold
+    font-size: 36px
+
+    & svg
+        font-size: 36px
 
     .Seperator
         display: flex
         height: 100%
         align-items: center
         margin: 0 .7rem
-        & svg
-            font-size: 1.5rem
 
     .Breadcrumb
         display: flex
         align-items: center
 
         .Active
-            color: $primary
+            color: $black
 
     & a
         color: $black
+        display: flex
         text-decoration: none
         &:visited
             color: $black
