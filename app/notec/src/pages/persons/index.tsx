@@ -1,19 +1,23 @@
 import { useCallback } from 'react';
-import Breadcrumbs from '@/components/Breadcrumbs';
 import Table, { Action, Column } from '@/components/DataTable';
-import HeaderActions from '@/components/HeaderActions';
 import View from '@/components/View';
 import { IPerson } from '@/types/Person';
 import { deletePersonUrl, personsUrl } from '@/utils/api/urls';
-import { Button, CircularProgress, Stack, useMediaQuery } from '@mui/material';
+import {
+  CircularProgress,
+  Grid,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import AddIcon from '@mui/icons-material/Add';
 import { theme } from '@/assets/styles/theme';
 import { useDeleteStore, useFetchStore } from '@/stores/useRequestStore';
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import ActionButton from '@/components/ActionButton';
+import { useTranslation } from 'next-i18next';
 
 const Appointments = () => {
   const router = useRouter();
@@ -25,6 +29,8 @@ const Appointments = () => {
 
   const { fetch } = useFetchStore();
   const { _delete } = useDeleteStore();
+
+  const { t } = useTranslation();
 
   const handleDeletePerson = useCallback(
     async (id: string) => {
@@ -85,19 +91,27 @@ const Appointments = () => {
   }, [router, handleDeletePerson]);
 
   return (
-    <View fullWidth container>
-      <HeaderActions>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
+    <View fullWidth direction="column">
+      <Grid container sx={{ justifyContent: 'center' }} alignItems="center">
+        <Grid
+          item
+          xs={12}
+          display="flex"
+          justifyContent="start"
           alignItems="center"
+          mb={4}
         >
-          <Breadcrumbs depth={1} values={['Stranke']} />
-          <Button onClick={() => router.push('/persons/add')}>
-            Dodaj <AddIcon />
-          </Button>
-        </Stack>
-      </HeaderActions>
+          <Grid my={3}>
+            <span className="HeaderHeading">
+              {t('clientpage.client_overview')}
+            </span>
+            <br />
+            <span className="HeaderDate">
+              {t('clientpage.view_manage_clients')}
+            </span>
+          </Grid>
+        </Grid>
+      </Grid>
       {isLoading ? (
         <CircularProgress />
       ) : (
@@ -106,8 +120,16 @@ const Appointments = () => {
           rows={currentPersons}
           columns={tableColumns}
           rowActions={rowActions}
+          searchFieldPlaceholder={t('clientpage.search_for_clients')}
         />
       )}
+      <Grid xs={12} justifyContent={'start'} display="flex">
+        <ActionButton
+          isPrimary
+          onClick={() => router.push('/persons/add')}
+          label={t('new_client')}
+        />
+      </Grid>
     </View>
   );
 };

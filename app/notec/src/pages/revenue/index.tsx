@@ -135,7 +135,7 @@ const Services = () => {
         {revenue.length && (
           <Grid container sx={{ paddingTop: '2rem' }}>
             <Grid item xs={6} sx={{ display: 'flex' }}>
-              <PaperCard title="Promet" extend>
+              <PaperCard title="Promet">
                 {/* <Doughnut data={data} />; */}
               </PaperCard>
             </Grid>

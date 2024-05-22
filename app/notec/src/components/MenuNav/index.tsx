@@ -79,7 +79,7 @@ export const MenuNav = ({ isMobile = false }: Props) => {
             onClick={() => handleOnMenuItemClicked('/')}
           >
             <Home />
-            <div className={NavMenuText}>{t('general.home')}</div>
+            <div className={NavMenuText}>{t('dashboard')}</div>
           </Button>
         </div>
         <div className={NavMenuButtonWrapper}>

@@ -1,21 +1,22 @@
 @import ../../assets/styles/_constants.sass
 
 .PaperCard
-    flex-grow: 1!important
+    flex-grow: 1
+    border-radius: 10px
+    padding: 2rem
+    border: 1px solid $border-grey
+
     &.Clickable
         cursor: pointer
         transition: all .2s ease
         &:hover
-            background-color: $hover-light
+            box-shadow: $box-hover
 
     .Title
         margin-bottom: .5rem
+        font-weight: bold
+        font-size: 2rem
     .Subtitle
-        color: $primary
-        font-weight: 600
-
-    .Value
-        font-weight: bolder
-
-    & svg
-        margin-right: .5rem
+        color: $grey-03
+        font-weight: 400
+        font-size: 1.2rem

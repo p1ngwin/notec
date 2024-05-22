@@ -5,6 +5,7 @@
     "month": "Month",
     "year": "Year"
   },
+  "today_appointments": "Today's appointments",
   "appointment": {
     "new": "New appointment",
     "edit": "Edit appointment",

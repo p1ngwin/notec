@@ -26,6 +26,7 @@ type Props<RowData extends HasId> = {
   rows: RowData[];
   rowActions?: Action<RowData>[];
   showRowCount?: boolean;
+  searchFieldPlaceholder?: string;
 };
 
 export type Column<RowData extends HasId> = {
@@ -86,6 +87,7 @@ const Table = <RowData extends HasId>({
   rows,
   rowActions,
   showRowCount = false,
+  searchFieldPlaceholder,
 }: Props<RowData>) => {
   const { Table, TableHeadCell, FooterPagination, TableBodyCell } = styles;
 
@@ -127,7 +129,7 @@ const Table = <RowData extends HasId>({
           variant="outlined"
           size="small"
           fullWidth={false}
-          placeholder="Search for service..."
+          placeholder={searchFieldPlaceholder || 'placeholder'}
           onChange={(e) => setFilterResults(e.currentTarget.value)}
           value={filterResults}
           InputProps={{
@@ -177,7 +179,6 @@ const Table = <RowData extends HasId>({
                   {columns.map(
                     ({ field, label, cellClassName, renderCell }) => (
                       <Cell
-                        classes={{ root: 'testuu' }}
                         className={classNames([TableBodyCell], {
                           cellClassName,
                         })}

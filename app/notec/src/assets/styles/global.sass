@@ -1,5 +1,6 @@
 @import ./_constants
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap')
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Raleway:wght@500&display=swap')
 
 // Media query for tablets
 @media screen and (max-width: 1024px)
@@ -122,6 +123,7 @@ div#__next > div
   display: flex
   flex-direction: column
   background: #fafafa
+  flex-grow: 1
 
 .FullWidth
   width: 100%
@@ -129,14 +131,14 @@ div#__next > div
   max-width: unset!important
 
 .MuiTypography-root
-  font-family: "Nunito Sans"
+  font-family: $fontFamilyPrimary
 
 .MuiSelect-select
   padding: 0
   min-height: 40px!important
 
 .MuiFormControl-root
-  font-family: "Nunito Sans"
+  font-family: $fontFamilyPrimary
   width: 100%
   border: 1px solid #ccc
   border-radius: 3px
@@ -167,15 +169,17 @@ div#__next > div
   & .fc-event
     position: relative
 
-.fc-timegrid-col-events, .fc-daygrid-day-events
-  & div:nth-child(2n) a
-    background: #63db4e
-.fc-timegrid-col-events, .fc-daygrid-day-events
-  & div:nth-child(3n) a
-    background: #76b86a
+/*.fc-timegrid-col-events, .fc-daygrid-day-events
+ & div:nth-child(2n) a
+ background: #63db4e
+ */
+
+  /*.fc-timegrid-col-events, .fc-daygrid-day-events*/
+  /*& div:nth-child(3n) a
+   background: #76b86a*/
 
 .react-datepicker
-  font-family: 'Nunito Sans'!important
+  font-family: $fontFamilyPrimary!important
 
   .react-datepicker__day--selected
     background-color: $primary
@@ -189,10 +193,10 @@ div#__next > div
   flex-direction: column
   width: 100%
   max-width: 600px
-  font-family: 'Nunito Sans'!important
+  font-family: $fontFamilyPrimary!important
 
   & .MuiFormLabel-root
-    font-family: "Nunito Sans"
+    font-family: $fontFamilyPrimary
 
   & .MuiFormControl-root
     margin-bottom: 1rem
@@ -201,7 +205,7 @@ div#__next > div
       margin: 1rem 3rem 1rem 1rem
 
 .ToastPrimary
-  font-family: 'Nunito Sans'
+  font-family: $fontFamilyPrimary
   font-weight: bold
 
 .AsyncPrimary
@@ -212,3 +216,92 @@ div#__next > div
   & .MultiValueGeneric
     padding: 10px
     font-size: 100%
+
+.AppointmentsOverview
+  .AppointmentItem
+    display: grid
+    grid-template-columns: 1fr 8fr 1fr
+    align-items: center
+    margin-top: 1rem
+
+    .Date
+      color: $grey-03
+
+    .User
+      font-size: 1.2rem
+      font-weight: bold
+
+    .AppointmentIcon
+      border: 1px solid $border-grey
+      border-radius: 100%
+      display: flex
+      place-content: center
+      place-items: center
+      padding: .7rem
+      margin-right: 1rem
+
+      svg
+        font-size: 2rem
+        color: $grey-03
+
+.RevenueOverview
+  .RevenueItem
+    display: grid
+    grid-template-columns: 6fr 1fr
+    align-items: center
+    margin-top: 1rem
+
+    .RevenueDetails
+      .RevenueValue
+        font-size: 1.5rem
+        font-weight: bold
+      .RevenueValueSubtext
+        color: $grey-03
+
+    .RevenueIcon
+      display: flex
+      justify-content: flex-end
+      align-items: center
+
+      svg
+        font-size: 2rem
+
+.HeaderHeading
+  font-size: 2.5rem
+  font-weight: bold
+
+.HeaderDate
+  font-size: 1.5rem
+  font-weight: lighter
+  color: $grey-03
+
+.ClientsOverview
+  .ClientsItem
+    display: grid
+    grid-template-columns: 6fr 1fr
+    align-items: center
+    margin-top: 1rem
+
+    .ClientsDetails
+      .ClientsValue
+        font-size: 1.5rem
+        font-weight: bold
+      .ClientsValueSubtext
+        color: $grey-03
+
+    .ClientsIcon
+      display: flex
+      justify-content: flex-end
+      align-items: center
+
+      svg
+        font-size: 2rem
+
+.HeaderHeading
+  font-size: 2.5rem
+  font-weight: bold
+
+.HeaderDate
+  font-size: 1.5rem
+  font-weight: lighter
+  color: $grey-03

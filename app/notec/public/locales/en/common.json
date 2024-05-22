@@ -1,7 +1,10 @@
 {
-  "home": "Homchie",
+  "home": "Home",
+  "dashboard": "Dashboard",
   "welcome": "Welcome to portal",
   "services": "Services",
+  "clients": "Clients",
+  "new_client": "New client",
   "add": "Add",
   "navigation": {
     "appointments": {
@@ -19,5 +22,23 @@
     "no_account": "Don't have an account? Sign Up",
     "email_address": "Email adress",
     "password": "Password"
+  },
+  "homepage": {
+    "today_appointments": "Today's appointments",
+    "view_today_appointments": "View your scheduled appointments for today.",
+    "revenue": "Revenue",
+    "revenue_overview": "Overview of your total revenue for the month.",
+    "total_monthly_revenue": "Total Revenue this month",
+    "growth_last_month": " Growth from last month",
+    "track_monthly_clients": "Track the number of new customers this month.",
+    "dashboard": "Dashboard",
+    "dashboard_subtext": "Overview of your business metrics.",
+    "total_clients": "Total clients",
+    "new_monthly_clients": "New clients this month."
+  },
+  "clientpage": {
+    "client_overview": "Client overview",
+    "view_manage_clients": "View and manage your client information.",
+    "search_for_clients": "Search for clients"
   }
 }
