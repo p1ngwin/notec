@@ -2,6 +2,13 @@
 
 .Table
     width: 100%
+    border: 1px solid $border-grey
+    border-radius: 15px
+
+    .TableBodyRow
+        &:hover
+            cursor: pointer
+            background: $grey-02
 
     & .TableHeadCell
         font-size: 1.2rem
@@ -13,13 +20,38 @@
         padding: 10px
         font-size: 1.2rem
 
+        &.CellId
+            padding-left: 20px!important
+
     & .RowActionButton
         cursor: pointer
 
     & .FooterPagination
+        & > div
+            flex-grow: 1
+        div
+            display: flex
 
     & .ActionsComponent
         display: flex
+
+        .ActionsButton
+            display: flex
+            align-items: center
+
+.ButtonPage
+    display: flex
+    justify-content: center
+    padding: 13px 9px
+    border-radius: 4px
+    border: 1px solid transparent
+    cursor: pointer
+    background: transparent
+    min-width: 45px
+    margin: 0 .5rem
+
+    &.Active
+        border-color: $border-grey
 
 @media screen and (max-width: 768px)
     .TableHeadCell

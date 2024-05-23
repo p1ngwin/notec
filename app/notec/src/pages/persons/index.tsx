@@ -3,12 +3,7 @@ import Table, { Action, Column } from '@/components/DataTable';
 import View from '@/components/View';
 import { IPerson } from '@/types/Person';
 import { deletePersonUrl, personsUrl } from '@/utils/api/urls';
-import {
-  CircularProgress,
-  Grid,
-  Typography,
-  useMediaQuery,
-} from '@mui/material';
+import { CircularProgress, Grid, useMediaQuery } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -66,15 +61,23 @@ const Appointments = () => {
   const EMPTY_CELL = <span>/</span>;
 
   const tableColumns: Column<IPerson>[] = [
-    { label: 'Ime', field: 'first_name', renderCell: (i) => i.first_name },
-    { label: 'Priimek', field: 'last_name', renderCell: (i) => i.last_name },
     {
-      label: 'Tel. št.',
+      label: t('first_name'),
+      field: 'first_name',
+      renderCell: (i) => i.first_name,
+    },
+    {
+      label: t('last_name'),
+      field: 'last_name',
+      renderCell: (i) => i.last_name,
+    },
+    {
+      label: t('phone_number'),
       field: 'phone_number',
       renderCell: (i) => i.phone_number ?? EMPTY_CELL,
     },
     {
-      label: 'Email',
+      label: t('email'),
       field: 'email',
       renderCell: (i) => i.email ?? EMPTY_CELL,
     },
@@ -83,12 +86,15 @@ const Appointments = () => {
   const rowActions = useMemo<Action<IPerson>[]>(() => {
     return [
       {
-        label: 'Edit',
+        label: t('actions.edit'),
         onClick: ({ _id }) => router.push(`persons/edit/${_id}`),
       },
-      { label: 'Delete', onClick: ({ _id }) => handleDeletePerson(_id) },
+      {
+        label: t('actions.delete'),
+        onClick: ({ _id }) => handleDeletePerson(_id),
+      },
     ];
-  }, [router, handleDeletePerson]);
+  }, [router, handleDeletePerson, t]);
 
   return (
     <View fullWidth direction="column">
@@ -101,7 +107,7 @@ const Appointments = () => {
           alignItems="center"
           mb={4}
         >
-          <Grid my={3}>
+          <Grid item xs={8} my={3}>
             <span className="HeaderHeading">
               {t('clientpage.client_overview')}
             </span>
@@ -109,6 +115,13 @@ const Appointments = () => {
             <span className="HeaderDate">
               {t('clientpage.view_manage_clients')}
             </span>
+          </Grid>
+          <Grid item xs={4} justifyContent={'end'} display="flex">
+            <ActionButton
+              isPrimary
+              onClick={() => router.push('/persons/add')}
+              label={t('new_client')}
+            />
           </Grid>
         </Grid>
       </Grid>
@@ -123,13 +136,6 @@ const Appointments = () => {
           searchFieldPlaceholder={t('clientpage.search_for_clients')}
         />
       )}
-      <Grid xs={12} justifyContent={'start'} display="flex">
-        <ActionButton
-          isPrimary
-          onClick={() => router.push('/persons/add')}
-          label={t('new_client')}
-        />
-      </Grid>
     </View>
   );
 };

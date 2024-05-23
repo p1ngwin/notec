@@ -1,23 +1,24 @@
-import Breadcrumbs from '@/components/Breadcrumbs';
 import Table, { Action, Column } from '@/components/DataTable';
-import HeaderActions from '@/components/HeaderActions';
 import View from '@/components/View';
 import { IService } from '@/types/Service';
 import { servicesDeleteUrl, servicesUrl } from '@/utils/api/urls';
-import { Button, Container, Stack } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { Grid } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useFetchStore, useDeleteStore } from '@/stores/useRequestStore';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetStaticProps } from 'next';
+import ActionButton from '@/components/ActionButton';
+import { useTranslation } from 'next-i18next';
 
 const Services = () => {
   const router = useRouter();
 
   const { fetch } = useFetchStore();
   const { _delete } = useDeleteStore();
+
+  const { t } = useTranslation();
 
   const [curretServices, setServices] = useState<IService[]>([]);
   const handleDeleteService = async (id: string) => {
@@ -47,9 +48,13 @@ const Services = () => {
   }, [fetch]);
 
   const tableColumns: Column<IService>[] = [
-    { label: 'Naziv storitve', field: 'service', renderCell: (i) => i.service },
     {
-      label: 'Cena',
+      label: t('service_name'),
+      field: 'service',
+      renderCell: (i) => i.service,
+    },
+    {
+      label: t('price'),
       field: 'price',
       renderCell: (i) => (
         <span>
@@ -67,30 +72,44 @@ const Services = () => {
       },
       { label: 'Delete', onClick: ({ _id }) => handleDeleteService(_id) },
     ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   return (
     <View fullWidth>
-      <Container maxWidth="lg">
-        <HeaderActions>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Breadcrumbs depth={1} values={['Cenik']} />
-            <Button onClick={() => router.push('/services/add')}>
-              Dodaj <AddIcon />
-            </Button>
-          </Stack>
-        </HeaderActions>
-        <Table
-          showRowCount
-          rows={curretServices}
-          columns={tableColumns}
-          rowActions={rowActions}
-        />
-      </Container>
+      <Grid container sx={{ justifyContent: 'center' }} alignItems="center">
+        <Grid
+          item
+          xs={12}
+          display="flex"
+          justifyContent="start"
+          alignItems="center"
+          mb={4}
+        >
+          <Grid item xs={8} my={3}>
+            <span className="HeaderHeading">
+              {t('servicespage.services_overview')}
+            </span>
+            <br />
+            <span className="HeaderDate">
+              {t('servicespage.search_for_services')}
+            </span>
+          </Grid>
+          <Grid item xs={4} justifyContent={'end'} display="flex">
+            <ActionButton
+              isPrimary
+              onClick={() => router.push('/services/add')}
+              label={t('new_service')}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
+      <Table
+        showRowCount
+        rows={curretServices}
+        columns={tableColumns}
+        rowActions={rowActions}
+      />
     </View>
   );
 };

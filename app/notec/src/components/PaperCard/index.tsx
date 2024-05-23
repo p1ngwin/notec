@@ -22,7 +22,8 @@ export const PaperCard = ({
   isLoading,
   children,
 }: Props) => {
-  const { PaperCard, Title, Subtitle, Value, Clickable } = styles;
+  const { PaperCard, Title, Subtitle, Value, Clickable, PaperCardIcon } =
+    styles;
 
   return (
     <div
@@ -35,20 +36,32 @@ export const PaperCard = ({
         <CircularProgress />
       ) : (
         <Grid container>
-          <Grid item xs={12}>
-            <Typography variant="h5" className={Title}>
-              {title}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            {subtitle && (
-              <Typography variant="subtitle2" className={Subtitle}>
-                {subtitle}
+          <Grid xs={12} display="flex" justifyContent="space-between">
+            <Grid item xs={icon ? 8 : 12}>
+              <Typography variant="h5" className={Title}>
+                {title}
               </Typography>
+            </Grid>
+            {icon && (
+              <Grid
+                className={PaperCardIcon}
+                item
+                xs={2}
+                display="flex"
+                justifyContent="end"
+                alignItems="center"
+                fontSize={4}
+              >
+                {icon}
+              </Grid>
             )}
           </Grid>
+          {subtitle && (
+            <Grid item xs={icon ? 8 : 12}>
+              <Typography className={Subtitle}>{subtitle}</Typography>
+            </Grid>
+          )}
           <Grid item xs={12}>
-            {icon && icon}
             <Typography variant="h4" className={Value}>
               {value}
             </Typography>

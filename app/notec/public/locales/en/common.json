@@ -13,9 +13,18 @@
     },
     "expenses": {}
   },
+  "menu": {
+    "dashboard": "Dashboard",
+    "clients": "Clients",
+    "schedule": "Schedule",
+    "services": "Services",
+    "income": "Income",
+    "expenses": "Expenses"
+  },
   "actions": {
     "update": "Update",
-    "edit": "Edit"
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "login": {
     "sign_in": "Sign in",
@@ -30,6 +39,7 @@
     "revenue_overview": "Overview of your total revenue for the month.",
     "total_monthly_revenue": "Total Revenue this month",
     "growth_last_month": " Growth from last month",
+    "from_last_month": "from last month",
     "track_monthly_clients": "Track the number of new customers this month.",
     "dashboard": "Dashboard",
     "dashboard_subtext": "Overview of your business metrics.",
@@ -40,5 +50,30 @@
     "client_overview": "Client overview",
     "view_manage_clients": "View and manage your client information.",
     "search_for_clients": "Search for clients"
-  }
+  },
+  "servicespage": {
+    "services_overview": "Services overview",
+    "view_manage_services": "View and manage your service offerings.",
+    "search_for_services": "Search for services"
+  },
+  "revenuepage": {
+    "revenue_overview": "Revenue overview",
+    "view_manage_revenue": "View and manage your revenue data.",
+    "revenue_details": "Revenue details",
+    "revenue_details_detailed": "Detailed revenue overview",
+    "revenue_top_10": "Top 10 revenue services",
+    "revnue_top_10_view": "View 10 most profittable services",
+    "total_profit": "Total profit"
+  },
+  "first_name": "First name",
+  "last_name": "Last name",
+  "phone_number": "Phone number",
+  "email": "Email",
+  "new_service": "New service",
+  "service": "Service",
+  "service_name": "Service name",
+  "profit": "Profit",
+  "date": "Date",
+  "is_paid": "Is paid",
+  "price": "Price"
 }

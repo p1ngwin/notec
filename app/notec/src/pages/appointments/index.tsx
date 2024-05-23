@@ -205,6 +205,7 @@ const Appointments = () => {
             alignItems="center"
           >
             <Grid
+              item
               xs={3}
               justifyContent="start"
               display="flex"
@@ -218,7 +219,7 @@ const Appointments = () => {
                 <NextMonthIcon />
               </IconButton>
             </Grid>
-            <Grid xs={6} justifyContent={'center'} display="flex">
+            <Grid item xs={6} justifyContent={'center'} display="flex">
               <ActionButton
                 isPrimary
                 onClick={() => router.push('/appointments/add')}
