@@ -13,7 +13,7 @@ const AppointmentController = {
     const { uid } = req.user ?? {};
     if (!uid) return res.status(401).json({ error: "Not authorized" });
 
-    const { date, dateOnly, id, dateStart, dateEnd } =
+    const { date, time, dateOnly, id, dateStart, dateEnd } =
       req.query ?? req.body ?? {};
 
     const pipeline: FilterQuery<IAppointment[]> = [
@@ -84,6 +84,14 @@ const AppointmentController = {
       pipeline.unshift({
         $match: {
           date: dateType(date as string),
+        },
+      });
+    }
+
+    if (time) {
+      pipeline.unshift({
+        $match: {
+          time: dateType(time as string),
         },
       });
     }

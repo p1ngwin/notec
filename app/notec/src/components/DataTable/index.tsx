@@ -26,6 +26,8 @@ type Props<RowData extends HasId> = {
   rows: RowData[];
   rowActions?: Action<RowData>[];
   showRowCount?: boolean;
+  searchFieldPlaceholder?: string;
+  rowCount?: number;
 };
 
 export type Column<RowData extends HasId> = {
@@ -86,11 +88,20 @@ const Table = <RowData extends HasId>({
   rows,
   rowActions,
   showRowCount = false,
+  searchFieldPlaceholder,
+  rowCount = 10,
 }: Props<RowData>) => {
-  const { Table, TableHeadCell, FooterPagination, TableBodyCell } = styles;
+  const {
+    Table,
+    TableHeadCell,
+    FooterPagination,
+    TableBodyCell,
+    CellId,
+    TableBodyRow,
+  } = styles;
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(rowCount);
   const [filterResults, setFilterResults] = useState('');
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -127,7 +138,7 @@ const Table = <RowData extends HasId>({
           variant="outlined"
           size="small"
           fullWidth={false}
-          placeholder="Search for service..."
+          placeholder={searchFieldPlaceholder || 'placeholder'}
           onChange={(e) => setFilterResults(e.currentTarget.value)}
           value={filterResults}
           InputProps={{
@@ -165,19 +176,15 @@ const Table = <RowData extends HasId>({
           <TableBody>
             {visibleRows &&
               visibleRows?.map((row, index) => (
-                <TableRow key={index}>
+                <TableRow key={index} className={TableBodyRow}>
                   {showRowCount && (
-                    <Cell
-                      className={classNames([TableBodyCell])}
-                      classes={{ root: 'testuu' }}
-                    >
+                    <Cell className={classNames([TableBodyCell, CellId])}>
                       {index + 1}
                     </Cell>
                   )}
                   {columns.map(
                     ({ field, label, cellClassName, renderCell }) => (
                       <Cell
-                        classes={{ root: 'testuu' }}
                         className={classNames([TableBodyCell], {
                           cellClassName,
                         })}
@@ -199,6 +206,7 @@ const Table = <RowData extends HasId>({
       </TableContainer>
       {rows.length && (
         <TablePagination
+          sx={{ display: 'flex' }}
           className={FooterPagination}
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
@@ -214,3 +222,78 @@ const Table = <RowData extends HasId>({
 };
 
 export default Table;
+
+/* TODO
+Component for displaying clickable button pages. Needs more work
+const TablePaginationActions = (props: TablePaginationActionsProps) => {
+  const { count, page, rowsPerPage, onPageChange } = props;
+  const { ActionsComponent, ActionsButton } = styles;
+
+  const handleFirstPageButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    onPageChange(event, 0);
+  };
+
+  const handleBackButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    onPageChange(event, page - 1);
+  };
+
+  const handleNextButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    onPageChange(event, page + 1);
+  };
+
+  const handleLastPageButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
+
+  return (
+    <Grid className={ActionsComponent}>
+      <Grid item className={ActionsButton}>
+        <IconButton
+          onClick={handleBackButtonClick}
+          disabled={page === 0}
+          aria-label="previous page"
+        >
+          <KeyboardArrowLeft /> Previous
+        </IconButton>
+      </Grid>
+      <Grid item className={ActionsButton}>
+        {[...Array(Math.ceil(count / rowsPerPage))]
+          .filter((pages) => page === pages + 1 || page === pages - 1)
+          .map((x, i) => {
+            if (i < 5) {
+              return <ButtonPage key={i} value={i} />;
+            }
+          })}
+        <ButtonPage value={rowsPerPage} />
+        <ButtonPage value={count} />
+      </Grid>
+      <Grid item>
+        <IconButton
+          onClick={handleNextButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label="next page"
+        >
+          Next <KeyboardArrowRight />
+        </IconButton>
+      </Grid>
+    </Grid>
+  );
+};
+
+type ButtonPageProps = {
+  value: number | string;
+  onClick?: () => void;
+};
+const ButtonPage = ({ value, onClick }: ButtonPageProps) => {
+  const { ButtonPage } = styles;
+  return <button className={ButtonPage}>{value}</button>;
+};
+*/

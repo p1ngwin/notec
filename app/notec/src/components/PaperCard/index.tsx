@@ -1,6 +1,6 @@
-import classNames from "classnames";
-import styles from "./styles.module.sass";
-import { Box, Paper, Typography, CircularProgress } from "@mui/material";
+import classNames from 'classnames';
+import styles from './styles.module.sass';
+import { Typography, CircularProgress, Grid } from '@mui/material';
 
 type Props = {
   title?: string;
@@ -10,7 +10,6 @@ type Props = {
   onClick?: () => void;
   isLoading?: boolean;
   children?: React.ReactNode;
-  extend?: boolean;
   centerContent?: boolean;
 };
 
@@ -22,65 +21,56 @@ export const PaperCard = ({
   onClick,
   isLoading,
   children,
-  extend,
-  centerContent,
 }: Props) => {
-  const { PaperCard, Title, Subtitle, Value, Clickable } = styles;
+  const { PaperCard, Title, Subtitle, Value, Clickable, PaperCardIcon } =
+    styles;
 
   return (
-    <Paper
+    <div
       className={classNames([PaperCard], {
         [Clickable]: !!onClick,
       })}
-      elevation={1}
-      sx={{
-        padding: "1rem",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        placeContent: centerContent ? "center" : "initial",
-        placeItems: centerContent ? "center" : "initial",
-        flex: extend ? 1 : "initial",
-      }}
       onClick={onClick}
     >
       {isLoading ? (
         <CircularProgress />
       ) : (
-        <>
-          <Box>
-            <Typography
-              variant="h5"
-              className={Title}
-            >
-              {title}
-            </Typography>
-          </Box>
-          <Box>
-            {subtitle && (
-              <Typography
-                variant="subtitle2"
-                className={Subtitle}
-              >
-                {subtitle}
+        <Grid container>
+          <Grid xs={12} display="flex" justifyContent="space-between">
+            <Grid item xs={icon ? 8 : 12}>
+              <Typography variant="h5" className={Title}>
+                {title}
               </Typography>
+            </Grid>
+            {icon && (
+              <Grid
+                className={PaperCardIcon}
+                item
+                xs={2}
+                display="flex"
+                justifyContent="end"
+                alignItems="center"
+                fontSize={4}
+              >
+                {icon}
+              </Grid>
             )}
-          </Box>
-          <Box
-            sx={{ display: "flex", alignItems: "center", paddingTop: "1rem" }}
-          >
-            {icon && icon}
-
-            <Typography
-              variant="h4"
-              className={Value}
-            >
+          </Grid>
+          {subtitle && (
+            <Grid item xs={icon ? 8 : 12}>
+              <Typography className={Subtitle}>{subtitle}</Typography>
+            </Grid>
+          )}
+          <Grid item xs={12}>
+            <Typography variant="h4" className={Value}>
               {value}
             </Typography>
+          </Grid>
+          <Grid mt={5} item xs={12}>
             {children}
-          </Box>
-        </>
+          </Grid>
+        </Grid>
       )}
-    </Paper>
+    </div>
   );
 };

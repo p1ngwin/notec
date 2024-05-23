@@ -1,15 +1,14 @@
-import classNames from "classnames";
-import styles from "./styles.module.sass";
-import { Grid, IconButton, Typography } from "@mui/material";
+import classNames from 'classnames';
+import styles from './styles.module.sass';
+import { Grid, IconButton, Typography } from '@mui/material';
 import {
   NavigateBefore as PrevMonthIcon,
   NavigateNext as NextMonthIcon,
-} from "@mui/icons-material";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useDateStore } from "@/stores/useDateStore";
-import dayjs from "dayjs";
+} from '@mui/icons-material';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useDateStore } from '@/stores/useDateStore';
+import dayjs from 'dayjs';
 
 type Props = {
   className?: string | string[];
@@ -26,7 +25,7 @@ const DateNav = ({
   onNextMonth,
   onDateSelected,
 }: Props) => {
-  const { DateNav, FullWidth, DatePickerIconOnly, DateNavArrow } = styles;
+  const { DateNav, FullWidth, DateNavArrow } = styles;
 
   const {
     getSelectedDate,
@@ -51,61 +50,53 @@ const DateNav = ({
   };
 
   const handleOnDateSelected = (date: Date | null) => {
-    setSelectedDate(dayjs(date).add(1, "day").toString());
+    setSelectedDate(dayjs(date).add(1, 'day').toString());
     onDateSelected && onDateSelected();
   };
 
   return (
     <Grid
       container
-      sx={{ justifyContent: "center" }}
+      sx={{ justifyContent: 'center' }}
       className={DateNavCn}
       alignItems="center"
     >
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Grid
-          item
-          xs={2}
-          display="flex"
-          justifyContent="flex-start"
-        >
-          <IconButton
-            onClick={handleOnPrevMonth}
-            className={DateNavArrow}
-          >
+        {/* TODO: this was primarly ment for Date navigation. Possible global management implementations?
+        <Grid item xs={2} display="flex" justifyContent="flex-start">
+          <IconButton onClick={handleOnPrevMonth} className={DateNavArrow}>
             <PrevMonthIcon />
           </IconButton>
         </Grid>
-        <Grid
-          item
-          xs={8}
-          display="flex"
-        >
-          <Typography
-            variant="h4"
-            width="100%"
-            align="right"
-          >
+        <Grid item xs={8} display="flex">
+          <Typography variant="h4" width="100%" align="right">
             {getSelectedMonth()}
           </Typography>
           <DatePicker<Date>
             className={DatePickerIconOnly}
             onChange={(date) => handleOnDateSelected(date)}
             slotProps={{
-              actionBar: { actions: ["today"] },
+              actionBar: { actions: ['today'] },
             }}
           />
         </Grid>
+        <Grid item xs={2} display="flex" justifyContent="flex-end">
+          <IconButton onClick={handleOnNextMonth} className={DateNavArrow}>
+            <NextMonthIcon />
+          </IconButton>
+        </Grid> */}
         <Grid
           item
-          xs={2}
+          xs={12}
+          justifyContent="start"
           display="flex"
-          justifyContent="flex-end"
+          alignItems="center"
         >
-          <IconButton
-            onClick={handleOnNextMonth}
-            className={DateNavArrow}
-          >
+          <Typography variant="h4">{getSelectedMonth()}</Typography>
+          <IconButton onClick={handleOnPrevMonth} className={DateNavArrow}>
+            <PrevMonthIcon />
+          </IconButton>
+          <IconButton onClick={handleOnNextMonth} className={DateNavArrow}>
             <NextMonthIcon />
           </IconButton>
         </Grid>

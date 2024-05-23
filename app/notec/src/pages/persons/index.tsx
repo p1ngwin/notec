@@ -1,19 +1,18 @@
 import { useCallback } from 'react';
-import Breadcrumbs from '@/components/Breadcrumbs';
 import Table, { Action, Column } from '@/components/DataTable';
-import HeaderActions from '@/components/HeaderActions';
 import View from '@/components/View';
 import { IPerson } from '@/types/Person';
 import { deletePersonUrl, personsUrl } from '@/utils/api/urls';
-import { Button, CircularProgress, Stack, useMediaQuery } from '@mui/material';
+import { CircularProgress, Grid, useMediaQuery } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import AddIcon from '@mui/icons-material/Add';
 import { theme } from '@/assets/styles/theme';
 import { useDeleteStore, useFetchStore } from '@/stores/useRequestStore';
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import ActionButton from '@/components/ActionButton';
+import { useTranslation } from 'next-i18next';
 
 const Appointments = () => {
   const router = useRouter();
@@ -25,6 +24,8 @@ const Appointments = () => {
 
   const { fetch } = useFetchStore();
   const { _delete } = useDeleteStore();
+
+  const { t } = useTranslation();
 
   const handleDeletePerson = useCallback(
     async (id: string) => {
@@ -60,15 +61,23 @@ const Appointments = () => {
   const EMPTY_CELL = <span>/</span>;
 
   const tableColumns: Column<IPerson>[] = [
-    { label: 'Ime', field: 'first_name', renderCell: (i) => i.first_name },
-    { label: 'Priimek', field: 'last_name', renderCell: (i) => i.last_name },
     {
-      label: 'Tel. št.',
+      label: t('first_name'),
+      field: 'first_name',
+      renderCell: (i) => i.first_name,
+    },
+    {
+      label: t('last_name'),
+      field: 'last_name',
+      renderCell: (i) => i.last_name,
+    },
+    {
+      label: t('phone_number'),
       field: 'phone_number',
       renderCell: (i) => i.phone_number ?? EMPTY_CELL,
     },
     {
-      label: 'Email',
+      label: t('email'),
       field: 'email',
       renderCell: (i) => i.email ?? EMPTY_CELL,
     },
@@ -77,27 +86,45 @@ const Appointments = () => {
   const rowActions = useMemo<Action<IPerson>[]>(() => {
     return [
       {
-        label: 'Edit',
+        label: t('actions.edit'),
         onClick: ({ _id }) => router.push(`persons/edit/${_id}`),
       },
-      { label: 'Delete', onClick: ({ _id }) => handleDeletePerson(_id) },
+      {
+        label: t('actions.delete'),
+        onClick: ({ _id }) => handleDeletePerson(_id),
+      },
     ];
-  }, [router, handleDeletePerson]);
+  }, [router, handleDeletePerson, t]);
 
   return (
-    <View fullWidth container>
-      <HeaderActions>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
+    <View fullWidth direction="column">
+      <Grid container sx={{ justifyContent: 'center' }} alignItems="center">
+        <Grid
+          item
+          xs={12}
+          display="flex"
+          justifyContent="start"
           alignItems="center"
+          mb={4}
         >
-          <Breadcrumbs depth={1} values={['Stranke']} />
-          <Button onClick={() => router.push('/persons/add')}>
-            Dodaj <AddIcon />
-          </Button>
-        </Stack>
-      </HeaderActions>
+          <Grid item xs={8} my={3}>
+            <span className="HeaderHeading">
+              {t('clientpage.client_overview')}
+            </span>
+            <br />
+            <span className="HeaderDate">
+              {t('clientpage.view_manage_clients')}
+            </span>
+          </Grid>
+          <Grid item xs={4} justifyContent={'end'} display="flex">
+            <ActionButton
+              isPrimary
+              onClick={() => router.push('/persons/add')}
+              label={t('new_client')}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
       {isLoading ? (
         <CircularProgress />
       ) : (
@@ -106,6 +133,7 @@ const Appointments = () => {
           rows={currentPersons}
           columns={tableColumns}
           rowActions={rowActions}
+          searchFieldPlaceholder={t('clientpage.search_for_clients')}
         />
       )}
     </View>

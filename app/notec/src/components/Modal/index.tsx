@@ -26,7 +26,7 @@ const Modal: React.FC<GenericDialogProps> = ({
       fullWidth
       maxWidth="sm"
       className={classNames(className)}
-      PaperProps={{ sx: { borderRadius: '35px', padding: 3 } }}
+      PaperProps={{ sx: { borderRadius: '10px', padding: 3 } }}
     >
       <DialogTitle>
         <IconButton

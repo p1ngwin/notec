@@ -6,7 +6,7 @@ import View from '@/components/View';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { IAppointment } from '@/types/Appointment';
-import { appointmentsUrl, deleteAppointmentUrl } from '@/utils/api/urls';
+import { appointmentsUrl } from '@/utils/api/urls';
 import styles from './styles.module.sass';
 import {
   DEFAULT_DATE_FORMAT_DAY,
@@ -17,26 +17,18 @@ import {
 } from '@/utils/helpers/utils';
 import { useRouter } from 'next/router';
 import {
-  Button,
-  Divider,
   Grid,
-  MenuItem,
   Typography,
   IconButton,
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';
-import { useDeleteStore, useFetchStore } from '@/stores/useRequestStore';
+import { useFetchStore } from '@/stores/useRequestStore';
 import Modal from '@/components/Modal';
 import {
-  ChevronRightOutlined,
-  CalendarTodayOutlined,
-  TimerOutlined,
-  PersonOutline,
   NavigateBefore as PrevMonthIcon,
   NavigateNext as NextMonthIcon,
 } from '@mui/icons-material';
-import toast from 'react-hot-toast';
 import { useDateStore } from '@/stores/useDateStore';
 import dayjs from 'dayjs';
 import { GetStaticProps } from 'next';
@@ -44,6 +36,8 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import ActionButton from '@/components/ActionButton';
+import { EventCellProps } from '@/types/common';
+import EventDetails from '@/components/EventDetails';
 
 type DateQueryArgs = {
   endStr: string;
@@ -91,7 +85,7 @@ const Appointments = () => {
   const [appointments, setAppointments] = useState<IAppointment[]>();
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogContent, setDialogContent] = useState<ReactNode | null>(null);
+  const [dialogContent, setDialogContent] = useState<ReactNode | null>();
 
   const [currentStart, setCurrentStart] = useState('');
 
@@ -124,14 +118,11 @@ const Appointments = () => {
     return (
       <RenderEventCell
         id={_id}
-        startTime={startTime}
+        time={startTime}
         date={date}
-        eventDetails={{
-          startTime,
-          first_name,
-          last_name,
-          service,
-        }}
+        first_name={first_name}
+        last_name={last_name}
+        service={service}
         className={SlotServiceItem}
       />
     );
@@ -146,9 +137,11 @@ const Appointments = () => {
     handleDialogOpen(
       <EventDetails
         id={id}
-        startTime={startTime}
+        time={startTime}
         date={date}
-        eventDetails={{ first_name, startTime, last_name, service }}
+        first_name={first_name}
+        last_name={last_name}
+        service={service}
       />,
     );
   };
@@ -212,6 +205,7 @@ const Appointments = () => {
             alignItems="center"
           >
             <Grid
+              item
               xs={3}
               justifyContent="start"
               display="flex"
@@ -225,7 +219,7 @@ const Appointments = () => {
                 <NextMonthIcon />
               </IconButton>
             </Grid>
-            <Grid xs={6} justifyContent={'center'} display="flex">
+            <Grid item xs={6} justifyContent={'center'} display="flex">
               <ActionButton
                 isPrimary
                 onClick={() => router.push('/appointments/add')}
@@ -388,28 +382,18 @@ const Appointments = () => {
 
 export default Appointments;
 
-type EventCellDetailsProps = {
-  startTime: string;
-  first_name: string;
-  last_name: string;
-  service: string;
-};
-
-type EventCellProps = {
-  id: string;
-  startTime: string;
-  date: string;
-  eventDetails: EventCellDetailsProps;
-  className?: string;
-};
-
-const RenderEventCell = ({ eventDetails, className }: EventCellProps) => {
+const RenderEventCell = ({
+  time,
+  first_name,
+  last_name,
+  service,
+  className,
+}: EventCellProps) => {
   const { ServiceText } = styles;
-  const { startTime, first_name, last_name, service } = eventDetails;
 
   return (
     <div className={className}>
-      <span>{startTime}</span>
+      <span>{time}</span>
       <br />
       <span className={ServiceText}>
         <b>{service}</b>
@@ -419,94 +403,6 @@ const RenderEventCell = ({ eventDetails, className }: EventCellProps) => {
         {first_name} {last_name}
       </span>
     </div>
-  );
-};
-
-const EventDetails = ({
-  id,
-  startTime,
-  date,
-  eventDetails,
-}: EventCellProps) => {
-  const router = useRouter();
-
-  const { t } = useTranslation('appointments');
-
-  const { _delete } = useDeleteStore();
-
-  const { first_name, last_name, service } = eventDetails;
-
-  const { ModalActions } = styles;
-
-  const handleAppointmentDelete = async (id: string) => {
-    const deletedAppointment = await await _delete(deleteAppointmentUrl(id), {
-      id,
-    });
-    if (deletedAppointment) {
-      toast.success('Naročilo izbrisano.');
-      window.location.reload();
-    } else {
-      toast.error('Napaka pri brisanju naročila.');
-    }
-  };
-
-  return (
-    <>
-      <Grid container>
-        <Grid item xs={12}>
-          <Typography variant="h4">
-            <CalendarTodayOutlined sx={{ marginRight: 1 }} />
-            {date}
-            <br /> <TimerOutlined sx={{ marginRight: 1 }} />
-            {startTime}
-            <br />
-            <PersonOutline sx={{ marginRight: 1 }} />
-            {first_name} {last_name}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Divider sx={{ margin: '1rem 0' }} />
-          {service &&
-            service.split(',').map((service, index) => (
-              <MenuItem key={id ?? index}>
-                <ChevronRightOutlined sx={{ marginRight: 1 }} />
-                {service}
-              </MenuItem>
-            ))}
-          <Divider sx={{ margin: '1rem 0' }} />
-        </Grid>
-
-        <Grid
-          className={ModalActions}
-          container
-          marginTop={2}
-          xs={12}
-          display="flex"
-          justifyContent="space-between"
-        >
-          <Grid item xs={6} display="flex" textAlign={'center'}>
-            <ActionButton
-              isPrimary
-              onClick={() => router.push(`/appointments/edit/${id}`)}
-              label={t('appointment.edit')}
-            ></ActionButton>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            display="flex"
-            justifyContent="end"
-            textAlign={'center'}
-          >
-            <ActionButton
-              isSecondary
-              onClick={() => handleAppointmentDelete(id)}
-              label={t('appointment.delete')}
-            ></ActionButton>
-          </Grid>
-        </Grid>
-      </Grid>
-    </>
   );
 };
 

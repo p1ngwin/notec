@@ -32,7 +32,7 @@ export const MenuNav = ({ isMobile = false }: Props) => {
     Active,
   } = styles;
 
-  const { t } = useTranslation('menu');
+  const { t } = useTranslation();
   const { toggleDrawer } = useSidebar();
 
   const user = useUserStore((state) => state.user);
@@ -72,26 +72,11 @@ export const MenuNav = ({ isMobile = false }: Props) => {
         )}
         <div className={classNames([NavMenuButtonWrapper])}>
           <Button
-            className={classNames([
-              NavMenuButton,
-              route === '/' && Active,
-            ])}
+            className={classNames([NavMenuButton, route === '/' && Active])}
             onClick={() => handleOnMenuItemClicked('/')}
           >
             <Home />
-            <div className={NavMenuText}>{t('general.home')}</div>
-          </Button>
-        </div>
-        <div className={NavMenuButtonWrapper}>
-          <Button
-            className={classNames([
-              NavMenuButton,
-              route === '/persons' && Active,
-            ])}
-            onClick={() => handleOnMenuItemClicked('/persons')}
-          >
-            <People />
-            <div className={NavMenuText}>{t('clients')}</div>
+            <div className={NavMenuText}>{t('menu.dashboard')}</div>
           </Button>
         </div>
         <div className={NavMenuButtonWrapper}>
@@ -103,7 +88,19 @@ export const MenuNav = ({ isMobile = false }: Props) => {
             onClick={() => handleOnMenuItemClicked('/appointments')}
           >
             <CalendarMonth />
-            <div className={NavMenuText}>{t('general.schedule')}</div>
+            <div className={NavMenuText}>{t('menu.schedule')}</div>
+          </Button>
+        </div>
+        <div className={NavMenuButtonWrapper}>
+          <Button
+            className={classNames([
+              NavMenuButton,
+              route === '/persons' && Active,
+            ])}
+            onClick={() => handleOnMenuItemClicked('/persons')}
+          >
+            <People />
+            <div className={NavMenuText}>{t('menu.clients')}</div>
           </Button>
         </div>
         <div className={NavMenuButtonWrapper}>
@@ -115,7 +112,7 @@ export const MenuNav = ({ isMobile = false }: Props) => {
             onClick={() => handleOnMenuItemClicked('/services')}
           >
             <Summarize />
-            <div className={NavMenuText}>{t('general.price_list')}</div>
+            <div className={NavMenuText}>{t('menu.services')}</div>
           </Button>
         </div>
         <div className={NavMenuButtonWrapper}>
@@ -127,7 +124,7 @@ export const MenuNav = ({ isMobile = false }: Props) => {
             onClick={() => handleOnMenuItemClicked('/revenue')}
           >
             <AddCard />
-            <div className={NavMenuText}>{t('general.income')}</div>
+            <div className={NavMenuText}>{t('menu.income')}</div>
           </Button>
         </div>
         <div className={NavMenuButtonWrapper}>
@@ -139,7 +136,7 @@ export const MenuNav = ({ isMobile = false }: Props) => {
             onClick={() => handleOnMenuItemClicked('/expenses')}
           >
             <AccountBalance />
-            <div className={NavMenuText}>{t('general.expenses')}</div>
+            <div className={NavMenuText}>{t('menu.expenses')}</div>
           </Button>
         </div>
       </div>
