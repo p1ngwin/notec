@@ -1,23 +1,19 @@
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import styles from './styles.module.sass';
-import { Email, Person, Phone } from '@mui/icons-material';
 import { createPersonUrl } from '@/utils/api/urls';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
-import {
-  Box,
-  TextField,
-  Stack,
-  FormControl,
-  InputAdornment,
-} from '@mui/material';
+import { TextField, Stack, FormControl, Grid } from '@mui/material';
 import { usePostStore } from '@/stores/useRequestStore';
+import { useTranslation } from 'next-i18next';
+import ActionButton from '@/components/ActionButton';
 
 type FormProps = {
   first_name: string;
   last_name: string;
   phone_number?: string;
   email?: string;
+  note?: string;
 };
 
 const AddPersonForm = () => {
@@ -25,7 +21,9 @@ const AddPersonForm = () => {
 
   const { post } = usePostStore();
 
-  const { FormGroup, FormContainer, FormButton } = styles;
+  const { t } = useTranslation();
+
+  const { FormGroup, FormContainer } = styles;
 
   const { handleSubmit, control } = useForm<FormProps>({
     defaultValues: {
@@ -33,33 +31,48 @@ const AddPersonForm = () => {
       last_name: '',
       phone_number: '',
       email: '',
+      note: undefined,
     },
   });
 
   const onSubmit: SubmitHandler<FormProps> = async (data) => {
     const response = await post(createPersonUrl(), data);
     if (response?.ok) {
-      toast.success('Person successfully added!');
+      toast.success(t('toast.client_add_success'));
       router.push('/persons');
     }
   };
 
   return (
     <div className={FormContainer}>
-      <h2>New client</h2>
-      <Box sx={{ mt: 1 }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className={FormGroup}>
-            <Stack
-              spacing={{ xs: 1, sm: 2 }}
-              direction="row"
-              useFlexGap
-              flexWrap="wrap"
-              justifyContent="center"
-            >
-              <FormControl variant="standard">
+      <Grid container>
+        <Grid item xs={12}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className={FormGroup}>
+              <Stack
+                spacing={{ xs: 1, sm: 2 }}
+                direction="row"
+                useFlexGap
+                flexWrap="wrap"
+                justifyContent="center"
+              >
+                <FormControl variant="standard">
+                  <Controller
+                    name="first_name"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        margin="normal"
+                        required
+                        fullWidth
+                        label={t('first_name')}
+                      />
+                    )}
+                  />
+                </FormControl>
                 <Controller
-                  name="first_name"
+                  name="last_name"
                   control={control}
                   render={({ field }) => (
                     <TextField
@@ -67,84 +80,47 @@ const AddPersonForm = () => {
                       margin="normal"
                       required
                       fullWidth
-                      label="First name"
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Person />
-                          </InputAdornment>
-                        ),
-                      }}
+                      label={t('last_name')}
                     />
                   )}
                 />
-              </FormControl>
-              <Controller
-                name="last_name"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Last name"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Person />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
-              />
-              <Controller
-                name="phone_number"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    margin="normal"
-                    fullWidth
-                    label="Phone number"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Phone />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
-              />
+                <Controller
+                  name="phone_number"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      margin="normal"
+                      fullWidth
+                      label={t('phone_number')}
+                    />
+                  )}
+                />
 
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    margin="normal"
-                    fullWidth
-                    label="Email"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Email />
-                        </InputAdornment>
-                      ),
-                    }}
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      margin="normal"
+                      fullWidth
+                      label={t('email')}
+                    />
+                  )}
+                />
+                <Grid item xs={12} justifyContent="center" display="flex">
+                  <ActionButton
+                    isPrimary
+                    onClick={handleSubmit(onSubmit)}
+                    label={t('actions.add')}
                   />
-                )}
-              />
-              <div className={FormGroup}>
-                <input type="submit" value="Add" className={FormButton} />
-              </div>
-            </Stack>
-          </div>
-        </form>
-      </Box>
+                </Grid>
+              </Stack>
+            </div>
+          </form>
+        </Grid>
+      </Grid>
     </div>
   );
 };

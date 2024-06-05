@@ -8,14 +8,22 @@ type Props = {
   isSecondary?: boolean;
   isPrimary?: boolean;
   icon?: SVGElement | null;
+  isPlain?: boolean;
 };
 
-const ActionButton = ({ label, onClick, isSecondary, isPrimary }: Props) => {
-  const { Button, secondary, primary } = styles;
+const ActionButton = ({
+  label,
+  onClick,
+  isSecondary,
+  isPrimary,
+  isPlain,
+}: Props) => {
+  const { Button, secondary, primary, plain } = styles;
 
   const buttonClasses = classNames([Button], {
     [secondary]: isSecondary,
     [primary]: isPrimary,
+    [plain]: isPlain,
   });
 
   return (
@@ -24,6 +32,7 @@ const ActionButton = ({ label, onClick, isSecondary, isPrimary }: Props) => {
       color="secondary"
       variant="text"
       onClick={onClick}
+      size="small"
     >
       {label}
     </MuiButton>

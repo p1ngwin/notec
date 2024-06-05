@@ -1,7 +1,6 @@
 import { ReactNode, useState } from 'react';
-import { Grid, Typography, Divider } from '@mui/material';
+import { Grid, Divider } from '@mui/material';
 import {
-  Person,
   PermIdentity,
   CreditCard,
   TrendingUp,
@@ -30,7 +29,7 @@ const HomePage = () => {
   const [expenses, setExpenses] = useState(0);
   const { t } = useTranslation();
 
-  const { fetch, isLoading } = useFetchStore();
+  const { fetch } = useFetchStore();
 
   useEffect(() => {
     (async () => {
@@ -94,47 +93,50 @@ const HomePage = () => {
           <PaperCard
             title={t('homepage.today_appointments')}
             subtitle={t('homepage.view_today_appointments')}
-            isLoading={isLoading}
           >
             <div className="AppointmentsOverview">
-              {appointments?.map(
-                ({
-                  first_name,
-                  last_name,
-                  date,
-                  _id,
-                  time,
-                  service,
-                }: IAppointment) => (
-                  <div key={_id} className="AppointmentItem">
-                    <div className="AppointmentIcon">
-                      <PermIdentity />
+              {appointments?.length ? (
+                appointments?.map(
+                  ({
+                    first_name,
+                    last_name,
+                    date,
+                    _id,
+                    time,
+                    service,
+                  }: IAppointment) => (
+                    <div key={_id} className="AppointmentItem">
+                      <div className="AppointmentIcon">
+                        <PermIdentity />
+                      </div>
+                      <div className="AppointmentDetails">
+                        <span className="User">
+                          {first_name} {last_name}
+                        </span>
+                        <br />
+                        <span className="Date">{formatTime(date)}</span>
+                      </div>
+                      <div className="AppointmentAction">
+                        <ActionButton
+                          isSecondary
+                          label="View"
+                          onClick={() =>
+                            handleEventClick({
+                              id: _id!,
+                              time,
+                              date,
+                              first_name,
+                              last_name,
+                              service,
+                            })
+                          }
+                        />
+                      </div>
                     </div>
-                    <div className="AppointmentDetails">
-                      <span className="User">
-                        {first_name} {last_name}
-                      </span>
-                      <br />
-                      <span className="Date">{formatTime(date)}</span>
-                    </div>
-                    <div className="AppointmentAction">
-                      <ActionButton
-                        isSecondary
-                        label="View"
-                        onClick={() =>
-                          handleEventClick({
-                            id: _id!,
-                            time,
-                            date,
-                            first_name,
-                            last_name,
-                            service,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-                ),
+                  ),
+                )
+              ) : (
+                <span>{t('homepage.no_appointments_today')}</span>
               )}
             </div>
           </PaperCard>
@@ -144,7 +146,6 @@ const HomePage = () => {
             onClick={() => router.push('/expenses')}
             title={t('homepage.revenue')}
             subtitle={t('homepage.revenue_overview')}
-            isLoading={isLoading}
           >
             <div className="RevenueOverview">
               <div className="RevenueItem">
@@ -180,7 +181,6 @@ const HomePage = () => {
             onClick={() => router.push('/persons')}
             title={t('clients')}
             subtitle={t('homepage.track_monthly_clients')}
-            isLoading={isLoading}
           >
             <div className="ClientsOverview">
               <div className="ClientsItem">

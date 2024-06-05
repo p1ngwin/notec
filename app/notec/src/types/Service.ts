@@ -3,6 +3,7 @@ export type IService = {
   id: string;
   service: SERVICE_TYPES;
   price: number;
+  note?: string;
 };
 
 export enum SERVICE_TYPES {

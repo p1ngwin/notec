@@ -31,6 +31,7 @@ import { IService } from '@/types/Service';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { formatDate, formatTime, parseDateTime } from '@/utils/helpers/utils';
 import { useTranslation } from 'next-i18next';
+import { GetStaticPaths } from 'next';
 
 type FormValues = {
   person_id: string;
@@ -275,3 +276,10 @@ export default function Page() {
     </LocalizationProvider>
   );
 }
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
+};

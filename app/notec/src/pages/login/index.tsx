@@ -8,22 +8,30 @@ import {
   TextField,
   Button,
   Grid,
-  Avatar,
+  InputAdornment,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { LockOutlined } from '@mui/icons-material';
+import { Email, VisibilityOff } from '@mui/icons-material';
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
+import ActionButton from '@/components/ActionButton';
+
+import styles from './styles.module.sass';
+import Divider from '@/components/Divider';
 
 type FormProps = {
   email: string;
   password: string;
+  remember: boolean;
 };
 
 const Login = () => {
+  const { Login, InputLabel, Subheading, Heading, _Button } = styles;
   const router = useRouter();
   const actions = useUserStore();
 
@@ -33,6 +41,7 @@ const Login = () => {
     defaultValues: {
       email: '',
       password: '',
+      remember: true,
     },
   });
 
@@ -46,7 +55,7 @@ const Login = () => {
       return actions.setUser(null);
     }
     if (user) {
-      toast.success(`Successfully logged in as ${user.email}.`);
+      toast.success(`Welcome ${user.displayName}`);
       actions.setUser(user);
       actions.setToken(token);
       return router.push('/');
@@ -54,12 +63,8 @@ const Login = () => {
   };
 
   return (
-    <View fullScreen>
-      <Container
-        component="main"
-        maxWidth="xs"
-        sx={{ display: 'flex', placeItems: 'center' }}
-      >
+    <View fullScreen className={Login}>
+      <Container component="main" maxWidth="sm">
         <Box
           sx={{
             display: 'flex',
@@ -67,66 +72,122 @@ const Login = () => {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlined />
-          </Avatar>
-          <>
-            <Typography component="h1" variant="h5">
-              {t('login.sign_in')}
+          <Grid
+            mb={4}
+            display="flex"
+            flexDirection="column"
+            justifyItems="center"
+          >
+            <Typography
+              component="h1"
+              variant="h3"
+              textAlign="center"
+              mb={2}
+              className={Heading}
+            >
+              {t('login.log_in')}
             </Typography>
-            <Box sx={{ mt: 1 }}>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Controller
-                  name="email"
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field }) => (
+            <Typography
+              component="h6"
+              variant="h6"
+              textAlign="center"
+              className={Subheading}
+            >
+              {t('login.log_in_subtext')}
+            </Typography>
+          </Grid>
+          <Box sx={{ mt: 2 }}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Controller
+                name="email"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <>
+                    <span className={InputLabel}>
+                      {t('login.email_address')}
+                    </span>
                     <TextField
                       {...field}
                       margin="normal"
                       required
                       fullWidth
-                      label={t('login.email_address')}
-                      autoComplete="email"
+                      type="email"
                       autoFocus
+                      InputProps={{
+                        sx: { borderRadius: 35, paddingX: 2 },
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Email />
+                          </InputAdornment>
+                        ),
+                      }}
                     />
-                  )}
-                />
-                <Controller
-                  name="password"
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field }) => (
+                  </>
+                )}
+              />
+              <Controller
+                name="password"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <>
+                    <span className={InputLabel}>{t('login.password')}</span>
                     <TextField
                       {...field}
                       margin="normal"
                       required
                       fullWidth
-                      label={t('login.password')}
-                      autoComplete="password"
                       type="password"
+                      InputProps={{
+                        sx: { borderRadius: 35, paddingX: 2 },
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <VisibilityOff />
+                          </InputAdornment>
+                        ),
+                      }}
                     />
-                  )}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  {t('login.sign_in')}
-                </Button>
-                <Grid item alignContent={'center'} alignItems={'center'}>
-                  <Button
-                    sx={{ alignItems: 'center', alignContent: 'center' }}
-                    onClick={() => router.push('/register')}
-                  >
-                    {t('login.no_account')}
-                  </Button>
+                  </>
+                )}
+              />
+              <Grid container mt={2}>
+                <Grid item xs={6} display="flex" justifyContent="start">
+                  <Controller
+                    name="remember"
+                    control={control}
+                    render={({ field }) => (
+                      <FormControlLabel
+                        control={
+                          <Checkbox {...field} defaultChecked color="default" />
+                        }
+                        label="Remember me"
+                      />
+                    )}
+                  />
                 </Grid>
-              </form>
-            </Box>
-          </>
+                <Grid item xs={6} display="flex" justifyContent="end">
+                  <ActionButton isPlain label="Forgot your password?" />
+                </Grid>
+              </Grid>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                className={_Button}
+              >
+                {t('login.sign_in')}
+              </Button>
+              <Divider>or</Divider>
+              <Grid item display="flex" justifyContent="center" mt={2}>
+                <ActionButton
+                  isPlain
+                  onClick={() => router.push('/register')}
+                  label={t('login.no_account')}
+                />
+              </Grid>
+            </form>
+          </Box>
         </Box>
       </Container>
     </View>

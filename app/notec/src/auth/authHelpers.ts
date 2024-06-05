@@ -46,7 +46,7 @@ type AuthSignInReturnProps = {
 
 export const signInUserWithEmail = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<AuthSignInReturnProps> => {
   try {
     const userCredential = await signInWithEmailAndPassword(

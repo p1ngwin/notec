@@ -33,9 +33,9 @@ const Services = () => {
         });
       }),
       {
-        loading: 'Deleting person...',
-        success: 'Successfully deleted person',
-        error: 'Failed to delete person',
+        loading: t('toast.client_delete_loading'),
+        success: t('toast.client_delete_success'),
+        error: t('toast.client_delete_error'),
       },
     );
   };
@@ -67,10 +67,13 @@ const Services = () => {
   const rowActions = useMemo<Action<IService>[]>(() => {
     return [
       {
-        label: 'Edit',
+        label: t('actions.edit'),
         onClick: ({ _id }) => router.push(`services/edit/${_id}`),
       },
-      { label: 'Delete', onClick: ({ _id }) => handleDeleteService(_id) },
+      {
+        label: t('actions.delete'),
+        onClick: ({ _id }) => handleDeleteService(_id),
+      },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
@@ -109,6 +112,8 @@ const Services = () => {
         rows={curretServices}
         columns={tableColumns}
         rowActions={rowActions}
+        searchFieldPlaceholder={t('servicespage.search_for_services')}
+        onRowClick={(e) => router.push(`/services/edit/${e._id}`)}
       />
     </View>
   );

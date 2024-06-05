@@ -10,4 +10,17 @@ export const theme = createTheme({
   typography: {
     fontFamily: ['Inter', 'Nunito Sans', 'Arial', 'sans-serif'].join(','),
   },
+  components: {
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          '&:-webkit-autofill': {
+            transitionDelay: '9999s',
+            transitionProperty: 'background-color, color',
+            fontSize: 'inherit!important',
+          },
+        },
+      },
+    },
+  },
 });

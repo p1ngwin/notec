@@ -36,11 +36,13 @@ export const PaperCard = ({
         <CircularProgress />
       ) : (
         <Grid container>
-          <Grid xs={12} display="flex" justifyContent="space-between">
+          <Grid item xs={12} display="flex" justifyContent="space-between">
             <Grid item xs={icon ? 8 : 12}>
-              <Typography variant="h5" className={Title}>
-                {title}
-              </Typography>
+              {title && (
+                <Typography variant="h5" className={Title}>
+                  {title}
+                </Typography>
+              )}
             </Grid>
             {icon && (
               <Grid

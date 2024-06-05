@@ -19,7 +19,7 @@ import { useOutsideClick } from '@/utils/helpers/clickHandlers';
 import styles from './styles.module.sass';
 import classNames from 'classnames';
 
-type HasId = { id: string };
+type HasId = { id: string; _id?: string };
 
 type Props<RowData extends HasId> = {
   columns: Column<RowData>[];
@@ -28,6 +28,7 @@ type Props<RowData extends HasId> = {
   showRowCount?: boolean;
   searchFieldPlaceholder?: string;
   rowCount?: number;
+  onRowClick?: (e: any) => void;
 };
 
 export type Column<RowData extends HasId> = {
@@ -90,6 +91,7 @@ const Table = <RowData extends HasId>({
   showRowCount = false,
   searchFieldPlaceholder,
   rowCount = 10,
+  onRowClick,
 }: Props<RowData>) => {
   const {
     Table,
@@ -113,6 +115,10 @@ const Table = <RowData extends HasId>({
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleOnRowClick = (e: any) => {
+    onRowClick && onRowClick(e);
   };
 
   const visibleRows = useMemo(() => {
@@ -176,7 +182,11 @@ const Table = <RowData extends HasId>({
           <TableBody>
             {visibleRows &&
               visibleRows?.map((row, index) => (
-                <TableRow key={index} className={TableBodyRow}>
+                <TableRow
+                  key={index}
+                  className={TableBodyRow}
+                  onClick={() => handleOnRowClick(row)}
+                >
                   {showRowCount && (
                     <Cell className={classNames([TableBodyCell, CellId])}>
                       {index + 1}
