@@ -24,16 +24,26 @@
   "actions": {
     "update": "Update",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "save": "Save",
+    "add": "Add"
   },
   "login": {
+    "log_in": "Log in",
+    "log_in_subtext": "Sign in to view and manage your business",
     "sign_in": "Sign in",
     "no_account": "Don't have an account? Sign Up",
     "email_address": "Email adress",
     "password": "Password"
   },
+  "register": {
+    "register": "Register",
+    "register_new_account": "Register your new account",
+    "already_registered": "Already registered? Click here to login"
+  },
   "homepage": {
     "today_appointments": "Today's appointments",
+    "no_appointments_today": "No upcoming appointments today",
     "view_today_appointments": "View your scheduled appointments for today.",
     "revenue": "Revenue",
     "revenue_overview": "Overview of your total revenue for the month.",
@@ -49,12 +59,21 @@
   "clientpage": {
     "client_overview": "Client overview",
     "view_manage_clients": "View and manage your client information.",
-    "search_for_clients": "Search for clients"
+    "search_for_clients": "Search for clients",
+    "edit_client": "Edit client",
+    "new_client": "New client",
+    "new_client_subtext": "Add new client in the form below"
   },
   "servicespage": {
     "services_overview": "Services overview",
     "view_manage_services": "View and manage your service offerings.",
-    "search_for_services": "Search for services"
+    "search_for_services": "Search for services",
+    "edit_service": "Edit service",
+    "enter_price": "Please enter price",
+    "enter_service_name": "Please enter service name",
+    "new_service": "New service",
+    "new_service_subtext": "Add new service in the form below",
+    "service_enter_details_below": "Enter service details below"
   },
   "revenuepage": {
     "revenue_overview": "Revenue overview",
@@ -63,7 +82,9 @@
     "revenue_details_detailed": "Detailed revenue overview",
     "revenue_top_10": "Top 10 revenue services",
     "revnue_top_10_view": "View 10 most profittable services",
-    "total_profit": "Total profit"
+    "total_profit": "Total profit",
+    "average_order_value": "Average Order Value",
+    "conversion_rate": "Conversion Rate"
   },
   "first_name": "First name",
   "last_name": "Last name",
@@ -75,5 +96,18 @@
   "profit": "Profit",
   "date": "Date",
   "is_paid": "Is paid",
-  "price": "Price"
+  "price": "Price",
+  "note": "Note",
+  "optional": "optional",
+
+  "toast": {
+    "service_update_success": "Service saved succefully.",
+    "service_update_error": "Error updating the service.",
+    "client_add_success": "Client successfully added.",
+    "client_delete_loading": "Deleting client...",
+    "client_delete_success": "Successfully deleted client",
+    "client_delete_error": "Failed to delete client",
+    "verification_email_sent": "Verification email sent to",
+    "registration_error": "Error registrating user. Error:"
+  }
 }

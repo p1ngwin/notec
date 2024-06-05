@@ -5,4 +5,5 @@ export type IPerson = {
   last_name: string;
   phone_number?: string;
   email?: string;
+  note?: string;
 };

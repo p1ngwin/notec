@@ -3,7 +3,7 @@ import Table, { Action, Column } from '@/components/DataTable';
 import View from '@/components/View';
 import { IPerson } from '@/types/Person';
 import { deletePersonUrl, personsUrl } from '@/utils/api/urls';
-import { CircularProgress, Grid, useMediaQuery } from '@mui/material';
+import { Grid, useMediaQuery } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -18,7 +18,6 @@ const Appointments = () => {
   const router = useRouter();
 
   const [currentPersons, setPersons] = useState<IPerson[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -51,10 +50,8 @@ const Appointments = () => {
 
   useEffect(() => {
     (async () => {
-      setIsLoading(true);
       const persons = await fetch(personsUrl());
       persons && setPersons(persons);
-      setIsLoading(false);
     })();
   }, [fetch]);
 
@@ -125,17 +122,20 @@ const Appointments = () => {
           </Grid>
         </Grid>
       </Grid>
-      {isLoading ? (
-        <CircularProgress />
-      ) : (
-        <Table
-          showRowCount={!isMobile}
-          rows={currentPersons}
-          columns={tableColumns}
-          rowActions={rowActions}
-          searchFieldPlaceholder={t('clientpage.search_for_clients')}
-        />
-      )}
+      <Grid container>
+        <Grid item xs={12}>
+          <Table
+            showRowCount={!isMobile}
+            rows={currentPersons}
+            columns={tableColumns}
+            rowActions={rowActions}
+            searchFieldPlaceholder={t('clientpage.search_for_clients')}
+            onRowClick={(e) => {
+              router.push(`/persons/edit/${e._id}`);
+            }}
+          />
+        </Grid>
+      </Grid>
     </View>
   );
 };

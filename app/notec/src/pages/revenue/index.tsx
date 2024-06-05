@@ -95,11 +95,11 @@ const Services = () => {
   const rowActions = useMemo<Action<IRevenue>[]>(() => {
     return [
       {
-        label: 'Edit',
+        label: t('actions.edit'),
         onClick: ({ id }) => router.push(`revenue/edit/${id}`),
       },
     ];
-  }, [router]);
+  }, [router, t]);
 
   //TODO: filter low values in order not to bloat the graph .filter(serviceRevenue => serviceRevenue.net_profit >= 20)
 
@@ -140,7 +140,7 @@ const Services = () => {
     },
     datasets: [
       {
-        label: t("total_profit"),
+        label: t('total_profit'),
         data: sum,
         backgroundColor: [
           'rgb(230, 25, 75)', // Reddish
@@ -209,7 +209,10 @@ const Services = () => {
           </PaperCard>
         </Grid>
         <Grid item xs={4} sx={{ display: 'flex' }}>
-          <PaperCard title="Average Order Value" icon={<CreditCard />}>
+          <PaperCard
+            title={t('revenuepage.average_order_value')}
+            icon={<CreditCard />}
+          >
             <div className="RevenueOverview">
               <div className="RevenueItem">
                 <div className="RevenueDetails">
@@ -228,7 +231,10 @@ const Services = () => {
           </PaperCard>
         </Grid>
         <Grid item xs={4} sx={{ display: 'flex' }} flexGrow={1}>
-          <PaperCard title="Conversion Rate" icon={<TrendingUp />}>
+          <PaperCard
+            title={t('revenuepage.conversion_rate')}
+            icon={<TrendingUp />}
+          >
             <div className="RevenueOverview">
               <div className="RevenueItem">
                 <div className="RevenueDetails">

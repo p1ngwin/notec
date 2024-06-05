@@ -84,13 +84,12 @@
   .MuiSelect-select.MuiTablePagination-select.MuiSelect-standard.MuiInputBase-input
     display: flex!important
 
-// End of mobile
-
 :root
   --fc-border-color: #ebebeb
   --fc-today-bg-color: #f1f1f1!important
 
 body
+  font-family: $fontFamilyPrimary
   margin: 0
   max-width: 100%
 
@@ -212,7 +211,10 @@ div#__next > div
 
 .ToastPrimary
   font-family: $fontFamilyPrimary
-  font-weight: bold
+
+  & .ToastBase
+    padding: .5rem 2rem
+    max-width: unset
 
 .AsyncPrimary
   font-size: 1rem

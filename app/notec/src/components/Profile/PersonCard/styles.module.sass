@@ -3,16 +3,31 @@
 .PersonView
     display: flex
     flex-direction: column
-    max-width: 250px
     padding: 1rem
 
-    > div
-        padding: 1.5rem
+    ._Avatar
+        margin-right: 80px
+
+    .BaseCard
+        display: flex
+        flex-direction: row
 
     .PersonInfoRow
         display: flex
-        justify-self: center
+        color: $black
+        font-size: 1.5rem
+        align-items: center
+
         &:not(:last-child)
             margin-bottom: .5rem
         svg
+            color: $grey-03
             margin-right: .5rem
+
+        a
+            text-decoration: none
+            color: $black
+
+    .PersonNote
+        font-style: italic
+        font-size: 1rem
