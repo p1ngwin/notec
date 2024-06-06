@@ -1,7 +1,7 @@
 # Welcome to Notec!
 
-For now, in this section, there will only be instructions to run basic proof of concept app.
-
+Latest working demo:
+https://notec.vercel.app/
 
 ## App structure
 
