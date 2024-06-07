@@ -25,10 +25,17 @@ if(!firebaseConfig) {
   throw new Error("Missing Firebase credentials");
 }
 
+const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+
+
+console.log("Pkey is: ", privateKey);
+
 
 firebaseAdmin.initializeApp({
-  credential: firebaseAdmin.credential.cert({...firebaseConfig, 
-  privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n')}),
+  credential: firebaseAdmin.credential.cert({
+    ...firebaseConfig, 
+    privateKey
+  })
 });
 
 const app: Express = express();
