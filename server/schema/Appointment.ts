@@ -10,7 +10,7 @@ export const AppointmentSchema = new Schema<IAppointment>({
       required: true,
     },
   ],
-  person_id: {
+  client_id: {
     ref: "Person",
     type: Schema.Types.ObjectId,
     required: true,

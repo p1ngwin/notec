@@ -35,7 +35,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 type FormValues = {
-  person_id: string;
+  client_id: string;
   date: string;
   time: string;
   service_id: string[];
@@ -57,13 +57,13 @@ export default function Page() {
 
   const [currentAppointment, setAppointment] = useState<IAppointment>();
 
-  const { service_id, person_id, date, time } = currentAppointment ?? {};
+  const { service_id, client_id, date, time } = currentAppointment ?? {};
 
   const { control, handleSubmit, reset } = useForm<FormValues>({
     defaultValues: {
       date: parseDateTime(date),
       time: parseDateTime(time),
-      person_id: person_id,
+      client_id: client_id,
       service_id: service_id,
     },
   });
@@ -235,7 +235,7 @@ export default function Page() {
                   )}
                 />
                 <Controller
-                  name="person_id"
+                  name="client_id"
                   control={control}
                   rules={{ required: 'Prosimo izberite osebo' }}
                   render={({ ...field }) => (

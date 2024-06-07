@@ -2,7 +2,7 @@
 export type IRevenue = {
   name?: string;
   service_id?: [string];
-  person_id?: string;
+  client_id?: string;
   payment_type?: PaymentTypeEnum;
   date?: Date;
   is_paid: boolean;
