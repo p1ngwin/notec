@@ -3,9 +3,13 @@ import { useRouter } from 'next/router';
 import styles from '../styles.module.sass';
 import PersonCard from '@/components/Profile/PersonCard';
 import { useEffect, useState } from 'react';
-import { personsUrl, updatePersonUrl } from '@/utils/api/urls';
+import { deletePersonUrl, personsUrl, updatePersonUrl } from '@/utils/api/urls';
 import { IPerson } from '@/types/Person';
-import { useFetchStore, useUpdateStore } from '@/stores/useRequestStore';
+import {
+  useDeleteStore,
+  useFetchStore,
+  useUpdateStore,
+} from '@/stores/useRequestStore';
 import { TextField, Grid } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -23,10 +27,12 @@ type FormValues = {
 };
 
 export default function Page() {
-  const { query } = useRouter();
+  const router = useRouter();
+  const { query } = router;
 
-  const { fetch } = useFetchStore();
+  const { fetch, isLoading } = useFetchStore();
   const { update } = useUpdateStore();
+  const { _delete } = useDeleteStore();
 
   const { t } = useTranslation();
 
@@ -36,7 +42,7 @@ export default function Page() {
 
   const [person, setPerson] = useState<IPerson>();
 
-  const { first_name, last_name, email, phone_number } = person ?? {};
+  const { first_name, last_name, email, phone_number, id } = person ?? {};
 
   const { control, handleSubmit, setValue } = useForm<FormValues>({
     defaultValues: {
@@ -71,13 +77,23 @@ export default function Page() {
       setValue('email', person.email);
       setValue('phone_number', person.phone_number);
 
-      toast.success('Oseba uspešno posodobljena.');
+      toast.success(t("toast.client_delete_success"));
     } else {
-      toast.error('Napaka pri posodabljanju osebe.');
+      toast.error(t("toast.client_delete_error"));
     }
   };
 
-  if (!person) {
+  const onDelete = async () => {
+    toast
+      .promise(_delete(deletePersonUrl(personId)), {
+        loading: t('toast.client_delete_loading'),
+        success: t('toast.client_delete_success'),
+        error: t('toast.client_delete_error'),
+      })
+      .then(() => router.push('../'));
+  };
+
+  if (!isLoading && !person) {
     return <span>Oseba ni najdena!</span>;
   }
 
@@ -113,7 +129,7 @@ export default function Page() {
         <Grid item xs={6} display="flex">
           <PaperCard title={t('clientpage.edit_client')}>
             <form onSubmit={handleSubmit(onUpdate)}>
-              <Grid container maxWidth="md" spacing={1}>
+              <Grid container spacing={1}>
                 <Grid item xs={6}>
                   <Controller
                     name="first_name"
@@ -169,11 +185,22 @@ export default function Page() {
                   />
                 </Grid>
               </Grid>
-              <ActionButton
-                label={'Save'}
-                onClick={handleSubmit(onUpdate)}
-                isPrimary
-              />
+              <Grid container>
+                <Grid item xs={6} justifyContent="start" display="flex">
+                  <ActionButton
+                    label={t('actions.save')}
+                    onClick={handleSubmit(onUpdate)}
+                    isPrimary
+                  />
+                </Grid>
+                <Grid item xs={6} justifyContent="end" display="flex">
+                  <ActionButton
+                    label={t('actions.delete')}
+                    onClick={handleSubmit(onDelete)}
+                    isSecondary
+                  />
+                </Grid>
+              </Grid>
             </form>
           </PaperCard>
         </Grid>

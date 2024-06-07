@@ -1,7 +1,7 @@
 # Welcome to Notec!
 
 Latest working demo:
-https://notec.vercel.app/
+https://notec.vercel.app/?username=user@user.com&password=test123
 
 ## App structure
 
