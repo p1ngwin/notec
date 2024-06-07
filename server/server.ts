@@ -19,7 +19,7 @@ const cors = require("cors");
 
 dotenv.config();
 
-const firebaseConfig = process.env.FIREBASE_CREDENTIALS;
+const firebaseConfig = JSON.parse(process.env.FIREBASE_CREDENTIALS || "");
 
 if(!firebaseConfig) {
   throw new Error("Missing Firebase credentials");
@@ -27,7 +27,8 @@ if(!firebaseConfig) {
 
 
 firebaseAdmin.initializeApp({
-  credential: firebaseAdmin.credential.cert(JSON.parse(firebaseConfig)),
+  credential: firebaseAdmin.credential.cert({...firebaseConfig, 
+  privateKey: process.env.FIREBASE_PRIVATE_KEY}),
 });
 
 const app: Express = express();
