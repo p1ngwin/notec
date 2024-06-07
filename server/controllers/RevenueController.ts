@@ -77,7 +77,7 @@ const RevenueController = {
     const {
       name,
       service_id,
-      person_id,
+      client_id,
       payment_type,
       date,
       is_paid,
@@ -92,7 +92,7 @@ const RevenueController = {
       const revenueData: IRevenue = {
         name,
         service_id,
-        person_id,
+        client_id,
         payment_type,
         date,
         is_paid,

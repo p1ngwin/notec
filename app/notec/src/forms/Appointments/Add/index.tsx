@@ -18,7 +18,7 @@ import { servicesUrl } from "@/utils/api/urls";
 import AsyncSelect from "react-select/async";
 
 type FormProps = {
-  person_id: string;
+  client_id: string;
   date: string;
   time: string;
   service_id: string[];
@@ -40,7 +40,7 @@ const CreateAppointmentForm = () => {
     defaultValues: {
       date: parseDateTime(),
       time: parseDateTime(),
-      person_id: "",
+      client_id: "",
       service_id: [""],
     },
   });
@@ -188,7 +188,7 @@ const CreateAppointmentForm = () => {
                   )}
                 />
                 <Controller
-                  name="person_id"
+                  name="client_id"
                   control={control}
                   rules={{ required: "Prosimo izberite osebo" }}
                   render={({ ...field }) => (

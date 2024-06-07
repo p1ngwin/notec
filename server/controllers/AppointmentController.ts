@@ -24,14 +24,14 @@ const AppointmentController = {
       },
       {
         $lookup: {
-          from: "people",
-          localField: "person_id",
+          from: "clients",
+          localField: "client_id",
           foreignField: "_id",
-          as: "person",
+          as: "client",
         },
       },
       {
-        $unwind: "$person",
+        $unwind: "$client",
       },
       {
         $lookup: {
@@ -66,11 +66,11 @@ const AppointmentController = {
               },
             },
           },
-          person_id: "$person._id",
-          first_name: "$person.first_name",
-          last_name: "$person.last_name",
-          phone: "$person.phone_number",
-          email: "$person.email",
+          client_id: "$client._id",
+          first_name: "$client.first_name",
+          last_name: "$client.last_name",
+          phone: "$client.phone_number",
+          email: "$client.email",
         },
       },
       {
@@ -143,16 +143,16 @@ const AppointmentController = {
     }
   },
   createAppointment: async (req: Request, res: Response) => {
-    const { person_id, date, time, service_id } = req.body ?? {};
+    const { client_id, date, time, service_id } = req.body ?? {};
     const { uid } = req.user ?? {};
     if (!uid) return res.status(401).json({ error: "Not authorized" });
 
-    if (!person_id)
+    if (!client_id)
       return res.status(400).json({ error: "Missing person id!" });
 
     try {
       // Check if the person exists
-      const person = await PersonModel.findById(person_id);
+      const person = await PersonModel.findById(client_id);
 
       if (!person) {
         return res.status(404).json({ error: "Person not found!" });
@@ -165,7 +165,7 @@ const AppointmentController = {
         .lean();
 
       const appointmentData: IAppointment = {
-        person_id,
+        client_id,
         date: date,
         time: time,
         service_id,
@@ -178,7 +178,7 @@ const AppointmentController = {
 
       const revenueData: IRevenue = {
         service_id,
-        person_id,
+        client_id,
         net_profit: services.reduce((acc, ser) => acc + ser.price!, 0),
         date,
         is_paid: false,
@@ -203,10 +203,10 @@ const AppointmentController = {
       return res.status(500).json({ error: "Wrong ID format!" });
 
     const id = new mongoose.Types.ObjectId(req.params.id);
-    const { person_id, date, time, service_id, uuid } = req.body;
+    const { client_id, date, time, service_id, uuid } = req.body;
     try {
       const appointmentData: IAppointment = {
-        person_id,
+        client_id,
         date,
         time,
         service_id,

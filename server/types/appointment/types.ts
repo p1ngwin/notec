@@ -5,7 +5,7 @@ export interface IAppointment {
   date: Date;
   time: Date;
   service_id: [mongoose.Schema.Types.ObjectId];
-  person_id: mongoose.Schema.Types.ObjectId;
+  client_id: mongoose.Schema.Types.ObjectId;
   payment_date?: Date;
   uuid: string; // Firebase user id
 }

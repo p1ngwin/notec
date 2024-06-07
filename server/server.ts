@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
+import mongoose, { ConnectOptions } from "mongoose";
 import {
   appointmetsUrl,
   expensesUrl,
@@ -17,35 +17,18 @@ import firebaseAdmin from "firebase-admin";
 import { validateToken } from "./utils/helpers/token";
 const cors = require("cors");
 
-let firebaseConfig;
+dotenv.config();
 
-const environment = process.env.NODE_ENV;
+const firebaseConfig = process.env.FIREBASE_CREDENTIALS;
 
-if(environment === 'production' || environment === 'development') {
-  firebaseConfig = {
-    type: "service_account",
-    project_id: process.env.PROJECT_ID,
-    private_key_id:  process.env.PRIVATE_KEY_ID,
-    private_key:  JSON.parse(process.env.PRIVATE_KEY || ""),
-    client_email:  process.env.CLIENT_EMAIL,
-    client_id:  process.env.CLIENT_ID,
-    auth_uri:  process.env.AUTH_URI,
-    token_uri:  process.env.TOKEN_URI,
-    auth_provider_x509_cert_url:  process.env.AUTH_PROVIDER_X509_CERT_URL,
-    client_x509_cert_url:  process.env.CLIENT_X509_CERT_URL,
-    universe_domain:  process.env.UNIVERSE_DOMAIN
-  }
-}
-else {
-  firebaseConfig = require("./firebaseAdminSDK.json");
+if(!firebaseConfig) {
+  throw new Error("Missing Firebase credentials");
 }
 
 
 firebaseAdmin.initializeApp({
-  credential: firebaseAdmin.credential.cert(firebaseConfig),
+  credential: firebaseAdmin.credential.cert(JSON.parse(firebaseConfig)),
 });
-
-dotenv.config();
 
 const app: Express = express();
 app.use(express.json());
@@ -57,18 +40,17 @@ const defaultPort = process.env.SERVER_PORT
 const env = process.env.ENVIRONMENT;
 const port = env !== "local" ? defaultPort : 8000;
 
-const uri = String(process.env.DB_LOCAL ?? process.env.DATABASE_CONNECTION);
+const uri = String(process.env.DATABASE_CONNECTION);
 
 mongoose.set("strictQuery", true);
 
-const options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+const options: ConnectOptions = {
   autoIndex: false,
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
   family: 4,
   bufferCommands: true,
+  dbName: process.env.DATABASE_NAME || "notec"
 };
 
 mongoose.connect(uri, options).then(
