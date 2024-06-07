@@ -80,7 +80,7 @@ const Appointments = () => {
     },
   ];
 
-  const rowActions = useMemo<Action<IPerson>[]>(() => {
+  /*const rowActions = useMemo<Action<IPerson>[]>(() => {
     return [
       {
         label: t('actions.edit'),
@@ -91,7 +91,7 @@ const Appointments = () => {
         onClick: ({ _id }) => handleDeletePerson(_id),
       },
     ];
-  }, [router, handleDeletePerson, t]);
+  }, [router, handleDeletePerson, t]);*/
 
   return (
     <View fullWidth direction="column">
@@ -128,7 +128,7 @@ const Appointments = () => {
             showRowCount={!isMobile}
             rows={currentPersons}
             columns={tableColumns}
-            rowActions={rowActions}
+            //rowActions={rowActions}
             searchFieldPlaceholder={t('clientpage.search_for_clients')}
             onRowClick={(e) => {
               router.push(`/persons/edit/${e._id}`);

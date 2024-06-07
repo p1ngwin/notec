@@ -1,13 +1,16 @@
-import { auth } from "@/auth/useAuth";
-import { defaultFetchOptions } from "../helpers/utils";
+import { auth } from '@/auth/useAuth';
+import { defaultFetchOptions } from '../helpers/utils';
 
-export const deleteData = async (url: RequestInfo, body: any): Promise<any> => {
+export const deleteData = async (
+  url: RequestInfo,
+  body?: any,
+): Promise<any> => {
   const token = await auth.currentUser?.getIdToken();
-  if (!token) return new Error("Provide token!");
+  if (!token) return new Error('Provide token!');
 
   const fetchOptions = {
     ...defaultFetchOptions,
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
       ...defaultFetchOptions.headers,
       Authorization: `Bearer ${token}`,
@@ -16,7 +19,7 @@ export const deleteData = async (url: RequestInfo, body: any): Promise<any> => {
 
   const response = await fetch(url, {
     ...fetchOptions,
-    body: JSON.stringify(body),
+    body: JSON.stringify(body || {}),
   });
 
   if (response.ok) {
@@ -29,6 +32,6 @@ export const deleteData = async (url: RequestInfo, body: any): Promise<any> => {
   }
 
   if (response.status === 404) {
-    return console.log("Not found");
+    return console.log('Not found');
   }
 };

@@ -31,7 +31,7 @@ export const useFetchStore = create<FetchStore>()((set) => ({
 interface DeleteStore {
   isSubmitting: boolean;
   setIsSubmitting: (isLoading: boolean) => void;
-  _delete: (url: string, id: any) => Promise<any>;
+  _delete: (url: string, id?: any) => Promise<any>;
   error?: unknown | null;
 }
 

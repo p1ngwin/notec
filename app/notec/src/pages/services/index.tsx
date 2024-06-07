@@ -58,7 +58,7 @@ const Services = () => {
       field: 'price',
       renderCell: (i) => (
         <span>
-          <b>{i.price} €</b>
+          <b>{i.price.toFixed(2)} €</b>
         </span>
       ),
     },

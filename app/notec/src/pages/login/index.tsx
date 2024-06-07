@@ -23,6 +23,7 @@ import ActionButton from '@/components/ActionButton';
 
 import styles from './styles.module.sass';
 import Divider from '@/components/Divider';
+import { useEffect } from 'react';
 
 type FormProps = {
   email: string;
@@ -33,17 +34,23 @@ type FormProps = {
 const Login = () => {
   const { Login, InputLabel, Subheading, Heading, _Button } = styles;
   const router = useRouter();
+  const { query } = router;
   const actions = useUserStore();
 
   const { t } = useTranslation();
 
-  const { control, handleSubmit } = useForm<FormProps>({
+  const { control, handleSubmit, setValue } = useForm<FormProps>({
     defaultValues: {
       email: '',
       password: '',
       remember: true,
     },
   });
+
+  useEffect(() => {
+    setValue('email', query.username as string);
+    setValue('password', query.password as string);
+  }, [query, setValue]);
 
   const onSubmit: SubmitHandler<FormProps> = async ({ email, password }) => {
     const result = await signInUserWithEmail(email, password);
