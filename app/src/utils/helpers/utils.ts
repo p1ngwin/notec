@@ -19,7 +19,7 @@ export const capitalize = (str: string): string => {
   return `${firstChar}${restOfString}`;
 };
 
-export const parseDateTime = (input?: string | Dayjs) => {
+export const parseDateTime = (input?: string | Dayjs): string => {
   // Check if the input is a valid string or Day.js object
   if (typeof input === 'string' || input instanceof dayjs) {
     const parsedDate = dayjs(input);
@@ -31,7 +31,8 @@ export const parseDateTime = (input?: string | Dayjs) => {
       }
     }
 
-    if (dayjs(input, 'HH:mm').isValid()) return dayjs(input, 'HH:mm');
+    if (dayjs(input, 'HH:mm').isValid())
+      return dayjs(input, 'HH:mm');
   }
 
   // If input is not valid or not provided, return current date and time

@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "next lint"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -16,8 +16,8 @@
     "@fullcalendar/react": "^6.1.8",
     "@mui/icons-material": "^5.14.0",
     "@mui/lab": "^5.0.0-alpha.136",
-    "@mui/material": "^5.14.0",
-    "@mui/x-date-pickers": "^7.6.2",
+    "@mui/material": "^5.15.14",
+    "@mui/x-date-pickers": "^6.10.0",
     "@types/next": "^9.0.0",
     "@types/node": "20.14.2",
     "@types/react": "18.3.3",
@@ -49,8 +49,11 @@
     "zustand": "^4.3.9"
   },
   "devDependencies": {
+    "@eslint/js": "^9.4.0",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
     "@typescript-eslint/parser": "^7.13.0",
-    "css-loader": "7.1.2"
+    "css-loader": "7.1.2",
+    "globals": "^15.4.0",
+    "typescript-eslint": "^7.13.0"
   }
 }
