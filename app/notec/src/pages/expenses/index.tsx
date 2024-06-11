@@ -16,7 +16,7 @@ import { useTranslation } from 'next-i18next';
 const Expenses = () => {
   const router = useRouter();
 
-  const { t } = useTranslation(['expenses', 'common']);
+  const { t } = useTranslation();
 
   const [expenses, setExpenses] = useState<IExpenses[]>([]);
 
@@ -31,12 +31,12 @@ const Expenses = () => {
 
   const tableColumns: Column<IExpenses>[] = [
     {
-      label: t('expense.title'),
+      label: t('expenses.title'),
       field: 'name',
       renderCell: (i) => i.name ?? '',
     },
     {
-      label: t('expense.price'),
+      label: t('expenses.price'),
       field: 'cost',
       renderCell: (i) => (
         <span>
@@ -45,14 +45,14 @@ const Expenses = () => {
       ),
     },
     {
-      label: t('expense.due_date'),
+      label: t('expenses.due_date'),
       field: 'due_date',
       renderCell: (i) => (
         <span>{dayjs(i.due_date).format('DD. MM. YYYY')}</span>
       ),
     },
     {
-      label: t('expense.payment_date'),
+      label: t('expenses.payment_date'),
       field: 'payment_date',
       renderCell: (i) => (
         <span>

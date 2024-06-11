@@ -1,14 +1,12 @@
-import { useCallback } from 'react';
-import Table, { Action, Column } from '@/components/DataTable';
+import Table, { Column } from '@/components/DataTable';
 import View from '@/components/View';
 import { IPerson } from '@/types/Person';
-import { deletePersonUrl, personsUrl } from '@/utils/api/urls';
+import { personsUrl } from '@/utils/api/urls';
 import { Grid, useMediaQuery } from '@mui/material';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
-import toast from 'react-hot-toast';
+import { useEffect, useState } from 'react';
 import { theme } from '@/assets/styles/theme';
-import { useDeleteStore, useFetchStore } from '@/stores/useRequestStore';
+import { useFetchStore } from '@/stores/useRequestStore';
 import { GetStaticProps } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import ActionButton from '@/components/ActionButton';
@@ -22,11 +20,11 @@ const Appointments = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { fetch } = useFetchStore();
-  const { _delete } = useDeleteStore();
+  //const { _delete } = useDeleteStore();
 
   const { t } = useTranslation();
 
-  const handleDeletePerson = useCallback(
+  /*const handleDeletePerson = useCallback(
     async (id: string) => {
       if (!id) return;
 
@@ -46,7 +44,7 @@ const Appointments = () => {
       );
     },
     [setPersons, _delete, fetch],
-  );
+  );*/
 
   useEffect(() => {
     (async () => {
