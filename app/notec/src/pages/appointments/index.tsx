@@ -71,7 +71,7 @@ const Appointments = () => {
 
   const router = useRouter();
 
-  const { t } = useTranslation('appointments');
+  const { t } = useTranslation();
 
   const { getSelectedDate } = useDateStore();
 
@@ -223,7 +223,7 @@ const Appointments = () => {
               <ActionButton
                 isPrimary
                 onClick={() => router.push('/appointments/add')}
-                label={t('appointment.new')}
+                label={t('appointmentspage.new_appointment')}
               />
             </Grid>
             <Grid item xs={3} display="flex" justifyContent="end">
@@ -245,7 +245,7 @@ const Appointments = () => {
                     calendarApi?.changeView(CalendarType.timeGridDay)
                   }
                 >
-                  Day
+                  {t('calendar.day')}
                 </ToggleButton>
                 <ToggleButton
                   className={classNames(
@@ -259,7 +259,7 @@ const Appointments = () => {
                     calendarApi?.changeView(CalendarType.timeGridWeek)
                   }
                 >
-                  Week
+                  {t('calendar.week')}
                 </ToggleButton>
                 <ToggleButton
                   className={classNames(
@@ -274,7 +274,7 @@ const Appointments = () => {
                     calendarApi?.changeView(CalendarType.dayGridMonth)
                   }
                 >
-                  Month
+                  {t('calendar.month')}
                 </ToggleButton>
               </ToggleButtonGroup>
             </Grid>
@@ -340,8 +340,8 @@ const Appointments = () => {
             eventContent={renderEventContent}
             dateClick={handleDateClick}
             buttonText={{
-              timeGridWeek: t('week'),
-              timeGridDay: t('day'),
+              timeGridWeek: t('calendar.week'),
+              timeGridDay: t('calendar.day'),
             }}
             slotLabelFormat={[
               {
@@ -406,12 +406,6 @@ const RenderEventCell = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => ({
-  props: {
-    ...(await serverSideTranslations(locale ?? 'en')),
-  },
-});
-
 const HeaderCell = ({ args }: any) => {
   const { HeaderCellWrapper, HeaderCellDay, HeaderCellString } = styles;
 
@@ -437,3 +431,9 @@ const SlotCell = ({ args }: any) => {
     </div>
   );
 };
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? 'en')),
+  },
+});

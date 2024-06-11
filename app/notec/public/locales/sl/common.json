@@ -1,0 +1,137 @@
+{
+  "home": "Domov",
+  "dashboard": "Nadzorna plošča",
+  "welcome": "Dobrodošli v portalu",
+  "services": "Storitve",
+  "clients": "Stranke",
+  "new_client": "Nova stranka",
+  "add": "Dodaj",
+  "navigation": {
+    "appointments": {
+      "title": "Sestanki",
+      "new_appointment": "Nov sestanek"
+    },
+    "expenses": {}
+  },
+  "menu": {
+    "dashboard": "Nadzorna plošča",
+    "clients": "Stranke",
+    "schedule": "Urnik",
+    "services": "Storitve",
+    "income": "Prihodek",
+    "expenses": "Stroški",
+    "settings": "Nastavitve",
+    "sign_out": "Odjava"
+  },
+  "actions": {
+    "update": "Posodobi",
+    "edit": "Uredi",
+    "delete": "Izbriši",
+    "save": "Shrani",
+    "add": "Dodaj"
+  },
+  "login": {
+    "log_in": "Prijava",
+    "log_in_subtext": "Prijavite se za ogled in upravljanje vašega poslovanja",
+    "sign_in": "Prijavite se",
+    "no_account": "Nimate računa? Registrirajte se",
+    "email_address": "E-poštni naslov",
+    "password": "Geslo"
+  },
+  "register": {
+    "register": "Registracija",
+    "register_new_account": "Registrirajte nov račun",
+    "already_registered": "Ste že registrirani? Kliknite tukaj za prijavo"
+  },
+  "homepage": {
+    "today_appointments": "Današnji sestanki",
+    "no_appointments_today": "Danes ni prihajajočih sestankov",
+    "view_today_appointments": "Oglejte si svoje današnje načrtovane sestanke.",
+    "revenue": "Prihodek",
+    "revenue_overview": "Pregled vašega skupnega prihodka za mesec.",
+    "total_monthly_revenue": "Skupni prihodek ta mesec",
+    "growth_last_month": "Rast v primerjavi s prejšnjim mesecem",
+    "from_last_month": "od prejšnjega meseca",
+    "track_monthly_clients": "Spremljajte število novih strank ta mesec.",
+    "dashboard": "Nadzorna plošča",
+    "dashboard_subtext": "Pregled vaših poslovnih meritev.",
+    "total_clients": "Skupno število strank",
+    "new_monthly_clients": "Nove stranke ta mesec."
+  },
+  "clientpage": {
+    "client_overview": "Pregled strank",
+    "view_manage_clients": "Oglejte si in upravljajte informacije o strankah.",
+    "search_for_clients": "Iskanje strank",
+    "edit_client": "Uredi stranko",
+    "new_client": "Nova stranka",
+    "new_client_subtext": "Dodajte novo stranko v spodnji obrazec"
+  },
+  "servicespage": {
+    "services_overview": "Pregled storitev",
+    "view_manage_services": "Oglejte si in upravljajte svoje storitve.",
+    "search_for_services": "Iskanje storitev",
+    "edit_service": "Uredi storitev",
+    "enter_price": "Vnesite ceno",
+    "enter_service_name": "Vnesite ime storitve",
+    "new_service": "Nova storitev",
+    "new_service_subtext": "Dodajte novo storitev v spodnji obrazec",
+    "service_enter_details_below": "Vnesite podrobnosti storitve spodaj"
+  },
+  "revenuepage": {
+    "revenue_overview": "Pregled prihodkov",
+    "view_manage_revenue": "Oglejte si in upravljajte podatke o prihodkih.",
+    "revenue_details": "Podrobnosti o prihodkih",
+    "revenue_details_detailed": "Podroben pregled prihodkov",
+    "revenue_top_10": "Top 10 storitev po prihodkih",
+    "revnue_top_10_view": "Oglejte si 10 najbolj dobičkonosnih storitev",
+    "total_profit": "Skupni dobiček",
+    "average_order_value": "Povprečna vrednost naročila",
+    "conversion_rate": "Stopnja konverzije",
+    "search_for_revenue": "Iskanje po dohodkih"
+  },
+  "appointmentspage": {
+    "new_appointment": "Novo naročilo",
+    "edit_appointment": "Uredi naročilo",
+    "delete_appointment": "Izbriši naročilo"
+  },
+  "first_name": "Ime",
+  "last_name": "Priimek",
+  "phone_number": "Telefonska številka",
+  "email": "E-pošta",
+  "new_service": "Nova storitev",
+  "service": "Storitev",
+  "service_name": "Ime storitve",
+  "profit": "Dobiček",
+  "date": "Datum",
+  "is_paid": "Plačano",
+  "price": "Cena",
+  "note": "Opomba",
+  "optional": "neobvezno",
+
+  "toast": {
+    "service_update_success": "Storitev uspešno shranjena.",
+    "service_update_error": "Napaka pri posodabljanju storitve.",
+    "client_add_success": "Stranka uspešno dodana.",
+    "client_delete_loading": "Brisanje stranke...",
+    "client_delete_success": "Stranka uspešno izbrisana",
+    "client_delete_error": "Napaka pri brisanju stranke",
+    "verification_email_sent": "Potrditveno e-poštno sporočilo poslano na",
+    "registration_error": "Napaka pri registraciji uporabnika. Napaka:",
+    "appointment_deleted_success": "Naročilo uspešno izbrisano",
+    "appointment_deleted_error": "Napaka pri brisanju naročila"
+  },
+  "calendar": {
+    "week": "Teden",
+    "day": "Dan",
+    "month": "Mesec"
+  },
+  "expenses": {
+    "new": "Nov odhodek",
+    "edit": "Uredi odhodek",
+    "delete": "Izbriši odhodek",
+    "title": "Naziv odhodka",
+    "due_date": "Datum plačila",
+    "price": "Znesek",
+    "payment_date": "Plačano dne"
+  }
+}

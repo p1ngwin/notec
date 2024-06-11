@@ -19,7 +19,9 @@
     "schedule": "Schedule",
     "services": "Services",
     "income": "Income",
-    "expenses": "Expenses"
+    "expenses": "Expenses",
+    "settings": "Settings",
+    "sign_out": "Sign out"
   },
   "actions": {
     "update": "Update",
@@ -32,6 +34,7 @@
     "log_in": "Log in",
     "log_in_subtext": "Sign in to view and manage your business",
     "sign_in": "Sign in",
+    "sign_out": "Sign out",
     "no_account": "Don't have an account? Sign Up",
     "email_address": "Email adress",
     "password": "Password"
@@ -84,7 +87,13 @@
     "revnue_top_10_view": "View 10 most profittable services",
     "total_profit": "Total profit",
     "average_order_value": "Average Order Value",
-    "conversion_rate": "Conversion Rate"
+    "conversion_rate": "Conversion Rate",
+    "search_for_revenue": "Search for revenue"
+  },
+  "appointmentspage": {
+    "new_appointment": "New appointment",
+    "edit_appointment": "Edit appointment",
+    "delete_appointment": "Delete appointment"
   },
   "first_name": "First name",
   "last_name": "Last name",
@@ -109,5 +118,19 @@
     "client_delete_error": "Failed to delete client",
     "verification_email_sent": "Verification email sent to",
     "registration_error": "Error registrating user. Error:"
+  },
+  "calendar": {
+    "week": "Week",
+    "day": "Day",
+    "month": "Month"
+  },
+  "expenses": {
+    "new": "New expanse",
+    "edit": "Edit expanse",
+    "delete": "Delete expanse",
+    "title": "Expanse title",
+    "due_date": "Due date",
+    "price": "Price",
+    "payment_date": "Payment date"
   }
 }

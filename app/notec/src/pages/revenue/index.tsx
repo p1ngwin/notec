@@ -208,7 +208,7 @@ const Services = () => {
             </div>
           </PaperCard>
         </Grid>
-        <Grid item xs={4} sx={{ display: 'flex' }}>
+        <Grid item xs={4} display="flex">
           <PaperCard
             title={t('revenuepage.average_order_value')}
             icon={<CreditCard />}
@@ -222,8 +222,7 @@ const Services = () => {
               <div className="RevenueItem">
                 <div className="RevenueDetails">
                   <span className="RevenueValueSubtext">
-                    <span>+20.1%</span>
-                    {t('homepage.from_last_month')}
+                    <span>+20.1%</span> {t('homepage.from_last_month')}
                   </span>
                 </div>
               </div>
@@ -254,7 +253,7 @@ const Services = () => {
         </Grid>
       </Grid>
       <Grid container mt={5} spacing={4} justifyContent="space-around">
-        <Grid item xs={6}>
+        <Grid item xs={6} display="flex" flexGrow={1}>
           <PaperCard
             title={t('revenuepage.revenue_details')}
             subtitle={t('revenuepage.revenue_details_detailed')}
@@ -264,10 +263,11 @@ const Services = () => {
               columns={tableColumns}
               rowActions={rowActions}
               rowCount={5}
+              searchFieldPlaceholder={t('revenuepage.search_for_revenue')}
             />
           </PaperCard>
         </Grid>
-        <Grid item xs={6} sx={{ display: 'flex' }}>
+        <Grid item xs={6} display="flex" flexGrow={1}>
           <PaperCard
             title={t('revenuepage.revenue_details')}
             subtitle={t('revenuepage.revnue_top_10_view')}

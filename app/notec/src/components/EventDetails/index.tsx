@@ -23,7 +23,7 @@ const EventDetails = ({
 }: EventCellProps) => {
   const router = useRouter();
 
-  const { t } = useTranslation('appointments');
+  const { t } = useTranslation();
 
   const { _delete } = useDeleteStore();
 
@@ -32,10 +32,10 @@ const EventDetails = ({
       id,
     });
     if (deletedAppointment) {
-      toast.success('Naročilo izbrisano.');
+      toast.success(t('toast.appointment_deleted_success'));
       window.location.reload();
     } else {
-      toast.error('Napaka pri brisanju naročila.');
+      toast.error(t('toast.appointment_deleted_success'));
     }
   };
 
@@ -75,7 +75,7 @@ const EventDetails = ({
           <ActionButton
             isPrimary
             onClick={() => router.push(`/appointments/edit/${id}`)}
-            label={t('appointment.edit')}
+            label={t('appointmentspage.edit_appointment')}
           ></ActionButton>
         </Grid>
         <Grid
@@ -88,7 +88,7 @@ const EventDetails = ({
           <ActionButton
             isSecondary
             onClick={() => handleAppointmentDelete(id)}
-            label={t('appointment.delete')}
+            label={t('appointmentspage.delete_appointment')}
           ></ActionButton>
         </Grid>
       </Grid>
