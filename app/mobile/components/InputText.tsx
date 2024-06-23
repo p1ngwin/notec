@@ -1,18 +1,18 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { KeyboardTypeOptions, StyleSheet, TextInput, View } from 'react-native';
+import { InputModeOptions, StyleSheet, TextInput, View } from 'react-native';
 import { Row } from './Row';
 import { Col } from './Col';
 
 type Props = {
   placeholder?: string;
-  keyboardType?: KeyboardTypeOptions;
+  inputMode?: InputModeOptions;
   icon?: keyof typeof Ionicons.glyphMap;
   isPasword?: boolean;
 };
 
 export default function InputText({
   placeholder,
-  keyboardType = 'default',
+  inputMode = 'text',
   icon,
   isPasword,
 }: Props) {
@@ -22,7 +22,7 @@ export default function InputText({
         <Col size={icon ? 11 : 12}>
           <TextInput
             placeholder={placeholder}
-            keyboardType={keyboardType}
+            inputMode={inputMode}
             style={{ paddingVertical: 15, paddingHorizontal: 20 }}
             secureTextEntry={isPasword}
           />
