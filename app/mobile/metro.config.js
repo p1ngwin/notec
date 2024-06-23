@@ -6,7 +6,6 @@ const defaultConfig = getDefaultConfig(__dirname);
 module.exports = {
     ...defaultConfig,
     watchFolders: [
-        path.resolve(__dirname, '../shared'),
         path.resolve(__dirname, '../public'),
     ],
     projectRoot: path.resolve(__dirname),
